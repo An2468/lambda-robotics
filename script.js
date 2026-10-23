@@ -106,9 +106,40 @@ if(counters.length){
  }),{threshold:.6});
  counters.forEach(c=>co.observe(c));
 }
-const tierNav=$('#tierNav'),tierDetail=$('#tierDetail');
-function renderTier(index){const tier=cfg.tiers[index];if(!tier)return; $$('.tier-button').forEach((el,i)=>{el.classList.toggle('active',i===index);el.setAttribute('aria-pressed',i===index?'true':'false')});tierDetail.innerHTML=`<div class="tier-count">SPONSORSHIP LEVEL ${String(index+1).padStart(2,'0')} / 05 &nbsp; ↗ ${safe(tier.note)}</div><h3>${safe(tier.name)}.</h3><div class="amount">CONTRIBUTION: ${safe(tier.amount)}</div><ul>${tier.benefits.map(b=>`<li>${safe(b)}</li>`).join('')}</ul><a class="pill" style="position:relative;display:inline-block;margin-top:22px;background:#121417;color:white" href="#contact" id="chooseTier">LET'S TALK ↗</a>`;$('#chooseTier').addEventListener('click',()=>{$('#sponsorTier').value=tier.name})}
-(cfg.tiers||[]).forEach((t,i)=>{const btn=document.createElement('button');btn.className='tier-button';btn.innerHTML=`<span>${safe(t.name)}</span><span>${String(i+1).padStart(2,'0')} ↗</span>`;btn.addEventListener('click',()=>renderTier(i));tierNav.appendChild(btn)});renderTier(2);
+// Sponsor ladder. Tiers are cumulative, so selecting one charges every rung
+// beneath it and the detail panel marks the inherited benefits as inherited.
+const ladder=$('#ladder'),tierDetail=$('#tierDetail');
+const tiers=cfg.tiers||[];
+tiers.forEach((t,i)=>{
+ const b=document.createElement('button');
+ b.type='button';b.className='rung';b.style.setProperty('--i',i);
+ b.setAttribute('aria-pressed','false');
+ b.innerHTML=`<span class="rung-bar"><i></i></span><span class="rung-label"><b>${safe(t.name)}</b><em>${String(i+1).padStart(2,'0')}</em></span><span class="rung-amt">${safe(t.amount)}</span>`;
+ b.addEventListener('click',()=>renderTier(i));
+ ladder.appendChild(b);
+});
+const rungs=$$('.rung');
+function renderTier(index){
+ const tier=tiers[index];if(!tier)return;
+ rungs.forEach((el,i)=>{
+  el.classList.toggle('on',i<=index);
+  el.classList.toggle('sel',i===index);
+  el.style.setProperty('--d',Math.max(0,index-i));   // charges from the picked rung downward
+  el.setAttribute('aria-pressed',i===index?'true':'false');
+ });
+ // everything the lower tiers already give you, plus what this one adds
+ const inherited=tiers.slice(0,index).flatMap(t=>t.benefits).filter(x=>!/benefits$/i.test(x));
+ const own=tier.benefits.filter(x=>!/benefits$/i.test(x));
+ const seen=new Set(),rows=[];
+ inherited.forEach(x=>{if(!seen.has(x)){seen.add(x);rows.push([x,true])}});
+ own.forEach(x=>{if(!seen.has(x)){seen.add(x);rows.push([x,false])}});
+ tierDetail.innerHTML=`<div class="tier-count">LEVEL ${String(index+1).padStart(2,'0')} / ${String(tiers.length).padStart(2,'0')} \u00b7 ${safe(tier.note).toUpperCase()}</div>`+
+  `<h3>${safe(tier.name)}.</h3><div class="amount">CONTRIBUTION \u00b7 ${safe(tier.amount)}</div>`+
+  `<ul>${rows.map(([x,inh],i)=>`<li class="${inh?'inherited':''}" style="--d:${i}">${safe(x)}</li>`).join('')}</ul>`+
+  `<a class="tier-cta" href="#contact" id="chooseTier">Talk about ${safe(tier.name)} \u2197</a>`;
+ $('#chooseTier').addEventListener('click',()=>{const f=$('#sponsorTier');if(f)f.value=tier.name});
+}
+renderTier(2);
 const mobile=$('#mobileMenu');$('#menuButton').addEventListener('click',()=>{mobile.classList.toggle('open');$('#menuButton').setAttribute('aria-expanded',String(mobile.classList.contains('open')))});mobile.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mobile.classList.remove('open')));
 const instagram=$('#insta'),tiktok=$('#tiktok');if(cfg.instagram&&cfg.instagram!=='#')instagram.href=cfg.instagram;else instagram.addEventListener('click',e=>{e.preventDefault();alert('Add your Instagram URL in config.js')});if(cfg.tiktok&&cfg.tiktok!=='#')tiktok.href=cfg.tiktok;else tiktok.addEventListener('click',e=>{e.preventDefault();alert('Add your TikTok URL in config.js')});
 // Canvas-free CSS 3D model. A real robot photograph can replace the first cube.

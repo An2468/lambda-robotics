@@ -24,6 +24,25 @@ const sponsorLogo=s=>{const inner=s.logo?`<img src="${safe(s.logo)}" alt="${safe
  return s.url?`<a class="sponsor-logo" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer" aria-hidden="pending">${inner}</a>`:`<div class="sponsor-logo" aria-hidden="pending">${inner}</div>`};
 fillMarquee($('#sponsorTrack'),cfg.sponsors||[],sponsorLogo);
 fillMarquee($('#heroSponsorTrack'),cfg.sponsors||[],sponsorLogo);
+// Sponsor showcase: the card above the logo row shows whichever sponsor is picked.
+const backerCard=$('#backerCard'),backerRow=$('#backerRow'),backers=cfg.sponsors||[];
+let backerOn=-1;
+function showBacker(i){
+ if(i===backerOn||!backers[i])return;
+ backerOn=i;const s=backers[i];
+ [...backerRow.children].forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-pressed',String(j===i))});
+ backerCard.innerHTML=`<div class="backer-mark" style="--d:0">${s.logo?`<img src="${safe(s.logo)}" alt="${safe(s.name)} logo"/>`:`<span class="ph">${safe(s.name)}</span>`}</div>`+
+  `<div style="--d:1"><div class="backer-count">${String(i+1).padStart(2,'0')} / ${String(backers.length).padStart(2,'0')} \u00b7 SPONSOR</div><h3>${safe(s.name)}</h3>`+
+  `${s.about?`<p>${safe(s.about)}</p>`:''}${s.url?`<a class="backer-link" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer">Learn more \u2197</a>`:''}</div>`;
+}
+backers.forEach((s,i)=>{
+ const b=document.createElement('button');b.type='button';b.className='backer-logo';
+ b.setAttribute('aria-label',`Show ${s.name}`);
+ b.innerHTML=s.logo?`<img src="${safe(s.logo)}" alt=""/>`:`<b>${safe(s.name)}</b>`;
+ ['click','mouseenter','focus'].forEach(ev=>b.addEventListener(ev,()=>showBacker(i)));
+ backerRow.appendChild(b);
+});
+if(backers.length)showBacker(0);else $('#sponsors').hidden=true;
 
 // Journey: a timeline you step through. One panel swaps in place, so the
 // section stays about a screen tall instead of scrolling through every card.
@@ -159,7 +178,7 @@ if(draft&&!reduced){let praf=0,tx=0,ty=0;
 // Nav rail highlights whichever section fills the viewport.
 const navLinks=$$('.navlinks a[href^="#"]');
 const spy=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;
- navLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
+ navLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id||a.dataset.also===e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
 $$('section[id]').forEach(sec=>spy.observe(sec));
 const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.12});$$('.reveal').forEach(x=>observer.observe(x));
 const sponsorForm=$('#sponsorForm');sponsorForm.addEventListener('submit',async e=>{e.preventDefault();if(!sponsorForm.reportValidity())return;const data=Object.fromEntries(new FormData(sponsorForm));data.team='Lambda FTC 36789';delete data.consent;const status=$('#formStatus');status.textContent='Preparing inquiry…';if(cfg.inquiryEndpoint){try{const res=await fetch(cfg.inquiryEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});if(!res.ok)throw Error('Submission failed');status.textContent='Your inquiry was submitted. Thank you for contacting Lambda!';sponsorForm.reset()}catch(err){status.textContent='Submission failed. Please try again or contact us by email.'}}else{const recipient=(cfg.email||'').includes('REPLACE_')?'':cfg.email;const subject=encodeURIComponent('Lambda Robotics — Sponsorship Inquiry');const body=encodeURIComponent(`Company/contact: ${data.company}\nType: ${data.support}\nTier: ${data.tier}\nContact email: ${data.email}\n\nPlease contact me to discuss sponsoring Lambda Robotics FTC #36789.`);const mail=`mailto:${recipient}?subject=${subject}&body=${body}`;window.location.href=mail;status.textContent=recipient?'Email draft opened. Please send it from your email app.':'Email draft opened. Enter Lambda’s team email as the recipient before sending.'}});

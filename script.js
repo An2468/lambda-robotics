@@ -25,47 +25,43 @@ const sponsorLogo=s=>{const inner=s.logo?`<img src="${safe(s.logo)}" alt="${safe
 fillMarquee($('#sponsorTrack'),cfg.sponsors||[],sponsorLogo);
 fillMarquee($('#heroSponsorTrack'),cfg.sponsors||[],sponsorLogo);
 
-// Journey: milestones stack like a deck of cards as you scroll past them.
-const stack=$('#stack'),points=$('#journeyPoints'),railFill=$('#journeyRailFill'),counter=$('#journeyCounter');
-(cfg.milestones||[]).forEach((m,i)=>{
- const art=document.createElement('article');art.className='mstone';art.style.setProperty('--i',i);
- art.style.top=`${96+i*14}px`;art.dataset.status=m.status||'';
- art.innerHTML=`<div class="m-side"><div class="m-idx">${safe(m.index)} / ${safe(m.label)}</div><div class="m-date">${safe(m.date)}</div></div>`+
-  `<div class="m-body"><h3>${safe(m.title)}</h3><p>${safe(m.body)}</p><span class="m-tag"><i></i>${safe(m.status)}</span></div><div class="m-rule"></div>`;
- stack.appendChild(art);
-});
-const cards=$$('.mstone');
-(cfg.milestones||[]).forEach((m,i)=>{
+// Journey: a timeline you step through. One panel swaps in place, so the
+// section stays about a screen tall instead of scrolling through every card.
+const panel=$('#mpanel'),points=$('#journeyPoints'),railFill=$('#journeyRailFill'),counter=$('#journeyCounter');
+const stones=cfg.milestones||[];
+stones.forEach((m,i)=>{
  const btn=document.createElement('button');btn.type='button';btn.className='journey-point';
- btn.setAttribute('aria-label',`Go to milestone ${i+1}: ${m.title}`);
+ btn.setAttribute('aria-label',`Milestone ${i+1}: ${m.title}`);
  btn.innerHTML=`<span class="point-date">${safe(m.date)}</span><span class="point-label">${safe(m.label)}</span>`;
- btn.addEventListener('click',()=>cards[i]&&cards[i].scrollIntoView({block:'center',behavior:reduced?'auto':'smooth'}));
+ btn.addEventListener('click',()=>show(i));
  points.appendChild(btn);
 });
-let active=-1,rafStack=0;
-function syncStack(){
- rafStack=0;if(!cards.length)return;
- const top=96,vh=innerHeight;let current=0;
- cards.forEach((c,i)=>{
-  const r=c.getBoundingClientRect();
-  const next=cards[i+1];
-  // how far the following card has slid over this one
-  const cover=next?Math.max(0,Math.min(1,(vh-next.getBoundingClientRect().top)/(vh*.72))):0;
-  if(!reduced)c.style.transform=`scale(${1-cover*.055}) translateY(${cover*-10}px)`;
-  c.querySelector('.m-rule').style.setProperty('--done',cover.toFixed(3));
-  if(r.top<=top+90)current=i;
+let step=0;
+function show(i){
+ if(!stones.length)return;
+ step=(i+stones.length)%stones.length;
+ const m=stones[step];
+ [...points.children].forEach((n,j)=>{
+  n.classList.toggle('active',j===step);
+  n.classList.toggle('passed',j<step);
+  n.setAttribute('aria-current',j===step?'step':'false');
  });
- const frac=cards.length>1?current/(cards.length-1):0;
- railFill.style.width=`${frac*100}%`;
- if(current!==active){active=current;
-  [...points.children].forEach((n,i)=>{n.classList.toggle('active',i===active);n.classList.toggle('passed',i<active);
-   n.setAttribute('aria-current',i===active?'step':'false')});
-  counter.textContent=`${String(active+1).padStart(2,'0')} \u2014 ${String(cards.length).padStart(2,'0')}`;
- }
+ const node=points.children[step];
+ if(node)railFill.style.width=`${node.offsetLeft+node.offsetWidth/2}px`;
+ counter.textContent=`${String(step+1).padStart(2,'0')} \u2014 ${String(stones.length).padStart(2,'0')}`;
+ panel.dataset.status=m.status||'';
+ panel.innerHTML=`<div class="m-side" style="--d:0"><div class="m-idx">${safe(m.index)} / ${safe(m.label)}</div><div class="m-date">${safe(m.date)}</div></div>`+
+  `<div class="m-body" style="--d:1"><h3>${safe(m.title)}</h3><p>${safe(m.body)}</p><span class="m-tag"><i></i>${safe(m.status)}</span></div>`+
+  `<div class="m-ghost" aria-hidden="true">${safe(m.index)}</div>`;
 }
-addEventListener('scroll',()=>{if(!rafStack)rafStack=requestAnimationFrame(syncStack)},{passive:true});
-addEventListener('resize',syncStack,{passive:true});
-syncStack();
+$('#timelinePrev').addEventListener('click',()=>show(step-1));
+$('#timelineNext').addEventListener('click',()=>show(step+1));
+panel.addEventListener('keydown',e=>{
+ if(e.key==='ArrowRight'){show(step+1);e.preventDefault()}
+ if(e.key==='ArrowLeft'){show(step-1);e.preventDefault()}
+});
+addEventListener('resize',()=>show(step),{passive:true});
+show(0);
 
 // About: the manifesto lights up word by word as the section crosses the screen.
 const manifesto=$('#manifesto');

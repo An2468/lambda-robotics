@@ -5,25 +5,70 @@ const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll
 $('#year').textContent=new Date().getFullYear();
 const safe=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-// Roster reads as a call sheet; the portrait rides the cursor instead of sitting in a card.
-const roster=$('#roster');
+// THE MINDS. No portraits exist yet, so each member gets an ID plate drawn
+// deterministically from their name — same name, same plate, every load.
+// Primitives match the hero's language: gear rings, bolt circles, traces.
+// A real `photo` in config.js covers the plate instead.
+const minds=$('#minds');
+function seedOf(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function rngFrom(seed){let x=seed||1;return()=>{x^=x<<13;x>>>=0;x^=x>>>17;x^=x<<5;x>>>=0;return x/4294967296}}
+function plate(name,role,accent){
+ const r=rngFrom(seedOf(name+'|'+role));
+ const pick=a=>a[Math.floor(r()*a.length)];
+ const ink='#aab4c4',dim='#55606f',hot='#f4511e';
+ let g='';
+ // ground: a dotted survey grid, offset per member
+ const off=Math.floor(r()*9);
+ g+=`<pattern id="p${off}${seedOf(name)%97}" width="17" height="17" patternUnits="userSpaceOnUse" patternTransform="translate(${off} ${off})"><circle cx="1.5" cy="1.5" r="1" fill="#ffffff14"/></pattern>`;
+ const pid=`p${off}${seedOf(name)%97}`;
+ let body=`<rect width="200" height="200" fill="url(#${pid})"/>`;
+ // primary form
+ const form=pick(['gear','bolts','arcs']);
+ const cx=50+r()*100, cy=46+r()*100, rad=38+r()*44;
+ if(form==='gear'){
+  const teeth=9+Math.floor(r()*12);let d='';
+  for(let i=0;i<teeth;i++){const s0=i/teeth*Math.PI*2,s1=(i+.46)/teeth*Math.PI*2;
+   d+=`${i?'L':'M'}${(cx+Math.cos(s0)*rad).toFixed(1)} ${(cy+Math.sin(s0)*rad).toFixed(1)}`+
+      `L${(cx+Math.cos(s0)*(rad+8)).toFixed(1)} ${(cy+Math.sin(s0)*(rad+8)).toFixed(1)}`+
+      `L${(cx+Math.cos(s1)*(rad+8)).toFixed(1)} ${(cy+Math.sin(s1)*(rad+8)).toFixed(1)}`+
+      `L${(cx+Math.cos(s1)*rad).toFixed(1)} ${(cy+Math.sin(s1)*rad).toFixed(1)}`;}
+  body+=`<g class="spin"><path d="${d}Z" fill="none" stroke="${ink}" stroke-width="1.4" opacity=".62"/>`+
+        `<circle cx="${cx}" cy="${cy}" r="${(rad*.34).toFixed(1)}" fill="none" stroke="${dim}" stroke-width="1.4"/></g>`;
+ }else if(form==='bolts'){
+  const n=5+Math.floor(r()*7);let c='';
+  for(let i=0;i<n;i++){const a2=i/n*Math.PI*2;
+   c+=`<circle cx="${(cx+Math.cos(a2)*rad).toFixed(1)}" cy="${(cy+Math.sin(a2)*rad).toFixed(1)}" r="4.2" fill="none" stroke="${ink}" stroke-width="1.3"/>`;}
+  body+=`<circle cx="${cx}" cy="${cy}" r="${rad}" fill="none" stroke="${dim}" stroke-width="1.2" stroke-dasharray="4 5"/><g class="spin">${c}</g>`;
+ }else{
+  let c='';
+  for(let i=0;i<3+Math.floor(r()*3);i++){const rr=(rad-i*13).toFixed(1);
+   c+=`<circle cx="${cx}" cy="${cy}" r="${rr}" fill="none" stroke="${i%2?dim:ink}" stroke-width="1.3" opacity=".7" stroke-dasharray="${(30+r()*70).toFixed(0)} ${(10+r()*30).toFixed(0)}"/>`;}
+  body+=`<g class="spin">${c}</g>`;
+ }
+ // secondary: traces or a hatched band
+ if(r()>.5){
+  let t='',y=18+r()*40;
+  for(let i=0;i<3;i++){const yy=(y+i*26).toFixed(1),bx=(40+r()*90).toFixed(1);
+   t+=`<path d="M-4 ${yy}H${bx}l14 14H214" fill="none" stroke="${dim}" stroke-width="1.1" opacity=".75"/>`+
+      `<circle cx="${bx}" cy="${yy}" r="2.6" fill="${i===1?hot:dim}"/>`;}
+  body+=t;
+ }else{
+  let h='';const x0=r()*90;
+  for(let i=0;i<14;i++)h+=`<line x1="${(x0+i*9).toFixed(1)}" y1="210" x2="${(x0+i*9+52).toFixed(1)}" y2="-10" stroke="${dim}" stroke-width="1" opacity=".45"/>`;
+  body+=`<g>${h}</g>`;
+ }
+ if(accent)body+=`<circle cx="${(16+r()*168).toFixed(1)}" cy="${(16+r()*168).toFixed(1)}" r="5" fill="${hot}"/>`;
+ return `<svg class="mind-art" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>${g}</defs>${body}</svg>`;
+}
+const SPAN=['w2 h2','','','w2','','','h2','','w2',''];   // tiles a 4-column grid exactly, in reading order
 (cfg.members||[]).forEach((m,i)=>{
- const li=document.createElement('li');li.className='rost';
- li.innerHTML=`<span class="r-n">${String(i+1).padStart(2,'0')}</span><span class="r-face">${m.photo?`<img alt="Portrait of ${safe(m.name)}" src="${safe(m.photo)}" loading="lazy"/>`:'\u03bb'}</span><span class="r-name">${safe(m.name)}</span><span class="r-role">${safe(m.role)}</span><span class="r-ar">↗</span>`;
- roster.appendChild(li);
+ const cell=document.createElement('article');
+ cell.className=`mind ${SPAN[i%SPAN.length]}`.trim();
+ cell.innerHTML=(m.photo?`<img class="mind-photo" src="${safe(m.photo)}" alt="Portrait of ${safe(m.name)}" loading="lazy"/>`:plate(m.name,m.role,i%3===0))+
+  `<div class="mind-scrim"></div><span class="mind-n">${String(i+1).padStart(2,'0')}</span>`+
+  `<div class="mind-meta"><div class="mind-name">${safe(m.name)}</div><span class="mind-role">${safe(m.role)}</span></div><span class="mind-rule"></span>`;
+ minds.appendChild(cell);
 });
-// Gallery + sponsor marquees. Items are duplicated once so the CSS -50% loop is seamless.
-// Repeat the set until it is wide enough to cover any screen, then duplicate it once
-// so the CSS translateX(-50%) loop lands seamlessly. ponytail: fixed repeat count, not measured.
-function fillMarquee(el,items,render){if(!el||!items.length)return;
- const base=Array.from({length:Math.ceil(9/items.length)},()=>items).flat();
- el.innerHTML=[...base,...base].map(render).join('');
- el.querySelectorAll('[aria-hidden="pending"]').forEach((n,i)=>n.setAttribute('aria-hidden',i>=base.length?'true':'false'))}
-fillMarquee($('#galleryTrack'),cfg.gallery||[],g=>`<figure class="shot" aria-hidden="pending"><div class="frame">${g.src?`<img src="${safe(g.src)}" alt="${safe(g.caption)}" loading="lazy"/>`:'<div class="shot-ph">\u03bb</div>'}</div><figcaption>${safe(g.caption)}</figcaption></figure>`);
-const sponsorLogo=s=>{const inner=s.logo?`<img src="${safe(s.logo)}" alt="${safe(s.name)} logo"/>`:`<span class="logo-ph"><b>${safe(s.name)}</b><i>PARTNER</i></span>`;
- return s.url?`<a class="sponsor-logo" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer" aria-hidden="pending">${inner}</a>`:`<div class="sponsor-logo" aria-hidden="pending">${inner}</div>`};
-fillMarquee($('#sponsorTrack'),cfg.sponsors||[],sponsorLogo);
-fillMarquee($('#heroSponsorTrack'),cfg.sponsors||[],sponsorLogo);
 
 // Journey: a timeline you step through. One panel swaps in place, so the
 // section stays about a screen tall instead of scrolling through every card.

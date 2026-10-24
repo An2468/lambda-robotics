@@ -80,7 +80,15 @@ function fillMarquee(el,items,render){if(!el||!items.length)return;
 fillMarquee($('#galleryTrack'),cfg.gallery||[],g=>`<figure class="shot" aria-hidden="pending"><div class="frame">${g.src?`<img src="${safe(g.src)}" alt="${safe(g.caption)}" loading="lazy"/>`:'<div class="shot-ph">\u03bb</div>'}</div><figcaption>${safe(g.caption)}</figcaption></figure>`);
 const sponsorLogo=s=>{const inner=s.logo?`<img src="${safe(s.logo)}" alt="${safe(s.name)} logo"/>`:`<span class="logo-ph"><b>${safe(s.name)}</b><i>PARTNER</i></span>`;
  return s.url?`<a class="sponsor-logo" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer" aria-hidden="pending">${inner}</a>`:`<div class="sponsor-logo" aria-hidden="pending">${inner}</div>`};
-fillMarquee($('#sponsorTrack'),cfg.sponsors||[],sponsorLogo);
+// A handful of partners reads better as a row of plates than a ticker, and a
+// ticker of three would just loop the same names past the tiers.
+const partners=cfg.sponsors||[],partnerTrack=$('#sponsorTrack');
+if(partnerTrack&&partners.length&&partners.length<=5){
+ partnerTrack.closest('.marquee').classList.add('is-static');
+ partnerTrack.innerHTML=partners.map(sponsorLogo).join('');
+ partnerTrack.querySelectorAll('[aria-hidden="pending"]').forEach(n=>n.removeAttribute('aria-hidden'));
+}else fillMarquee(partnerTrack,partners,sponsorLogo);
+// condense the wall once it pins, so it never crowds the ladder
 fillMarquee($('#heroSponsorTrack'),cfg.sponsors||[],sponsorLogo);
 
 // Journey: a timeline you step through. One panel swaps in place, so the

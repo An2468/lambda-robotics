@@ -27,6 +27,9 @@ The page is four sections plus a dialog. Each presents itself differently on pur
 ## Member plates
 Nobody has a portrait yet, so each member's tile draws a plate generated from their name — gear rings, bolt circles, traces and hatching, seeded by a hash so the same name always produces the same plate. Set `photo` on a member in `config.js` and the photo covers the plate instead; you can mix the two while photos trickle in. Every cell is identical in size on purpose — ten equals, no feature tile.
 
+## Partner wall
+With five or fewer entries in `sponsors`, the wall renders a row of large plates instead of a marquee — a ticker of three just loops the same names. Above 820px the wall is sticky, so the partners stay on screen while the tier ladder is read. Past five sponsors it falls back to the scrolling marquee.
+
 ## Partner dialog
 The contact form is a modal rather than a section. Anything pointing at `#contact` opens it — the nav button, the hero CTA, and each tier's "Talk about X", which also prefills the tier field. Escape, the close button and the backdrop all dismiss it; focus moves into the form on open, is trapped while it is up, and returns to whatever opened it. The newsletter signup moved to the footer.
 

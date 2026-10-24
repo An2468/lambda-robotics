@@ -190,8 +190,7 @@ function renderTier(index){
  tierDetail.innerHTML=`<div class="tier-count">LEVEL ${String(index+1).padStart(2,'0')} / ${String(tiers.length).padStart(2,'0')} \u00b7 ${safe(tier.note).toUpperCase()}</div>`+
   `<h3>${safe(tier.name)}.</h3><div class="amount">CONTRIBUTION \u00b7 ${safe(tier.amount)}</div>`+
   `<ul>${rows.map(([x,inh],i)=>`<li class="${inh?'inherited':''}" style="--d:${i}">${safe(x)}</li>`).join('')}</ul>`+
-  `<a class="tier-cta" href="#contact" id="chooseTier">Talk about ${safe(tier.name)} \u2197</a>`;
- $('#chooseTier').addEventListener('click',()=>{const f=$('#sponsorTier');if(f)f.value=tier.name});
+  `<a class="tier-cta" href="#contact" data-tier="${safe(tier.name)}" id="chooseTier">Talk about ${safe(tier.name)} \u2197</a>`;
 }
 renderTier(2);
 const mobile=$('#mobileMenu');$('#menuButton').addEventListener('click',()=>{mobile.classList.toggle('open');$('#menuButton').setAttribute('aria-expanded',String(mobile.classList.contains('open')))});mobile.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mobile.classList.remove('open')));
@@ -220,7 +219,47 @@ const spy=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)retur
  navLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
 $$('section[id]').forEach(sec=>spy.observe(sec));
 const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.12});$$('.reveal').forEach(x=>observer.observe(x));
-const sponsorForm=$('#sponsorForm');sponsorForm.addEventListener('submit',async e=>{e.preventDefault();if(!sponsorForm.reportValidity())return;const data=Object.fromEntries(new FormData(sponsorForm));data.team='Lambda FTC 36789';delete data.consent;const status=$('#formStatus');status.textContent='Preparing inquiry…';if(cfg.inquiryEndpoint){try{const res=await fetch(cfg.inquiryEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});if(!res.ok)throw Error('Submission failed');status.textContent='Your inquiry was submitted. Thank you for contacting Lambda!';sponsorForm.reset()}catch(err){status.textContent='Submission failed. Please try again or contact us by email.'}}else{const recipient=(cfg.email||'').includes('REPLACE_')?'':cfg.email;const subject=encodeURIComponent('Lambda Robotics — Sponsorship Inquiry');const body=encodeURIComponent(`Company/contact: ${data.company}\nType: ${data.support}\nTier: ${data.tier}\nContact email: ${data.email}\n\nPlease contact me to discuss sponsoring Lambda Robotics FTC #36789.`);const mail=`mailto:${recipient}?subject=${subject}&body=${body}`;window.location.href=mail;status.textContent=recipient?'Email draft opened. Please send it from your email app.':'Email draft opened. Enter Lambda’s team email as the recipient before sending.'}});
+
+// Partner modal. The contact section became a dialog so the page stops at four
+// sections; anything pointing at #contact opens it instead of scrolling.
+const modal=$('#contact');
+if(modal){
+ const card=modal.querySelector('.modal-card');
+ let lastFocus=null;
+ const focusable=()=>[...card.querySelectorAll('button,[href],input,select,textarea')].filter(el=>!el.disabled&&el.offsetParent!==null);
+ function openModal(tier){
+  lastFocus=document.activeElement;
+  modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.classList.add('locked');
+  const sel=$('#sponsorTier');
+  if(tier&&sel&&[...sel.options].some(o=>o.value===tier||o.text===tier))sel.value=tier;
+  const first=$('#company')||focusable()[0];
+  if(first)setTimeout(()=>first.focus(),60);
+ }
+ function closeModal(){
+  modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('locked');
+  if(lastFocus&&lastFocus.focus)lastFocus.focus();
+ }
+ modal.addEventListener('click',e=>{if(e.target.hasAttribute('data-close'))closeModal()});
+ addEventListener('keydown',e=>{
+  if(!modal.classList.contains('open'))return;
+  if(e.key==='Escape'){closeModal();return}
+  if(e.key!=='Tab')return;
+  const f=focusable();if(!f.length)return;
+  const first=f[0],last=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){last.focus();e.preventDefault()}
+  else if(!e.shiftKey&&document.activeElement===last){first.focus();e.preventDefault()}
+ });
+ // every existing route to the old contact section now opens the dialog
+ document.addEventListener('click',e=>{
+  const t=e.target.closest('[href="#contact"],[data-partner]');
+  if(!t)return;
+  e.preventDefault();
+  openModal(t.dataset.tier);
+ });
+ window.openPartnerModal=openModal;
+}
+
+const sponsorForm=$('#sponsorForm');sponsorForm.addEventListener('submit',async e=>{e.preventDefault();if(!sponsorForm.reportValidity())return;const data=Object.fromEntries(new FormData(sponsorForm));data.team='Lambda FTC 36789';delete data.consent;const status=$('#formStatus');status.textContent='Preparing inquiry…';if(cfg.inquiryEndpoint){try{const res=await fetch(cfg.inquiryEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});if(!res.ok)throw Error('Submission failed');status.textContent='Your inquiry was submitted. Thank you for contacting Lambda!';sponsorForm.reset()}catch(err){status.textContent='Submission failed. Please try again or contact us by email.'}}else{const recipient=(cfg.email||'').includes('REPLACE_')?'':cfg.email;const subject=encodeURIComponent('Lambda Robotics — Sponsorship Inquiry');const body=encodeURIComponent(`Company/contact: ${data.company}\nType: ${data.support}\nTier: ${data.tier}\nContact email: ${data.email}\n\nPlease contact me to discuss sponsoring Lambda Robotics FTC #36789.`);const mail=`mailto:${recipient}?subject=${subject}&body=${body}`;window.location.href=mail;status.textContent=recipient?'Email draft opened. Please send it from your email app.':'Email draft opened. Enter Lambda’s team email as the recipient before sending.';setTimeout(()=>{const m=$('#contact');if(m&&m.classList.contains('open'))m.querySelector('.modal-x').click()},1800)}});
 $('#newsletterForm').addEventListener('submit',async e=>{e.preventDefault();const email=$('#newsletterEmail').value.trim(),status=$('#newsletterStatus');if(!email)return;if(cfg.newsletterEndpoint){try{const res=await fetch(cfg.newsletterEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});if(!res.ok)throw Error();status.textContent='Subscription request received.';$('#newsletterForm').reset()}catch{status.textContent='Could not subscribe right now. Please try again later.'}}else{status.textContent='Newsletter subscription will be available soon. Add a newsletter endpoint in config.js.'}});
 $('#language').addEventListener('click',()=>{alert('English is live. Vietnamese translations are reserved for phase two; this control will switch languages once translations are added.')});
 })();

@@ -71,6 +71,18 @@ function plate(name,role,accent){
 // stagger the entrance once the grid scrolls in — variety from motion, not from size
 if(minds){const mo=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){minds.classList.add('in');mo.disconnect()}}),{threshold:.08});mo.observe(minds)}
 
+// Repeat the set until it is wide enough to cover any screen, then duplicate it once
+// so the CSS translateX(-50%) loop lands seamlessly. ponytail: fixed repeat count, not measured.
+function fillMarquee(el,items,render){if(!el||!items.length)return;
+ const base=Array.from({length:Math.ceil(9/items.length)},()=>items).flat();
+ el.innerHTML=[...base,...base].map(render).join('');
+ el.querySelectorAll('[aria-hidden="pending"]').forEach((n,i)=>n.setAttribute('aria-hidden',i>=base.length?'true':'false'))}
+fillMarquee($('#galleryTrack'),cfg.gallery||[],g=>`<figure class="shot" aria-hidden="pending"><div class="frame">${g.src?`<img src="${safe(g.src)}" alt="${safe(g.caption)}" loading="lazy"/>`:'<div class="shot-ph">\u03bb</div>'}</div><figcaption>${safe(g.caption)}</figcaption></figure>`);
+const sponsorLogo=s=>{const inner=s.logo?`<img src="${safe(s.logo)}" alt="${safe(s.name)} logo"/>`:`<span class="logo-ph"><b>${safe(s.name)}</b><i>PARTNER</i></span>`;
+ return s.url?`<a class="sponsor-logo" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer" aria-hidden="pending">${inner}</a>`:`<div class="sponsor-logo" aria-hidden="pending">${inner}</div>`};
+fillMarquee($('#sponsorTrack'),cfg.sponsors||[],sponsorLogo);
+fillMarquee($('#heroSponsorTrack'),cfg.sponsors||[],sponsorLogo);
+
 // Journey: a timeline you step through. One panel swaps in place, so the
 // section stays about a screen tall instead of scrolling through every card.
 const panel=$('#mpanel'),points=$('#journeyPoints'),railFill=$('#journeyRailFill'),counter=$('#journeyCounter');

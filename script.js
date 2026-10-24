@@ -60,15 +60,16 @@ function plate(name,role,accent){
  if(accent)body+=`<circle cx="${(16+r()*168).toFixed(1)}" cy="${(16+r()*168).toFixed(1)}" r="5" fill="${hot}"/>`;
  return `<svg class="mind-art" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>${g}</defs>${body}</svg>`;
 }
-const SPAN=['w2 h2','','','w2','','','h2','','w2',''];   // tiles a 4-column grid exactly, in reading order
 (cfg.members||[]).forEach((m,i)=>{
  const cell=document.createElement('article');
- cell.className=`mind ${SPAN[i%SPAN.length]}`.trim();
+ cell.className='mind';cell.style.setProperty('--i',i);
  cell.innerHTML=(m.photo?`<img class="mind-photo" src="${safe(m.photo)}" alt="Portrait of ${safe(m.name)}" loading="lazy"/>`:plate(m.name,m.role,i%3===0))+
   `<div class="mind-scrim"></div><span class="mind-n">${String(i+1).padStart(2,'0')}</span>`+
   `<div class="mind-meta"><div class="mind-name">${safe(m.name)}</div><span class="mind-role">${safe(m.role)}</span></div><span class="mind-rule"></span>`;
  minds.appendChild(cell);
 });
+// stagger the entrance once the grid scrolls in — variety from motion, not from size
+if(minds){const mo=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){minds.classList.add('in');mo.disconnect()}}),{threshold:.08});mo.observe(minds)}
 
 // Journey: a timeline you step through. One panel swaps in place, so the
 // section stays about a screen tall instead of scrolling through every card.

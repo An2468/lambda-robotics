@@ -260,11 +260,15 @@ const key=new THREE.DirectionalLight(0xffffff,.5);key.position.set(3.4,4.2,1.2);
 const rim=new THREE.DirectionalLight(0x9fb4d4,1.25);rim.position.set(-3.6,.6,-2.2);scene.add(rim);
 const pop=new THREE.PointLight(POP,7,9);pop.position.set(-2.2,-1.6,-1.8);scene.add(pop);  // warm kick from behind, not a spotlight on the face
 
-function gearShape(teeth,root,tip,bore,spokes){
- const sh=new THREE.Shape(),step=Math.PI*2/teeth;
+// Real gear geometry. One shared module m sets the tooth size for the whole
+// train; addendum is 1m above the pitch circle and dedendum 1.25m below, so a
+// tip has somewhere to go when it drops into the mating gear's valley.
+function gearShape(teeth,pitchR,m,bore,spokes){
+ const sh=new THREE.Shape(),step=Math.PI*2/teeth,tip=pitchR+m,valley=pitchR-1.25*m;
  for(let i=0;i<teeth;i++){
   const a=i*step;
-  [[0,root],[.16,tip],[.34,tip],[.5,root]].forEach(([f,r],k)=>{
+  // tooth spans the first half of the pitch, so its centre sits at 0.25 and the gap centre at 0.75
+  [[0,valley],[.10,tip],[.40,tip],[.50,valley]].forEach(([f,r],k)=>{
    const ang=a+step*f,x=Math.cos(ang)*r,y=Math.sin(ang)*r;
    (i===0&&k===0)?sh.moveTo(x,y):sh.lineTo(x,y);
   });
@@ -272,14 +276,14 @@ function gearShape(teeth,root,tip,bore,spokes){
  sh.closePath();
  const hole=new THREE.Path();hole.absarc(0,0,bore,0,Math.PI*2,true);sh.holes.push(hole);
  for(let i=0;i<spokes;i++){                      // lightening holes — reads as a machined part
-  const a=i/spokes*Math.PI*2,r=root*.58,rr=root*.17;
+  const a=i/spokes*Math.PI*2,r=valley*.58,rr=valley*.17;
   const h=new THREE.Path();h.absarc(Math.cos(a)*r,Math.sin(a)*r,rr,0,Math.PI*2,true);sh.holes.push(h);
  }
  return sh;
 }
-function gearMesh(teeth,root,mat,depth,spokes){
- const g=new THREE.ExtrudeGeometry(gearShape(teeth,root,root*1.17,root*.3,spokes),
-  {depth,bevelEnabled:true,bevelThickness:root*.035,bevelSize:root*.035,bevelSegments:2,curveSegments:10});
+function gearMesh(teeth,pitchR,m,mat,depth,spokes){
+ const g=new THREE.ExtrudeGeometry(gearShape(teeth,pitchR,m,pitchR*.3,spokes),
+  {depth,bevelEnabled:true,bevelThickness:m*.45,bevelSize:m*.45,bevelSegments:2,curveSegments:10});
  g.center();
  return new THREE.Mesh(g,mat);
 }
@@ -288,21 +292,44 @@ const chrome  =new THREE.MeshStandardMaterial({color:0xf2f6fb,metalness:1,roughn
 const graphite=new THREE.MeshStandardMaterial({color:0x2b3037,metalness:.92,roughness:.34,envMapIntensity:1.3});
 
 const rig=new THREE.Group();scene.add(rig);
-// pitch radii touch, so the teeth visibly drive one another
+const train=new THREE.Group();rig.add(train);
 const G=[
- {teeth:26,root:1.00,mat:anodised,depth:.2 ,spokes:5,pos:[0,0,0]},
- {teeth:17,root:.655,mat:chrome  ,depth:.17,spokes:4,pos:[1.72,.52,.02]},
- {teeth:13,root:.50 ,mat:graphite,depth:.15,spokes:0,pos:[1.4,-1.42,-.02]}
+ {teeth:26,r:1.00,mat:anodised,depth:.2 ,spokes:5,z:0},
+ {teeth:17,r:.655,mat:chrome  ,depth:.17,spokes:4,z:.02},
+ {teeth:13,r:.50 ,mat:graphite,depth:.15,spokes:0,z:-.02}
 ];
-const gears=G.map((d,i)=>{
- const m=gearMesh(d.teeth,d.root,d.mat,d.depth,d.spokes);
- m.position.set(...d.pos);
- m.userData={teeth:d.teeth,i};
- rig.add(m);return m;
+const MOD=2*G[0].r/G[0].teeth;                 // shared module — every gear uses it
+G.forEach(g=>g.step=Math.PI*2/g.teeth);
+
+// Centres sit exactly one pitch-radius sum apart, and each gear is phased so a
+// tooth of the driver lands in a gap of the driven one. Gear 3's direction is
+// snapped onto one of gear 2's tooth angles so all three mesh at once.
+const A12=.295, LAY23=-1.30;
+G[0].pos=[0,0];
+G[0].phase=A12-.25*G[0].step;
+G[1].phase=A12+Math.PI-.75*G[1].step;
+const d12=G[0].r+G[1].r, d23=G[1].r+G[2].r;
+G[1].pos=[Math.cos(A12)*d12,Math.sin(A12)*d12];
+const k=Math.round((LAY23-G[1].phase)/G[1].step-.25);
+const A23=G[1].phase+(k+.25)*G[1].step;
+G[2].pos=[G[1].pos[0]+Math.cos(A23)*d23, G[1].pos[1]+Math.sin(A23)*d23];
+G[2].phase=A23+Math.PI-.75*G[2].step;
+// every mesh reverses direction and scales by the tooth ratio
+G[0].rate=1; G[1].rate=-G[0].teeth/G[1].teeth; G[2].rate=-G[1].rate*G[1].teeth/G[2].teeth;
+
+const gears=G.map(d=>{
+ const mesh=gearMesh(d.teeth,d.r,MOD,d.mat,d.depth,d.spokes);
+ mesh.position.set(d.pos[0],d.pos[1],d.z);
+ mesh.userData=d;
+ train.add(mesh);return mesh;
 });
 // a shaft through the big gear, so it reads as assembled hardware
 const shaft=new THREE.Mesh(new THREE.CylinderGeometry(.13,.13,.9,24),chrome);
-shaft.rotation.x=Math.PI/2;rig.add(shaft);
+shaft.rotation.x=Math.PI/2;train.add(shaft);
+// centre the train on its own bounds so rig.position frames the whole cluster,
+// not gear one's axle
+{const b=new THREE.Box3().setFromObject(train),c=b.getCenter(new THREE.Vector3());
+ train.position.set(-c.x,-c.y,0);}
 
 const slow=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let w=0,h=0;
@@ -310,10 +337,10 @@ function size(){
  w=host.clientWidth;h=host.clientHeight;if(!w||!h)return;
  renderer.setSize(w,h,false);cam.aspect=w/h;
  const wide=w>1080;
- cam.position.set(0,0,wide?7.4:(w<760?8.6:7.8));
+ cam.position.set(0,0,wide?7.9:(w<760?10.4:8.6));
  cam.lookAt(0,0,0);
- rig.position.x=wide?1.55:.2;
- rig.position.y=wide?.1:-1.05;
+ rig.position.x=wide?1.62:.1;
+ rig.position.y=wide?0:-1.3;
  cam.updateProjectionMatrix();
 }
 size();addEventListener('resize',size,{passive:true});
@@ -348,12 +375,7 @@ function frame(now){
  rig.position.z=-boom*2.4;
  shaft.position.set(gears[0].position.x,gears[0].position.y,0);
 
- gears.forEach((g,i)=>{
-  // every mesh reverses direction and scales by the tooth ratio
-  const ratio=i===0?1:gears[0].userData.teeth/g.userData.teeth;
-  g.rotation.z=(i%2?-1:1)*spin*ratio+(i*.11);
-  g.material.opacity=1;
- });
+ gears.forEach(g=>{g.rotation.z=g.userData.phase+g.userData.rate*spin});
  renderer.render(scene,cam);
 }
 requestAnimationFrame(frame);

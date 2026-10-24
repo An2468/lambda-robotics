@@ -25,7 +25,7 @@ window.LAMBDA_CONFIG = {
   // about is the text on the sponsor card; url adds a "Learn more" link.
   sponsors: [
     {name:'OpenAI', logo:'assets/sponsors/openai.png', url:'https://openai.com', about:'The AI research and deployment company behind ChatGPT, on a mission to ensure artificial general intelligence benefits all of humanity.'},
-    {name:'LotusHacks', logo:'assets/sponsors/lotushacks.png', url:'', about:'A hackathon bringing together young builders and innovators in Vietnam.'},
+    {name:'LotusHacks', logo:'assets/sponsors/lotushacks.png', url:'https://lotushack.org', about:'A hackathon bringing together young builders and innovators in Vietnam.'},
     {name:'sixonefour labs', logo:'assets/sponsors/sixonefour-labs.png', url:'https://sixonefourlabs.com', about:'Proud sponsor of Lambda Robotics.'}
   ],
   members: [

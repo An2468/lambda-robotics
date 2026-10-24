@@ -31,7 +31,8 @@ function showBacker(i){
  if(i===backerOn||!backers[i])return;
  backerOn=i;const s=backers[i];
  [...backerRow.children].forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-pressed',String(j===i))});
- backerCard.innerHTML=`<div class="backer-mark" style="--d:0">${s.logo?`<img src="${safe(s.logo)}" alt="${safe(s.name)} logo"/>`:`<span class="ph">${safe(s.name)}</span>`}</div>`+
+ const mark=s.logo?`<img src="${safe(s.logo)}" alt="${safe(s.name)} logo"/>`:`<span class="ph">${safe(s.name)}</span>`;
+ backerCard.innerHTML=(s.url?`<a class="backer-mark" style="--d:0" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer">${mark}</a>`:`<div class="backer-mark" style="--d:0">${mark}</div>`)+
   `<div style="--d:1"><div class="backer-count">${String(i+1).padStart(2,'0')} / ${String(backers.length).padStart(2,'0')} \u00b7 SPONSOR</div><h3>${safe(s.name)}</h3>`+
   `${s.about?`<p>${safe(s.about)}</p>`:''}${s.url?`<a class="backer-link" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer">Learn more \u2197</a>`:''}</div>`;
 }

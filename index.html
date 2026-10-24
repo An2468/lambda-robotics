@@ -159,16 +159,21 @@ html{scroll-padding-top:70px}
 .hero-hint2{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);z-index:3;font:9px var(--mono);letter-spacing:.2em;color:#79808d;opacity:0;animation:fadeup .8s 2.2s forwards}
 
 /* ---------- Sponsor logos on the landing view ---------- */
-.hero-sponsors{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:17px 0;
+.hero-sponsors{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:20px 0;
  border-top:1px solid #ffffff14;background:#07080a99;backdrop-filter:blur(10px);
- display:grid;grid-template-columns:auto 1fr;align-items:center;gap:30px;opacity:0;animation:fadeup .9s 2.4s forwards}
-.hero-sponsors .lead{padding-left:max(5%,calc((100vw - 1500px)/2));font:9px var(--mono);letter-spacing:.18em;color:#6e7684;white-space:nowrap}
-.hero-sponsors .marquee{--speed:40s}
-.hero-sponsors .sponsor-logo{height:40px;opacity:.5}
-.hero-sponsors .logo-ph{padding:9px 16px;border-color:#ffffff24}
-.hero-sponsors .logo-ph b{font-size:16px}
-.hero-sponsors .logo-ph i{font-size:8px}
-@media(max-width:900px){.hero-sponsors .lead{display:none}.hero-sponsors{grid-template-columns:1fr;padding:13px 0}}
+ opacity:0;animation:fadeup .9s 2.4s forwards}
+.hero-sponsors .lead{position:absolute;left:28px;top:0;bottom:0;z-index:2;display:flex;align-items:center;
+ font:11px var(--mono);letter-spacing:.18em;color:#6e7684;white-space:nowrap;pointer-events:none}
+.hero-sponsors .marquee{--speed:40s;
+ -webkit-mask-image:linear-gradient(90deg,transparent 120px,#000 220px,#000 94%,transparent);
+ mask-image:linear-gradient(90deg,transparent 120px,#000 220px,#000 94%,transparent)}
+.hero-sponsors .logo-track{gap:84px}
+.hero-sponsors .sponsor-logo{height:48px;opacity:.5}
+.hero-sponsors .sponsor-logo img{max-height:41px;max-width:156px}
+.hero-sponsors .logo-ph{padding:11px 19px;border-color:#ffffff24}
+.hero-sponsors .logo-ph b{font-size:19px}
+.hero-sponsors .logo-ph i{font-size:10px}
+@media(max-width:900px){.hero-sponsors .lead{display:none}.hero-sponsors{padding:16px 0}.hero-sponsors .logo-track{gap:50px}.hero-sponsors .marquee{-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}}
 
 @media(max-width:1080px){.hud{display:none}.hero-stage{justify-content:flex-start;padding-top:17vh}
  .hero-vig{background:linear-gradient(180deg,#07080af2 4%,#07080ab3 30%,transparent 56%),radial-gradient(ellipse 60% 50% at 50% 60%,transparent 40%,#07080acc 100%)}}
@@ -373,7 +378,8 @@ html{scroll-padding-top:70px}
  background:radial-gradient(circle,#f4511e24,transparent 68%);pointer-events:none}
 .backer-card>*{opacity:0;transform:translateY(12px);animation:mIn .55s cubic-bezier(.2,.7,.3,1) forwards;animation-delay:calc(var(--d,0)*.08s)}
 .backer-mark{display:grid;place-items:center;min-height:90px}
-.backer-mark img{max-height:84px;max-width:min(100%,180px);width:auto;object-fit:contain}
+.backer-mark img{max-height:84px;max-width:min(100%,180px);width:auto;object-fit:contain;transition:transform .35s cubic-bezier(.2,.7,.3,1)}
+a.backer-mark:hover img{transform:scale(1.05)}
 .backer-mark .ph{font-size:clamp(24px,2.4vw,32px);font-weight:500;letter-spacing:-.06em;line-height:1;text-align:center;color:#eef0f3}
 .backer-count{font:9px var(--mono);letter-spacing:.14em;color:#848b96}
 .backer-card h3{font-size:clamp(20px,1.9vw,26px);font-weight:500;letter-spacing:-.05em;line-height:1.1;margin:10px 0 0}

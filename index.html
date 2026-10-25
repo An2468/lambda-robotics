@@ -57,7 +57,10 @@
 .sponsor-logo .logo-ph{display:flex;align-items:center;gap:12px;padding:14px 22px;border:1px solid #ffffff2e;border-radius:10px;white-space:nowrap}
 .sponsor-logo .logo-ph b{font-size:21px;font-weight:500;letter-spacing:-.02em}
 .sponsor-logo .logo-ph i{font-style:normal;font:9px var(--mono);letter-spacing:.14em;color:#8d929b}
-@media(max-width:620px){.nav .logo>span:last-child{display:none}.navright .lang{display:none}.navright .pill{white-space:nowrap}.shot{width:215px;height:300px}.gallery-strip{--speed:55s}.logo-track{gap:36px}}
+.sponsor-wall .wall-note{display:inline-block;margin-top:26px;font:11px var(--mono);letter-spacing:.08em;color:#878c96;text-transform:uppercase;border-bottom:1px solid #ffffff26;padding-bottom:3px;transition:color .3s,border-color .3s}
+.sponsor-wall .wall-note:hover{color:#fff;border-color:#ffffff8c}
+.footer .sponsor-wall{margin:0 0 48px;padding:24px 0 40px;border-top:0;border-bottom:1px solid #ffffff1f}
+@media(max-width:620px){.nav .logo>span:last-child{display:none}.navright .lang{display:none}.navright .pill{white-space:nowrap}.shot{width:215px;height:300px}.gallery-strip{--speed:55s}.logo-track{gap:36px}.sponsor-wall{margin-top:62px}}
 @media(prefers-reduced-motion:reduce){.marquee{overflow-x:auto}.marquee-track{animation:none}}
 
 /* Hero: type reads first, cube sits behind it as depth */
@@ -154,16 +157,21 @@ html{scroll-padding-top:70px}
 
 
 /* ---------- Sponsor logos on the landing view ---------- */
-.hero-sponsors{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:17px 0;
+.hero-sponsors{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:20px 0;
  border-top:1px solid #ffffff14;background:#07080a99;backdrop-filter:blur(10px);
- display:grid;grid-template-columns:auto 1fr;align-items:center;gap:30px;opacity:0;animation:fadeup .9s 2.4s forwards}
-.hero-sponsors .lead{padding-left:max(5%,calc((100vw - 1500px)/2));font:9px var(--mono);letter-spacing:.18em;color:#6e7684;white-space:nowrap}
-.hero-sponsors .marquee{--speed:40s}
-.hero-sponsors .sponsor-logo{height:40px;opacity:.5}
-.hero-sponsors .logo-ph{padding:9px 16px;border-color:#ffffff24}
-.hero-sponsors .logo-ph b{font-size:16px}
-.hero-sponsors .logo-ph i{font-size:8px}
-@media(max-width:900px){.hero-sponsors .lead{display:none}.hero-sponsors{grid-template-columns:1fr;padding:13px 0}}
+ opacity:0;animation:fadeup .9s 2.4s forwards}
+.hero-sponsors .lead{position:absolute;left:28px;top:0;bottom:0;z-index:2;display:flex;align-items:center;
+ font:11px var(--mono);letter-spacing:.18em;color:#6e7684;white-space:nowrap;pointer-events:none}
+.hero-sponsors .marquee{--speed:40s;
+ -webkit-mask-image:linear-gradient(90deg,transparent 120px,#000 220px,#000 94%,transparent);
+ mask-image:linear-gradient(90deg,transparent 120px,#000 220px,#000 94%,transparent)}
+.hero-sponsors .logo-track{gap:84px}
+.hero-sponsors .sponsor-logo{height:48px;opacity:.5}
+.hero-sponsors .sponsor-logo img{max-height:41px;max-width:156px}
+.hero-sponsors .logo-ph{padding:11px 19px;border-color:#ffffff24}
+.hero-sponsors .logo-ph b{font-size:19px}
+.hero-sponsors .logo-ph i{font-size:10px}
+@media(max-width:900px){.hero-sponsors .lead{display:none}.hero-sponsors{padding:16px 0}.hero-sponsors .logo-track{gap:50px}.hero-sponsors .marquee{-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}}
 
 @media(max-width:1080px){.hud{display:none}.hero-stage{justify-content:flex-start;padding-top:17vh}
  .hero-vig{background:linear-gradient(180deg,#07080af2 4%,#07080ab3 30%,transparent 56%),radial-gradient(ellipse 60% 50% at 50% 60%,transparent 40%,#07080acc 100%)}}
@@ -251,8 +259,6 @@ html{scroll-padding-top:70px}
 .mpanel[data-status="ACTIVE"] .m-tag{border-color:#17181b;background:#17181b;color:#eef0f2}
 .mpanel[data-status="ACTIVE"] .m-tag i{background:#9fe8b4;box-shadow:0 0 0 0 #9fe8b4aa;animation:ping 2.2s infinite}
 @keyframes ping{70%{box-shadow:0 0 0 7px #9fe8b400}100%{box-shadow:0 0 0 0 #9fe8b400}}
-.mpanel[data-status="UPCOMING"]{background:#d5d8dd}
-.mpanel[data-status="UPCOMING"] .m-date{color:#767b83}
 .m-ghost{position:absolute;right:26px;bottom:-30px;font-size:150px;font-weight:500;letter-spacing:-.09em;
  color:#0e10140d;line-height:1;pointer-events:none;animation:none;opacity:1;transform:none}
 @media(max-width:620px){
@@ -419,10 +425,6 @@ body.locked{overflow:hidden}
 
 
 
-@media(max-width:820px){
-    }
-@media(max-width:480px){}
-@media(prefers-reduced-motion:reduce){}
 
 /* ---- logo plates: dark marks stay legible on the dark bar ---- */
 .logo-plate{display:grid;place-items:center;width:100%;box-sizing:border-box;min-height:132px;
@@ -482,11 +484,55 @@ body.locked{overflow:hidden}
 .hero-sponsors .logo-plate.is-slot{border-style:solid;flex-direction:row;display:flex;align-items:center;gap:10px}
 .hero-sponsors .logo-plate.is-slot b{font-size:14px;color:#dfe3e9}
 .hero-sponsors .logo-plate.is-slot i{font-size:8px}
+
+/* Sponsors showcase: one feature card above a centred logo row.
+   Hovering, focusing or clicking a logo swaps the card to that sponsor. */
+.backers{background:#08090b;color:#f5f5f4;padding-bottom:130px}
+.backers .section-head p{color:#a6a9b0}
+.backer-card{position:relative;display:grid;grid-template-columns:minmax(150px,.8fr) 1.3fr;align-items:center;gap:34px;
+ width:60%;margin:80px auto 0;min-height:168px;padding:26px 32px;border:1px solid #ffffff1f;border-radius:12px;background:#101216;overflow:hidden}
+.backer-card:after{content:'';position:absolute;right:-50px;top:-50px;width:200px;height:200px;border-radius:50%;
+ background:radial-gradient(circle,#f4511e24,transparent 68%);pointer-events:none}
+.backer-card>*{opacity:0;transform:translateY(12px);animation:mIn .55s cubic-bezier(.2,.7,.3,1) forwards;animation-delay:calc(var(--d,0)*.08s)}
+.backer-mark{display:grid;place-items:center;min-height:90px}
+.backer-mark img{max-height:84px;max-width:min(100%,180px);width:auto;object-fit:contain;transition:transform .35s cubic-bezier(.2,.7,.3,1)}
+a.backer-mark:hover img{transform:scale(1.05)}
+.backer-mark .ph{font-size:clamp(24px,2.4vw,32px);font-weight:500;letter-spacing:-.06em;line-height:1;text-align:center;color:#eef0f3}
+.backer-count{font:9px var(--mono);letter-spacing:.14em;color:#848b96}
+.backer-card h3{font-size:clamp(20px,1.9vw,26px);font-weight:500;letter-spacing:-.05em;line-height:1.1;margin:10px 0 0}
+.backer-card p{max-width:400px;margin:10px 0 0;font-size:13px;line-height:1.6;color:#b9bec6}
+.backer-link{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding-bottom:3px;border-bottom:1px solid #f4511e55;
+ font:10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:#f4511e;transition:color .3s,border-color .3s}
+.backer-link:hover{color:#ff7a45;border-color:#ff7a45}
+.backer-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:18px 64px;margin-top:56px}
+.backer-logo{position:relative;display:grid;place-items:center;height:120px;padding:0 6px;border:0;background:none;color:#eef0f3;
+ transition:transform .35s cubic-bezier(.2,.7,.3,1)}
+.backer-logo:hover{transform:translateY(-3px)}
+.backer-logo:after{content:'';position:absolute;left:0;right:0;bottom:-4px;height:2px;background:#f4511e;transform:scaleX(0);
+ transition:transform .35s cubic-bezier(.2,.7,.3,1)}
+.backer-logo.on:after{transform:none}
+.backer-logo:focus-visible{outline:2px solid #f4511e;outline-offset:6px}
+.backer-logo img{max-height:102px;max-width:270px;width:auto;object-fit:contain}
+.backer-logo b{font-size:24px;font-weight:500;letter-spacing:-.04em;white-space:nowrap}
+@media(max-width:1200px){.backer-card{width:80%}}
+@media(max-width:900px){
+ .backer-card{width:100%;grid-template-columns:1fr;gap:18px;padding:26px 24px}
+ .backer-mark{min-height:70px;justify-items:start}
+ .backer-mark .ph{text-align:left}
+}
+@media(max-width:620px){
+ .backer-card{margin-top:56px}
+ .backer-row{gap:12px 36px}
+ .backer-logo{height:90px}
+ .backer-logo img{max-height:72px;max-width:min(190px,80vw)}
+ .backer-logo b{font-size:19px}
+}
+@media(prefers-reduced-motion:reduce){.backer-card>*{animation:none;opacity:1;transform:none}}
 </style><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script><script src="config.js" defer></script><script src="script.js" defer></script>
 </head><body>
 <div class="grain"></div><div class="cursor-glow" id="glow"></div><main class="site">
-<header class="nav" aria-label="Main navigation"><a href="#home" class="logo"><span class="logo-mark">λ</span>LAMBDA</a><nav class="navlinks"><a href="#about">ABOUT</a><a href="#team">TEAM</a><a href="#build">BUILD</a><a href="#partners">PARTNERS</a><div class="navticker" aria-hidden="true"><span id="navTick">FTC #36789 · 2026/2027 SEASON · BUILDING NOW</span></div></nav><div class="navright"><button class="lang" id="language" aria-label="Change language">EN / VI</button><a class="pill" href="#contact">BECOME A PARTNER ↗</a><button class="menu-toggle" id="menuButton" aria-label="Toggle menu">☰</button></div></header>
-<div class="mobile-menu" id="mobileMenu"><a href="#about">ABOUT</a><a href="#team">TEAM</a><a href="#build">BUILD</a><a href="#partners">PARTNERS</a><a href="#contact">CONTACT</a></div>
+<header class="nav" aria-label="Main navigation"><a href="#home" class="logo"><span class="logo-mark">λ</span>LAMBDA</a><nav class="navlinks"><a href="#about">ABOUT</a><a href="#team">TEAM</a><a href="#build">BUILD</a><a href="#sponsors">SPONSORS</a><a href="#partners">PARTNER</a><div class="navticker" aria-hidden="true"><span id="navTick">FTC #36789 · 2026/2027 SEASON · BUILDING NOW</span></div></nav><div class="navright"><button class="lang" id="language" aria-label="Change language">EN / VI</button><a class="pill" href="#contact">BECOME A PARTNER ↗</a><button class="menu-toggle" id="menuButton" aria-label="Toggle menu">☰</button></div></header>
+<div class="mobile-menu" id="mobileMenu"><a href="#about">ABOUT</a><a href="#team">TEAM</a><a href="#build">BUILD</a><a href="#sponsors">SPONSORS</a><a href="#partners">PARTNER</a><a href="#contact">CONTACT</a></div>
 <section class="hero" id="home"><div class="hero-grid"></div><div id="stage" aria-label="Interactive 3D model of our robot. Drag to rotate."></div><div class="hero-vig"></div>
 <div class="hero-stage"><div class="hero-copy">
 <h1 class="hero-title" aria-label="Lambda Robotics"><span class="hl"><span>LAMBDA</span></span><span class="hl"><span>ROBOTICS.</span></span></h1>
@@ -510,7 +556,8 @@ body.locked{overflow:hidden}
 
 <section class="section journey" id="build"><div class="section-kicker reveal">03 / THE BUILD</div><div class="section-head reveal"><h2 class="giant">IN THE<br>MAKING.</h2><p style="color:#535a63">Great engineering is an ongoing process. Follow our team's experiences, prototypes and next milestones.</p></div><div class="journey-dashboard reveal"><div class="journey-label"><span>OUR STORY / SCROLL THROUGH IT</span><span id="journeyCounter" aria-live="polite">01 — 04</span></div><div class="journey-rail" id="journeyRail" role="group" aria-label="Jump to a milestone"><div class="journey-rail-fill" id="journeyRailFill"></div><div class="journey-points" id="journeyPoints"></div></div></div><div class="journey-nav"><span>STEP THROUGH THE TIMELINE — CLICK A POINT OR USE ← →</span><div class="timeline-controls"><button class="circle-btn" id="timelinePrev" aria-label="Previous milestone">←</button><button class="circle-btn" id="timelineNext" aria-label="Next milestone">→</button></div></div><div class="mpanel" id="mpanel" tabindex="0" aria-live="polite" aria-label="Milestone detail"></div><div class="shots-band reveal"><h3>BEHIND THE BUILD.</h3><p>Prototypes, late builds, and the moments in between.</p></div><div class="marquee full-bleed gallery-strip reveal" tabindex="0" aria-label="Team photo gallery, scrolls automatically"><div class="marquee-track gallery-track" id="galleryTrack"></div></div><div class="event-strip reveal"><h3>WHAT'S NEXT? ↗</h3><p>Robot testing, upcoming FTC events and team activities will appear here once confirmed. <strong>Calendar dates are placeholders until Lambda publishes its official schedule.</strong></p></div></section>
 
-<section class="section sponsors" id="partners"><div class="section-kicker reveal">04 / OUR PARTNERS</div><h2 class="giant reveal">HELP US<br>GO <span style="color:#697180">FURTHER.</span></h2><p class="sponsor-lead reveal">We're an independent, self-funded team with a shared passion for engineering. Help us bring our designs to life and take the next step in our FTC journey.</p><div class="tier-block"><div class="eyebrow" style="margin-bottom:6px">FIVE WAYS TO PARTNER · EACH ONE INCLUDES THE LAST</div><div class="tier-rail" id="tierRail" role="tablist" aria-label="Partnership levels"></div><div class="tier-nav2"><div class="tier-dots" id="tierDots"></div><span style="font:10px var(--mono);letter-spacing:.12em;color:#767d88">SWIPE OR PICK A LEVEL</span></div></div></div><div class="fund-row"><span class="fund-lab">YOUR SUPPORT BUYS</span><div class="fund-list"><span>Robot hardware</span><span>Fabrication</span><span>Equipment</span><span>Competition fees</span><span>Travel</span><span>Outreach</span></div></div></section>
+<section class="section backers" id="sponsors"><div class="section-kicker reveal">04 / OUR SPONSORS</div><div class="section-head reveal"><h2 class="giant">OUR<br>SPONSORS.</h2><p>The companies and organisations that make Lambda's season possible. Pick a logo to learn more about each one.</p></div><div class="backer-card reveal" id="backerCard" aria-live="polite"></div><div class="backer-row reveal" id="backerRow" role="group" aria-label="Sponsors"></div></section>
+<section class="section sponsors" id="partners"><div class="section-kicker reveal">05 / PARTNER WITH US</div><h2 class="giant reveal">HELP US<br>GO <span style="color:#697180">FURTHER.</span></h2><p class="sponsor-lead reveal">We're an independent, self-funded team with a shared passion for engineering. Help us bring our designs to life and take the next step in our FTC journey.</p><div class="tier-block"><div class="eyebrow" style="margin-bottom:6px">FIVE WAYS TO PARTNER · EACH ONE INCLUDES THE LAST</div><div class="tier-rail" id="tierRail" role="tablist" aria-label="Partnership levels"></div><div class="tier-nav2"><div class="tier-dots" id="tierDots"></div><span style="font:10px var(--mono);letter-spacing:.12em;color:#767d88">SWIPE OR PICK A LEVEL</span></div></div></div><div class="fund-row"><span class="fund-lab">YOUR SUPPORT BUYS</span><div class="fund-list"><span>Robot hardware</span><span>Fabrication</span><span>Equipment</span><span>Competition fees</span><span>Travel</span><span>Outreach</span></div></div></section>
 
-<div class="modal" id="contact" aria-hidden="true"><div class="modal-scrim" data-close></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-x" data-close aria-label="Close">×</button><div class="modal-grid"><div class="modal-side"><div class="eyebrow">BECOME A PARTNER</div><h2 class="modal-head" id="modalTitle">LET'S BUILD<br><span>TOGETHER.</span></h2><div class="contact-info"><h3>Join our journey as a founding partner.</h3><p>Whether you can offer financial support, materials, tools or technical expertise, we'd love to start a conversation. Tell us how you'd like to help; we'll reach out by email.</p><p class="mono" style="font-size:11px">ONLY FOUR QUICK FIELDS · NO PAYMENT REQUIRED</p><p>Follow our progress:<br><a href="#" id="insta" target="_blank" rel="noopener noreferrer"><u>Instagram ↗</u></a> &nbsp; <a href="#" id="tiktok" target="_blank" rel="noopener noreferrer"><u>TikTok ↗</u></a></p></div></div><form class="contact-form" id="sponsorForm"><div class="eyebrow" style="color:#4c535c">BECOME A LAMBDA PARTNER / 01—04</div><label for="company">01 / COMPANY OR CONTACT NAME</label><input id="company" name="company" type="text" placeholder="Company or contact name" required maxlength="120"/><label for="support">02 / HOW WOULD YOU LIKE TO SUPPORT US?</label><select id="support" name="support"><option>Financial sponsorship</option><option>Equipment or materials</option><option>Engineering / technical mentorship</option><option>Not sure yet</option></select><label for="sponsorTier">03 / SPONSORSHIP TIER</label><select id="sponsorTier" name="tier"><option>Not sure yet</option><option>Supporter</option><option>Bronze</option><option>Silver</option><option>Gold</option><option>Platinum</option></select><label for="email">04 / YOUR EMAIL ADDRESS</label><input type="email" id="email" name="email" placeholder="you@company.com" required maxlength="254"/><label style="display:flex;align-items:flex-start;gap:10px;text-transform:none;letter-spacing:normal;line-height:1.5"><input type="checkbox" name="consent" required style="width:17px;height:17px;flex:none;margin:0"/>I agree to be contacted by Lambda about this inquiry.</label><button type="submit" class="submit"><span>SEND PARTNERSHIP INQUIRY</span><span>↗</span></button><div class="form-status" id="formStatus" role="status"></div><p class="form-note">If a secure form endpoint hasn't been configured, this button will open a draft email for you to send. It won't falsely claim that a message was submitted.</p></form></div></div></div><footer class="footer"><div class="footer-links"><span>FTC TEAM #36789</span><span>INDEPENDENT STUDENT ROBOTICS TEAM</span><a href="#home">BACK TO TOP ↑</a></div><div class="footer-brand">LAMBDA.</div><div class="newsletter"><div><label>NOTES FROM THE WORKSHOP.</label><p style="font-size:12px;color:#626971">Occasional updates about our build and team milestones.</p></div><form id="newsletterForm"><input type="email" id="newsletterEmail" placeholder="YOUR EMAIL ADDRESS" aria-label="Newsletter email" required/><button type="submit" aria-label="Subscribe">↗</button></form></div><p id="newsletterStatus" style="font-size:12px" role="status"></p><p id="newsletterStatus" style="font-size:12px" role="status"></p><div class="foot-bottom"><span>© <span id="year"></span> LAMBDA ROBOTICS</span><span>BUILT TO BUILD BETTER.</span><span>HO CHI MINH CITY, VIETNAM</span></div></footer>
+<div class="modal" id="contact" aria-hidden="true"><div class="modal-scrim" data-close></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-x" data-close aria-label="Close">×</button><div class="modal-grid"><div class="modal-side"><div class="eyebrow">BECOME A PARTNER</div><h2 class="modal-head" id="modalTitle">LET'S BUILD<br><span>TOGETHER.</span></h2><div class="contact-info"><h3>Join our journey as a founding partner.</h3><p>Whether you can offer financial support, materials, tools or technical expertise, we'd love to start a conversation. Tell us how you'd like to help; we'll reach out by email.</p><p class="mono" style="font-size:11px">ONLY FOUR QUICK FIELDS · NO PAYMENT REQUIRED</p><p>Follow our progress:<br><a href="#" id="insta" target="_blank" rel="noopener noreferrer"><u>Instagram ↗</u></a> &nbsp; <a href="#" id="tiktok" target="_blank" rel="noopener noreferrer"><u>TikTok ↗</u></a></p></div></div><form class="contact-form" id="sponsorForm"><div class="eyebrow" style="color:#4c535c">BECOME A LAMBDA PARTNER / 01—04</div><label for="company">01 / COMPANY OR CONTACT NAME</label><input id="company" name="company" type="text" placeholder="Company or contact name" required maxlength="120"/><label for="support">02 / HOW WOULD YOU LIKE TO SUPPORT US?</label><select id="support" name="support"><option>Financial sponsorship</option><option>Equipment or materials</option><option>Engineering / technical mentorship</option><option>Not sure yet</option></select><label for="sponsorTier">03 / SPONSORSHIP TIER</label><select id="sponsorTier" name="tier"><option>Not sure yet</option><option>Supporter</option><option>Bronze</option><option>Silver</option><option>Gold</option><option>Platinum</option></select><label for="email">04 / YOUR EMAIL ADDRESS</label><input type="email" id="email" name="email" placeholder="you@company.com" required maxlength="254"/><label style="display:flex;align-items:flex-start;gap:10px;text-transform:none;letter-spacing:normal;line-height:1.5"><input type="checkbox" name="consent" required style="width:17px;height:17px;flex:none;margin:0"/>I agree to be contacted by Lambda about this inquiry.</label><button type="submit" class="submit"><span>SEND PARTNERSHIP INQUIRY</span><span>↗</span></button><div class="form-status" id="formStatus" role="status"></div><p class="form-note">If a secure form endpoint hasn't been configured, this button will open a draft email for you to send. It won't falsely claim that a message was submitted.</p></form></div></div></div><footer class="footer"><div class="sponsor-wall reveal"><div class="eyebrow">BACKED BY</div><div class="marquee logo-strip" tabindex="0" aria-label="Our sponsors"><div class="marquee-track logo-track" id="sponsorTrack"></div></div><div class="footer-links"><span>FTC TEAM #36789</span><span>INDEPENDENT STUDENT ROBOTICS TEAM</span><a href="#home">BACK TO TOP ↑</a></div><div class="footer-brand">LAMBDA.</div><div class="newsletter"><div><label>NOTES FROM THE WORKSHOP.</label><p style="font-size:12px;color:#626971">Occasional updates about our build and team milestones.</p></div><form id="newsletterForm"><input type="email" id="newsletterEmail" placeholder="YOUR EMAIL ADDRESS" aria-label="Newsletter email" required/><button type="submit" aria-label="Subscribe">↗</button></form></div><p id="newsletterStatus" style="font-size:12px" role="status"></p><p id="newsletterStatus" style="font-size:12px" role="status"></p><div class="foot-bottom"><span>© <span id="year"></span> LAMBDA ROBOTICS</span><span>BUILT TO BUILD BETTER.</span><span>HO CHI MINH CITY, VIETNAM</span></div></footer>
 </main></body></html>

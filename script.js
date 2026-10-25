@@ -83,7 +83,28 @@ const sponsorLogo=s=>{
   ? `<span class="logo-plate"><img src="${safe(s.logo)}" alt="${safe(s.name)} logo" loading="lazy"/></span>`
   : `<span class="logo-plate is-slot"><b>${safe(s.name)}</b><i>PARTNER</i></span>`;
  return s.url?`<a class="sponsor-logo" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer" aria-label="${safe(s.name)}" aria-hidden="pending">${inner}</a>`:`<div class="sponsor-logo" aria-hidden="pending">${inner}</div>`};
+fillMarquee($('#sponsorTrack'),cfg.sponsors||[],sponsorLogo);   // footer wall
 fillMarquee($('#heroSponsorTrack'),cfg.sponsors||[],sponsorLogo);
+// Sponsor showcase: the card above the logo row shows whichever sponsor is picked.
+const backerCard=$('#backerCard'),backerRow=$('#backerRow'),backers=cfg.sponsors||[];
+let backerOn=-1;
+function showBacker(i){
+ if(i===backerOn||!backers[i])return;
+ backerOn=i;const s=backers[i];
+ [...backerRow.children].forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-pressed',String(j===i))});
+ const mark=s.logo?`<img src="${safe(s.logo)}" alt="${safe(s.name)} logo"/>`:`<span class="ph">${safe(s.name)}</span>`;
+ backerCard.innerHTML=(s.url?`<a class="backer-mark" style="--d:0" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer">${mark}</a>`:`<div class="backer-mark" style="--d:0">${mark}</div>`)+
+  `<div style="--d:1"><div class="backer-count">${String(i+1).padStart(2,'0')} / ${String(backers.length).padStart(2,'0')} \u00b7 SPONSOR</div><h3>${safe(s.name)}</h3>`+
+  `${s.about?`<p>${safe(s.about)}</p>`:''}${s.url?`<a class="backer-link" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer">Learn more \u2197</a>`:''}</div>`;
+}
+backers.forEach((s,i)=>{
+ const b=document.createElement('button');b.type='button';b.className='backer-logo';
+ b.setAttribute('aria-label',`Show ${s.name}`);
+ b.innerHTML=s.logo?`<img src="${safe(s.logo)}" alt=""/>`:`<b>${safe(s.name)}</b>`;
+ ['click','mouseenter','focus'].forEach(ev=>b.addEventListener(ev,()=>showBacker(i)));
+ backerRow.appendChild(b);
+});
+if(backers.length)showBacker(0);else $('#sponsors').hidden=true;
 
 // Journey: a timeline you step through. One panel swaps in place, so the
 // section stays about a screen tall instead of scrolling through every card.
@@ -229,7 +250,7 @@ if(draft&&!reduced){let praf=0,tx=0,ty=0;
 // Nav rail highlights whichever section fills the viewport.
 const navLinks=$$('.navlinks a[href^="#"]');
 const spy=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;
- navLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
+ navLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id||a.dataset.also===e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
 $$('section[id]').forEach(sec=>spy.observe(sec));
 const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.12});$$('.reveal').forEach(x=>observer.observe(x));
 

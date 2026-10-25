@@ -21,10 +21,12 @@ window.LAMBDA_CONFIG = {
     {src:'', caption:'Practice field'}
   ],
   // Sponsors: set logo to a path in assets/ when you have the real file.
+  // White or light logos on a transparent background (SVG/PNG) look best on the dark Sponsors section.
+  // about is the text on the sponsor card; url adds a "Learn more" link.
   sponsors: [
-    {name:'Sponsor One', logo:'', url:''},
-    {name:'Sponsor Two', logo:'', url:''},
-    {name:'Sponsor Three', logo:'', url:''}
+    {name:'OpenAI', logo:'assets/sponsors/openai.png', url:'https://openai.com', about:'The AI research and deployment company behind ChatGPT, on a mission to ensure artificial general intelligence benefits all of humanity.'},
+    {name:'LotusHacks', logo:'assets/sponsors/lotushacks.png', url:'https://lotushack.org', about:'A hackathon bringing together young builders and innovators in Vietnam.'},
+    {name:'sixonefour labs', logo:'assets/sponsors/sixonefour-labs.png', url:'https://sixonefourlabs.com', about:'Proud sponsor of Lambda Robotics.'}
   ],
   members: [
     {name:'Member 01',role:'Team Lead',photo:''},
@@ -39,10 +41,11 @@ window.LAMBDA_CONFIG = {
     {name:'Member 10',role:'Operations',photo:''}
   ],
   milestones: [
-    {index:'01',date:'2026',label:'THE BEGINNING',title:'An independent team takes shape.',body:'Ten students unite around a shared interest in robotics, engineering and competition.',status:'COMPLETE'},
-    {index:'02',date:'2026',label:'EXPERIENCE',title:'Experience beyond the arena.',body:'Our members bring experience from robotics projects and hackathon competitions.',status:'COMPLETE'},
-    {index:'03',date:'NOW',label:'IN PROGRESS',title:'Ideas become prototypes.',body:'We are prototyping our first FTC robot, refining each design through testing and iteration.',status:'ACTIVE'},
-    {index:'04',date:'TBD',label:'NEXT UP',title:'From workshop to competition.',body:'Upcoming testing, events and competition details will be shared as soon as they are confirmed.',status:'UPCOMING'}
+    {index:'01',date:'MAY 2026',label:'THE BEGINNING',title:'An independent team takes shape.',body:'Ten students unite around a shared interest in robotics, engineering and competition.',status:'COMPLETE'},
+    {index:'02',date:'SEP 2026',label:'KICKOFF',title:'BioBuzz season started.',body:'A brand-new game is revealed. We break down the rules, study the field and map out our strategy for the 2026–2027 season.',status:'COMPLETE'},
+    {index:'03',date:'SEP–JAN',label:'BUILD SEASON',title:'Build time!',body:'From September to January, ideas turn into hardware: CAD models, rapid prototypes, test drives, and rebuild after rebuild until every mechanism earns its place on the robot.',status:'ACTIVE'},
+    {index:'04',date:'JAN 2027',label:'SCRIMMAGE',title:'Lambda Robotics Scrimmage.',body:'We host the first-ever FTC scrimmage in Southern Vietnam, bringing teams together to test their robots before the championship.',status:'UPCOMING'},
+    {index:'05',date:'FEB 2027',label:'NATIONALS',title:'Vietnam Championship.',body:'Competing on the national stage against the best FTC teams in Vietnam.',status:'UPCOMING'}
   ],
   tiers: [
     {name:'Supporter',amount:'TBD',note:'Make a difference',benefits:['Recognition on our website','Team thank-you message']},

@@ -83,13 +83,6 @@ const sponsorLogo=s=>{
   ? `<span class="logo-plate"><img src="${safe(s.logo)}" alt="${safe(s.name)} logo" loading="lazy"/></span>`
   : `<span class="logo-plate is-slot"><b>${safe(s.name)}</b><i>PARTNER</i></span>`;
  return s.url?`<a class="sponsor-logo" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer" aria-label="${safe(s.name)}" aria-hidden="pending">${inner}</a>`:`<div class="sponsor-logo" aria-hidden="pending">${inner}</div>`};
-const partners=cfg.sponsors||[],partnerTrack=$('#sponsorTrack');
-if(partnerTrack&&partners.length&&partners.length<=5){
- partnerTrack.closest('.marquee').classList.add('is-static');
- partnerTrack.innerHTML=partners.map(sponsorLogo).join('');
- partnerTrack.querySelectorAll('[aria-hidden="pending"]').forEach(n=>n.removeAttribute('aria-hidden'));
-}else fillMarquee(partnerTrack,partners,sponsorLogo);
-// condense the wall once it pins, so it never crowds the ladder
 fillMarquee($('#heroSponsorTrack'),cfg.sponsors||[],sponsorLogo);
 
 // Journey: a timeline you step through. One panel swaps in place, so the

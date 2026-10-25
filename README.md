@@ -28,10 +28,7 @@ The page is four sections plus a dialog. Each presents itself differently on pur
 Nobody has a portrait yet, so each member's tile draws a plate generated from their name — gear rings, bolt circles, traces and hatching, seeded by a hash so the same name always produces the same plate. Set `photo` on a member in `config.js` and the photo covers the plate instead; you can mix the two while photos trickle in. Every cell is identical in size on purpose — ten equals, no feature tile.
 
 ## Partner logos
-Put files in `assets/` and point each sponsor's `logo` at them in `config.js`. SVG is best; otherwise a transparent PNG at least 600px wide. Logos render on a light plate (so dark marks stay legible on the dark section) and scale to fit, up to 84px tall in the partners section and 24px in the hero ticker. Until a `logo` is set the plate shows a dashed slot with the sponsor's name.
-
-## Partner wall
-With five or fewer entries in `sponsors`, the wall renders a row of large logo plates instead of a marquee — a ticker of three just loops the same names. Above 820px the wall is sticky, so the partners stay on screen while the tier ladder is read. Past five sponsors it falls back to the scrolling marquee.
+Put files in `assets/` and point each sponsor's `logo` at them in `config.js`. SVG is best; otherwise a transparent PNG at least 600px wide. Logos render on a light plate (so dark marks stay legible) and scale to fit, up to 24px tall in the hero ticker. Until a `logo` is set the plate shows a dashed slot with the sponsor's name.
 
 ## Partnership levels
 Tiers render as a selectable carousel: one card per level, the selected card lifting into a light treatment, the rest muted. Each card lists everything that level includes, with the benefits it adds over the level below marked in accent. No prices are shown — `amount` in `config.js` is not rendered. Clicking the CTA on the selected card opens the partner dialog with that tier filled in.

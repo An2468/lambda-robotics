@@ -2,7 +2,7 @@
 window.LAMBDA_CONFIG = {
   teamNumber: '36789',
   season: '2026 / 2027',
-  email: 'REPLACE_WITH_TEAM_EMAIL@example.com',
+  email: 'teamlambdarobotics@gmail.com',
   instagram: '#', // Replace with Instagram profile URL
   tiktok: '#', // Replace with TikTok profile URL
   inquiryEndpoint: '', // Optional: HTTPS endpoint accepting POST JSON; leave blank for email-draft fallback
@@ -47,11 +47,35 @@ window.LAMBDA_CONFIG = {
     {index:'04',date:'JAN 2027',label:'SCRIMMAGE',title:'Lambda Robotics Scrimmage.',body:'We host the first-ever FTC scrimmage in Southern Vietnam, bringing teams together to test their robots before the championship.',status:'UPCOMING'},
     {index:'05',date:'FEB 2027',label:'NATIONALS',title:'Vietnam Championship.',body:'Competing on the national stage against the best FTC teams in Vietnam.',status:'UPCOMING'}
   ],
+  // Official tiers from the 2026 sponsorship packet. Cumulative: each tier
+  // includes everything below it. `amount` is stored but NOT rendered.
   tiers: [
-    {name:'Supporter',amount:'TBD',note:'Make a difference',benefits:['Recognition on our website','Team thank-you message']},
-    {name:'Bronze',amount:'TBD',note:'Back the build',benefits:['Supporter recognition','Sponsor logo on website','Social media thank-you']},
-    {name:'Silver',amount:'TBD',note:'Help us grow',benefits:['Bronze benefits','Enhanced sponsor visibility','Recognition in season updates']},
-    {name:'Gold',amount:'TBD',note:'Power the journey',benefits:['Silver benefits','Priority website placement','Potential recognition on team materials']},
-    {name:'Platinum',amount:'TBD',note:'Build with us',benefits:['Gold benefits','Custom partnership discussion','Potential robot demonstration']}
-  ]
+    {name:'Bronze',amount:'$500',note:'Get your name on the team',benefits:[
+      'Social media feature',
+      'Company logo on team uniform and event banner',
+      'Company logo on our website']},
+    {name:'Silver',amount:'$1,000',note:'Ride along on the robot',benefits:[
+      'Company logo on the robot',
+      'Individual social media post',
+      'Special thank-you on the team standee']},
+    {name:'Gold',amount:'$2,000',note:'Show up at competition',benefits:[
+      'Promotional video played at our booth (2 min)',
+      'Distribute your product at our booth',
+      'Exclusive banner / standee at team events and our booth']},
+    {name:'Diamond',amount:'$4,000',note:'Front and centre, all season',benefits:[
+      'Company logo on team giveaway merchandise',
+      'Primary sponsor placement across all team assets',
+      'Special recognition across every channel we publish on',
+      'Team appearance with the robot and a live presentation at your event']}
+  ],
+  // Shown under the tiers; these are offers, not levels.
+  tierFootnotes: [
+    'Logo size and placement scale with tier \u2014 higher tiers get priority positioning.',
+    'Promotional video length: 2 minutes at Gold, 3 minutes at Diamond.',
+    'Team appearances are subject to scheduling, with priority for events in Vietnam.'
+  ],
+  extras: [
+    {name:'Presenting Sponsor',body:'The team competes as Lambda Robotics presented by your company for the whole season. One partner only \u2014 get in touch to discuss it.'},
+    {name:'Individual Contribution',body:'Any amount helps. Individual gifts go straight to robot parts, tools, competition registration and travel.'}
+  ],
 };

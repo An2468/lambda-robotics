@@ -226,7 +226,17 @@ rail.addEventListener('keydown',e=>{
  if(e.key==='ArrowRight'){pick(picked+1,true);e.preventDefault()}
  if(e.key==='ArrowLeft'){pick(picked-1,true);e.preventDefault()}
 });
-pick(2,false);
+pick(tiers.length>2?2:0,false);
+
+// Packet footnotes, and the two offers that sit outside the tier ladder.
+const tierNotes=$('#tierNotes');
+if(tierNotes&&(cfg.tierFootnotes||[]).length)
+ tierNotes.innerHTML=cfg.tierFootnotes.map(t=>`<li>${safe(t)}</li>`).join('');
+const extrasEl=$('#extras');
+if(extrasEl&&(cfg.extras||[]).length)
+ extrasEl.innerHTML=cfg.extras.map(e=>
+  `<div class="extra"><h4>${safe(e.name)}</h4><p>${safe(e.body)}</p><a href="#contact" data-tier="${safe(e.name)}">Talk to us \u2197</a></div>`).join('');
+
 const mobile=$('#mobileMenu');$('#menuButton').addEventListener('click',()=>{mobile.classList.toggle('open');$('#menuButton').setAttribute('aria-expanded',String(mobile.classList.contains('open')))});mobile.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mobile.classList.remove('open')));
 const instagram=$('#insta'),tiktok=$('#tiktok');if(cfg.instagram&&cfg.instagram!=='#')instagram.href=cfg.instagram;else instagram.addEventListener('click',e=>{e.preventDefault();alert('Add your Instagram URL in config.js')});if(cfg.tiktok&&cfg.tiktok!=='#')tiktok.href=cfg.tiktok;else tiktok.addEventListener('click',e=>{e.preventDefault();alert('Add your TikTok URL in config.js')});
 // Canvas-free CSS 3D model. A real robot photograph can replace the first cube.

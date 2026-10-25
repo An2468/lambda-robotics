@@ -30,6 +30,11 @@ Nobody has a portrait yet, so each member's tile draws a plate generated from th
 ## Partner logos
 Put files in `assets/` and point each sponsor's `logo` at them in `config.js`. SVG is best; otherwise a transparent PNG at least 600px wide. Logos render on a light plate (so dark marks stay legible) and scale to fit, up to 24px tall in the hero ticker. Until a `logo` is set the plate shows a dashed slot with the sponsor's name.
 
+## Sponsorship tiers
+Tiers come from the 2026 sponsorship packet: Bronze / Silver / Gold / Diamond, cumulative. `amount` holds the real figures ($500 / $1,000 / $2,000 / $4,000) but is deliberately not rendered — delete that rule in the carousel renderer if you want prices on the page. `tierFootnotes` and `extras` (Presenting Sponsor, Individual Contribution) render under the carousel.
+
+NOTE: the packet's tier table flattens to a plain benefit list when extracted, so which benefit belongs to which tier is an inference, guided by the footnotes (video starts at Gold, appearances at Diamond). Check it against the packet before sending the link to a sponsor.
+
 ## Partnership levels
 Tiers render as a selectable carousel: one card per level, the selected card lifting into a light treatment, the rest muted. Each card lists everything that level includes, with the benefits it adds over the level below marked in accent. No prices are shown — `amount` in `config.js` is not rendered. Clicking the CTA on the selected card opens the partner dialog with that tier filled in.
 

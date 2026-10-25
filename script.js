@@ -78,10 +78,11 @@ function fillMarquee(el,items,render){if(!el||!items.length)return;
  el.innerHTML=[...base,...base].map(render).join('');
  el.querySelectorAll('[aria-hidden="pending"]').forEach((n,i)=>n.setAttribute('aria-hidden',i>=base.length?'true':'false'))}
 fillMarquee($('#galleryTrack'),cfg.gallery||[],g=>`<figure class="shot" aria-hidden="pending"><div class="frame">${g.src?`<img src="${safe(g.src)}" alt="${safe(g.caption)}" loading="lazy"/>`:'<div class="shot-ph">\u03bb</div>'}</div><figcaption>${safe(g.caption)}</figcaption></figure>`);
-const sponsorLogo=s=>{const inner=s.logo?`<img src="${safe(s.logo)}" alt="${safe(s.name)} logo"/>`:`<span class="logo-ph"><b>${safe(s.name)}</b><i>PARTNER</i></span>`;
- return s.url?`<a class="sponsor-logo" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer" aria-hidden="pending">${inner}</a>`:`<div class="sponsor-logo" aria-hidden="pending">${inner}</div>`};
-// A handful of partners reads better as a row of plates than a ticker, and a
-// ticker of three would just loop the same names past the tiers.
+const sponsorLogo=s=>{
+ const inner=s.logo
+  ? `<span class="logo-plate"><img src="${safe(s.logo)}" alt="${safe(s.name)} logo" loading="lazy"/></span>`
+  : `<span class="logo-plate is-slot"><b>${safe(s.name)}</b><i>PARTNER</i></span>`;
+ return s.url?`<a class="sponsor-logo" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer" aria-label="${safe(s.name)}" aria-hidden="pending">${inner}</a>`:`<div class="sponsor-logo" aria-hidden="pending">${inner}</div>`};
 const partners=cfg.sponsors||[],partnerTrack=$('#sponsorTrack');
 if(partnerTrack&&partners.length&&partners.length<=5){
  partnerTrack.closest('.marquee').classList.add('is-static');
@@ -168,39 +169,50 @@ if(counters.length){
  }),{threshold:.6});
  counters.forEach(c=>co.observe(c));
 }
-// Sponsor ladder. Tiers are cumulative, so selecting one charges every rung
-// beneath it and the detail panel marks the inherited benefits as inherited.
-const ladder=$('#ladder'),tierDetail=$('#tierDetail');
+// Partnership levels as a selectable carousel. Tiers are cumulative, so each
+// card lists everything it includes and marks what that level adds.
+const rail=$('#tierRail'),dots=$('#tierDots');
 const tiers=cfg.tiers||[];
-tiers.forEach((t,i)=>{
- const b=document.createElement('button');
- b.type='button';b.className='rung';b.style.setProperty('--i',i);
- b.setAttribute('aria-pressed','false');
- b.innerHTML=`<span class="rung-bar"><i></i></span><span class="rung-label"><b>${safe(t.name)}</b><em>${String(i+1).padStart(2,'0')}</em></span><span class="rung-amt">${safe(t.amount)}</span>`;
- b.addEventListener('click',()=>renderTier(i));
- ladder.appendChild(b);
-});
-const rungs=$$('.rung');
-function renderTier(index){
- const tier=tiers[index];if(!tier)return;
- rungs.forEach((el,i)=>{
-  el.classList.toggle('on',i<=index);
-  el.classList.toggle('sel',i===index);
-  el.style.setProperty('--d',Math.max(0,index-i));   // charges from the picked rung downward
-  el.setAttribute('aria-pressed',i===index?'true':'false');
- });
- // everything the lower tiers already give you, plus what this one adds
- const inherited=tiers.slice(0,index).flatMap(t=>t.benefits).filter(x=>!/benefits$/i.test(x));
- const own=tier.benefits.filter(x=>!/benefits$/i.test(x));
+const tick=(n)=>`<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="8"/><path d="M4.6 8.2l2.2 2.2 4.6-4.8" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+function benefitsFor(i){
  const seen=new Set(),rows=[];
- inherited.forEach(x=>{if(!seen.has(x)){seen.add(x);rows.push([x,true])}});
- own.forEach(x=>{if(!seen.has(x)){seen.add(x);rows.push([x,false])}});
- tierDetail.innerHTML=`<div class="tier-count">LEVEL ${String(index+1).padStart(2,'0')} / ${String(tiers.length).padStart(2,'0')} \u00b7 ${safe(tier.note).toUpperCase()}</div>`+
-  `<h3>${safe(tier.name)}.</h3><div class="amount">CONTRIBUTION \u00b7 ${safe(tier.amount)}</div>`+
-  `<ul>${rows.map(([x,inh],i)=>`<li class="${inh?'inherited':''}" style="--d:${i}">${safe(x)}</li>`).join('')}</ul>`+
-  `<a class="tier-cta" href="#contact" data-tier="${safe(tier.name)}" id="chooseTier">Talk about ${safe(tier.name)} \u2197</a>`;
+ tiers.slice(0,i).forEach(t=>t.benefits.forEach(x=>{if(!/benefits$/i.test(x)&&!seen.has(x)){seen.add(x);rows.push([x,false])}}));
+ tiers[i].benefits.forEach(x=>{if(!/benefits$/i.test(x)&&!seen.has(x)){seen.add(x);rows.push([x,true])}});
+ return rows;
 }
-renderTier(2);
+tiers.forEach((t,i)=>{
+ const c=document.createElement('button');
+ c.type='button';c.className='tcard';c.setAttribute('role','tab');c.setAttribute('aria-selected','false');
+ c.innerHTML=`<span class="tcard-n">LEVEL ${String(i+1).padStart(2,'0')} / ${String(tiers.length).padStart(2,'0')}</span>`+
+  `<h3>${safe(t.name)}</h3><p class="tcard-note">${safe(t.note)}</p>`+
+  `<ul>${benefitsFor(i).map(([x,isNew])=>`<li class="${isNew?'new':''}">${tick()}<span>${safe(x)}</span></li>`).join('')}</ul>`+
+  `<span class="tcard-cta">Partner at ${safe(t.name)} ↗</span>`;
+ c.addEventListener('click',e=>{
+  if(e.target.closest('.tcard-cta')&&c.classList.contains('sel')){
+   if(window.openPartnerModal)window.openPartnerModal(t.name);
+   return;
+  }
+  pick(i,true);
+ });
+ rail.appendChild(c);
+ const d=document.createElement('button');
+ d.type='button';d.setAttribute('aria-label',`Show ${t.name}`);
+ d.addEventListener('click',()=>pick(i,true));
+ dots.appendChild(d);
+});
+const cards=$$('.tcard');
+let picked=-1;
+function pick(i,scroll){
+ picked=Math.max(0,Math.min(cards.length-1,i));
+ cards.forEach((c,j)=>{c.classList.toggle('sel',j===picked);c.setAttribute('aria-selected',j===picked?'true':'false')});
+ [...dots.children].forEach((d,j)=>d.classList.toggle('on',j===picked));
+ if(scroll&&cards[picked])cards[picked].scrollIntoView({inline:'center',block:'nearest',behavior:reduced?'auto':'smooth'});
+}
+rail.addEventListener('keydown',e=>{
+ if(e.key==='ArrowRight'){pick(picked+1,true);e.preventDefault()}
+ if(e.key==='ArrowLeft'){pick(picked-1,true);e.preventDefault()}
+});
+pick(2,false);
 const mobile=$('#mobileMenu');$('#menuButton').addEventListener('click',()=>{mobile.classList.toggle('open');$('#menuButton').setAttribute('aria-expanded',String(mobile.classList.contains('open')))});mobile.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mobile.classList.remove('open')));
 const instagram=$('#insta'),tiktok=$('#tiktok');if(cfg.instagram&&cfg.instagram!=='#')instagram.href=cfg.instagram;else instagram.addEventListener('click',e=>{e.preventDefault();alert('Add your Instagram URL in config.js')});if(cfg.tiktok&&cfg.tiktok!=='#')tiktok.href=cfg.tiktok;else tiktok.addEventListener('click',e=>{e.preventDefault();alert('Add your TikTok URL in config.js')});
 // Canvas-free CSS 3D model. A real robot photograph can replace the first cube.

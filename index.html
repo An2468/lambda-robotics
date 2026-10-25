@@ -155,7 +155,7 @@ html{scroll-padding-top:70px}
 .hud-row b{font-weight:400;color:#e9edf3}
 .hud-row.lit{color:var(--glow)}
 .hud-row.lit b{color:var(--glow)}
-.hero-hint2{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);z-index:3;font:9px var(--mono);letter-spacing:.2em;color:#79808d;opacity:0;animation:fadeup .8s 2.2s forwards}
+
 
 /* ---------- Sponsor logos on the landing view ---------- */
 .hero-sponsors{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:17px 0;
@@ -176,7 +176,7 @@ html{scroll-padding-top:70px}
  .hero-title{font-size:13vw;white-space:normal}
  .hero-intro{margin-top:24px}
  .hero-cta a{padding:12px 16px;font-size:9px}
- .hero-hint2{display:none}
+ 
 }
 
 /* ---------- BEHIND THE BUILD: prints taped to a dark wall ---------- */
@@ -208,7 +208,7 @@ html{scroll-padding-top:70px}
 }
 
 @media(prefers-reduced-motion:reduce){
- .hl>span,.hero-intro,.hud,.hero-sponsors,.hero-hint2{animation:none;transform:none;opacity:1}
+ .hl>span,.hero-intro,.hud,.hero-sponsors,
 }
 
 /* =======================================================================
@@ -457,6 +457,67 @@ body.locked{overflow:hidden}
 }
 @media(max-width:480px){.logo-strip.is-static .marquee-track{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.sponsor-wall,.sponsor-wall *{transition:none}}
+
+/* ---- real logos get a light plate so dark marks stay legible ---- */
+.logo-strip.is-static .sponsor-logo{height:auto;opacity:1;filter:none;padding:0;display:block}
+.logo-plate{display:grid;place-items:center;width:100%;box-sizing:border-box;min-height:132px;
+ padding:24px;border-radius:14px;background:#f1f3f6;border:1px solid #ffffff1f;
+ transition:transform .4s cubic-bezier(.2,.7,.3,1),box-shadow .4s}
+.logo-plate img{max-width:100%;max-height:84px;width:auto;height:auto;object-fit:contain}
+.sponsor-logo:hover .logo-plate{transform:translateY(-4px);box-shadow:0 16px 34px #00000059}
+.logo-plate.is-slot{background:#ffffff0a;border:1px dashed #ffffff33;gap:7px;min-height:132px}
+.logo-plate.is-slot b{font-size:clamp(18px,1.8vw,25px);font-weight:500;letter-spacing:-.035em;color:#e7eaef}
+.logo-plate.is-slot i{font-style:normal;font:9px var(--mono);letter-spacing:.18em;color:#f4511e}
+.sponsor-wall .wall-hint{margin-top:14px;font:9px var(--mono);letter-spacing:.14em;color:#6f7681}
+
+/* ---- tiers as a selectable carousel ---- */
+.tier-rail{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;
+ padding:26px 2px 30px;margin:0 -2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tier-rail::-webkit-scrollbar{display:none}
+.tcard{position:relative;flex:0 0 clamp(248px,24vw,300px);scroll-snap-align:center;
+ display:flex;flex-direction:column;gap:16px;padding:28px 24px 24px;border-radius:20px;
+ background:#15181d;border:1px solid #ffffff1a;color:#cfd4dc;text-align:left;cursor:pointer;
+ transition:transform .45s cubic-bezier(.2,.7,.3,1),background .4s,border-color .4s,box-shadow .4s,color .4s}
+.tcard:hover{border-color:#ffffff40;transform:translateY(-4px)}
+.tcard.sel{background:#f1f3f6;color:#15181d;border-color:#f1f3f6;transform:translateY(-14px) scale(1.04);
+ box-shadow:0 30px 60px #00000080;z-index:2}
+.tcard:focus-visible{outline:2px solid #f4511e;outline-offset:3px}
+.tcard-n{font:9px var(--mono);letter-spacing:.18em;color:#767d88}
+.tcard.sel .tcard-n{color:#5d6470}
+.tcard h3{margin:0;font-size:clamp(26px,2.6vw,34px);font-weight:500;letter-spacing:-.05em;line-height:1}
+.tcard-note{margin:-8px 0 0;font-size:13px;line-height:1.5;color:#878e99}
+.tcard.sel .tcard-note{color:#5d6470}
+.tcard ul{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:11px;flex:1}
+.tcard li{display:flex;gap:10px;font-size:13px;line-height:1.45}
+.tcard li svg{flex:none;width:15px;height:15px;margin-top:1px}
+.tcard li.new{font-weight:500}
+.tcard li.new svg circle{fill:#f4511e}
+.tcard li svg circle{fill:#39404b;transition:fill .4s}
+.tcard.sel li svg circle{fill:#c6ccd4}
+.tcard.sel li.new svg circle{fill:#f4511e}
+.tcard li svg path{stroke:#15181d}
+.tcard li:not(.new) svg path{stroke:#cfd4dc}
+.tcard.sel li:not(.new) svg path{stroke:#15181d}
+.tcard-cta{margin-top:4px;display:block;width:100%;padding:14px;border-radius:40px;border:1px solid #ffffff2e;
+ background:none;color:inherit;font:10px var(--mono);letter-spacing:.13em;text-transform:uppercase;
+ transition:background .3s,color .3s,border-color .3s}
+.tcard.sel .tcard-cta{background:#15181d;color:#f1f3f6;border-color:#15181d}
+.tcard.sel .tcard-cta:hover{background:#f4511e;border-color:#f4511e}
+.tcard:not(.sel) .tcard-cta:hover{background:#ffffff14;border-color:#ffffff70}
+.tier-nav2{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:4px}
+.tier-dots{display:flex;gap:7px}
+.tier-dots button{width:7px;height:7px;padding:0;border:0;border-radius:50%;background:#ffffff2e;transition:background .3s,transform .3s}
+.tier-dots button.on{background:#f4511e;transform:scale(1.5)}
+@media(max-width:620px){.tcard{flex:0 0 78vw;padding:24px 20px 20px}.tier-rail{gap:13px}}
+@media(prefers-reduced-motion:reduce){.tcard,.logo-plate{transition:none}.tcard.sel{transform:none}}
+
+/* the hero bar shares the renderer but stays a quiet ticker */
+.hero-sponsors .sponsor-logo{height:auto;opacity:.62}
+.hero-sponsors .logo-plate{min-height:0;padding:8px 15px;border-radius:9px;background:#ffffff0f;border:1px solid #ffffff1f}
+.hero-sponsors .logo-plate img{max-height:24px}
+.hero-sponsors .logo-plate.is-slot{border-style:solid;flex-direction:row;display:flex;align-items:center;gap:10px}
+.hero-sponsors .logo-plate.is-slot b{font-size:14px;color:#dfe3e9}
+.hero-sponsors .logo-plate.is-slot i{font-size:8px}
 </style><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script><script src="config.js" defer></script><script src="script.js" defer></script>
 </head><body>
 <div class="grain"></div><div class="cursor-glow" id="glow"></div><main class="site">
@@ -473,7 +534,7 @@ body.locked{overflow:hidden}
 <div class="hud-row lit"><span>SEASON</span><b>2026 / 27</b></div>
 <div class="hud-row lit"><span>BASED</span><b>HO CHI MINH</b></div>
 <div class="hud-row lit"><span>STATUS</span><b id="hudStatus">BUILDING</b></div></aside>
-<div class="hero-hint2">DRAG TO SPIN</div>
+
 <div class="hero-sponsors"><div class="lead">OUR PARTNERS</div><div class="marquee logo-strip" aria-label="Our sponsors"><div class="marquee-track logo-track" id="heroSponsorTrack"></div></div></div>
 </section>
 <section class="section intro" id="about"><div class="section-kicker reveal">01 / OUR IDENTITY</div>
@@ -485,7 +546,7 @@ body.locked{overflow:hidden}
 
 <section class="section journey" id="build"><div class="section-kicker reveal">03 / THE BUILD</div><div class="section-head reveal"><h2 class="giant">IN THE<br>MAKING.</h2><p style="color:#535a63">Great engineering is an ongoing process. Follow our team's experiences, prototypes and next milestones.</p></div><div class="journey-dashboard reveal"><div class="journey-label"><span>OUR STORY / SCROLL THROUGH IT</span><span id="journeyCounter" aria-live="polite">01 — 04</span></div><div class="journey-rail" id="journeyRail" role="group" aria-label="Jump to a milestone"><div class="journey-rail-fill" id="journeyRailFill"></div><div class="journey-points" id="journeyPoints"></div></div></div><div class="journey-nav"><span>STEP THROUGH THE TIMELINE — CLICK A POINT OR USE ← →</span><div class="timeline-controls"><button class="circle-btn" id="timelinePrev" aria-label="Previous milestone">←</button><button class="circle-btn" id="timelineNext" aria-label="Next milestone">→</button></div></div><div class="mpanel" id="mpanel" tabindex="0" aria-live="polite" aria-label="Milestone detail"></div><div class="shots-band reveal"><h3>BEHIND THE BUILD.</h3><p>Prototypes, late builds, and the moments in between.</p></div><div class="marquee full-bleed gallery-strip reveal" tabindex="0" aria-label="Team photo gallery, scrolls automatically"><div class="marquee-track gallery-track" id="galleryTrack"></div></div><div class="event-strip reveal"><h3>WHAT'S NEXT? ↗</h3><p>Robot testing, upcoming FTC events and team activities will appear here once confirmed. <strong>Calendar dates are placeholders until Lambda publishes its official schedule.</strong></p></div></section>
 
-<section class="section sponsors" id="partners"><div class="section-kicker reveal">04 / OUR PARTNERS</div><h2 class="giant reveal">HELP US<br>GO <span style="color:#697180">FURTHER.</span></h2><p class="sponsor-lead reveal">We're an independent, self-funded team with a shared passion for engineering. Help us bring our designs to life and take the next step in our FTC journey.</p><div class="sponsor-wall reveal"><div class="eyebrow">ALREADY WITH US · OUR FOUNDING PARTNERS</div><div class="marquee logo-strip" tabindex="0" aria-label="Our sponsors"><div class="marquee-track logo-track" id="sponsorTrack"></div></div></div><div class="ladder-wrap"><div><div class="eyebrow" style="margin-bottom:23px">FIVE WAYS TO PARTNER · EACH ONE INCLUDES THE LAST</div><div class="ladder" id="ladder"></div><div class="ladder-foot">PICK A LEVEL — EVERY RUNG BELOW IT COMES WITH IT</div></div><div class="tier-detail" id="tierDetail" aria-live="polite"></div></div><div class="fund-row"><span class="fund-lab">YOUR SUPPORT BUYS</span><div class="fund-list"><span>Robot hardware</span><span>Fabrication</span><span>Equipment</span><span>Competition fees</span><span>Travel</span><span>Outreach</span></div></div></section>
+<section class="section sponsors" id="partners"><div class="section-kicker reveal">04 / OUR PARTNERS</div><h2 class="giant reveal">HELP US<br>GO <span style="color:#697180">FURTHER.</span></h2><p class="sponsor-lead reveal">We're an independent, self-funded team with a shared passion for engineering. Help us bring our designs to life and take the next step in our FTC journey.</p><div class="sponsor-wall reveal"><div class="eyebrow">ALREADY WITH US · OUR FOUNDING PARTNERS</div><div class="marquee logo-strip" tabindex="0" aria-label="Our sponsors"><div class="marquee-track logo-track" id="sponsorTrack"></div></div></div><div class="tier-block"><div class="eyebrow" style="margin-bottom:6px">FIVE WAYS TO PARTNER · EACH ONE INCLUDES THE LAST</div><div class="tier-rail" id="tierRail" role="tablist" aria-label="Partnership levels"></div><div class="tier-nav2"><div class="tier-dots" id="tierDots"></div><span style="font:10px var(--mono);letter-spacing:.12em;color:#767d88">SWIPE OR PICK A LEVEL</span></div></div></div><div class="fund-row"><span class="fund-lab">YOUR SUPPORT BUYS</span><div class="fund-list"><span>Robot hardware</span><span>Fabrication</span><span>Equipment</span><span>Competition fees</span><span>Travel</span><span>Outreach</span></div></div></section>
 
 <div class="modal" id="contact" aria-hidden="true"><div class="modal-scrim" data-close></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-x" data-close aria-label="Close">×</button><div class="modal-grid"><div class="modal-side"><div class="eyebrow">BECOME A PARTNER</div><h2 class="modal-head" id="modalTitle">LET'S BUILD<br><span>TOGETHER.</span></h2><div class="contact-info"><h3>Join our journey as a founding partner.</h3><p>Whether you can offer financial support, materials, tools or technical expertise, we'd love to start a conversation. Tell us how you'd like to help; we'll reach out by email.</p><p class="mono" style="font-size:11px">ONLY FOUR QUICK FIELDS · NO PAYMENT REQUIRED</p><p>Follow our progress:<br><a href="#" id="insta" target="_blank" rel="noopener noreferrer"><u>Instagram ↗</u></a> &nbsp; <a href="#" id="tiktok" target="_blank" rel="noopener noreferrer"><u>TikTok ↗</u></a></p></div></div><form class="contact-form" id="sponsorForm"><div class="eyebrow" style="color:#4c535c">BECOME A LAMBDA PARTNER / 01—04</div><label for="company">01 / COMPANY OR CONTACT NAME</label><input id="company" name="company" type="text" placeholder="Company or contact name" required maxlength="120"/><label for="support">02 / HOW WOULD YOU LIKE TO SUPPORT US?</label><select id="support" name="support"><option>Financial sponsorship</option><option>Equipment or materials</option><option>Engineering / technical mentorship</option><option>Not sure yet</option></select><label for="sponsorTier">03 / SPONSORSHIP TIER</label><select id="sponsorTier" name="tier"><option>Not sure yet</option><option>Supporter</option><option>Bronze</option><option>Silver</option><option>Gold</option><option>Platinum</option></select><label for="email">04 / YOUR EMAIL ADDRESS</label><input type="email" id="email" name="email" placeholder="you@company.com" required maxlength="254"/><label style="display:flex;align-items:flex-start;gap:10px;text-transform:none;letter-spacing:normal;line-height:1.5"><input type="checkbox" name="consent" required style="width:17px;height:17px;flex:none;margin:0"/>I agree to be contacted by Lambda about this inquiry.</label><button type="submit" class="submit"><span>SEND PARTNERSHIP INQUIRY</span><span>↗</span></button><div class="form-status" id="formStatus" role="status"></div><p class="form-note">If a secure form endpoint hasn't been configured, this button will open a draft email for you to send. It won't falsely claim that a message was submitted.</p></form></div></div></div><footer class="footer"><div class="footer-links"><span>FTC TEAM #36789</span><span>INDEPENDENT STUDENT ROBOTICS TEAM</span><a href="#home">BACK TO TOP ↑</a></div><div class="footer-brand">LAMBDA.</div><div class="newsletter"><div><label>NOTES FROM THE WORKSHOP.</label><p style="font-size:12px;color:#626971">Occasional updates about our build and team milestones.</p></div><form id="newsletterForm"><input type="email" id="newsletterEmail" placeholder="YOUR EMAIL ADDRESS" aria-label="Newsletter email" required/><button type="submit" aria-label="Subscribe">↗</button></form></div><p id="newsletterStatus" style="font-size:12px" role="status"></p><p id="newsletterStatus" style="font-size:12px" role="status"></p><div class="foot-bottom"><span>© <span id="year"></span> LAMBDA ROBOTICS</span><span>BUILT TO BUILD BETTER.</span><span>HO CHI MINH CITY, VIETNAM</span></div></footer>
 </main></body></html>

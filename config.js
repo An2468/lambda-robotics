@@ -29,14 +29,14 @@ window.LAMBDA_CONFIG = {
     {name:'sixonefour labs', logo:'assets/sponsors/sixonefour-labs.png', url:'https://sixonefourlabs.com', about:'Proud sponsor of Lambda Robotics.'}
   ],
   members: [
-    {name:'Member 01',role:'Team Lead',photo:''},
-    {name:'Member 02',role:'CAD / Design',photo:''},
-    {name:'Member 03',role:'Mechanical',photo:''},
-    {name:'Member 04',role:'Software',photo:''},
-    {name:'Member 05',role:'Build Team',photo:''},
-    {name:'Member 06',role:'Mechanical',photo:''},
-    {name:'Member 07',role:'Software',photo:''},
-    {name:'Member 08',role:'CAD / Design',photo:''},
+    {name:'Sonic Nguyen',role:'Team Captain',photo:'assets/team/member-01.jpg'},
+    {name:'Bond Pham',role:'Head of Technical & Mechanical',photo:'assets/team/member-02.jpg'},
+    {name:'James Ho',role:'Head of CAD & Electrical',photo:'assets/team/member-03.jpg'},
+    {name:'Duy An',role:'Co-head of Software',photo:'assets/team/member-04.jpg'},
+    {name:'Minh Nhat',role:'Co-head of Software',photo:'assets/team/member-05.jpg'},
+    {name:'Duc Duong',role:'Sr. Full Stack Engineer',photo:'assets/team/member-06.jpg'},
+    {name:'Felix Diep',role:'Mechanical & Build Team',photo:'assets/team/member-07.jpg'},
+    {name:'Duy Anh',role:'Software & Build Team',photo:'assets/team/member-08.jpg'},
     {name:'Member 09',role:'Outreach',photo:''},
     {name:'Member 10',role:'Operations',photo:''}
   ],

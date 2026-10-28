@@ -688,3 +688,21 @@ html[lang="vi"] .wipe>span{padding-top:.04em}
  .fcard{opacity:1;transform:none}
  .bhero-scroll i:after{animation:none}
 }
+
+/* Vietnamese nav labels are much longer than the English ones, so the rail
+   runs out of room well before the 900px breakpoint and the last link slides
+   under the lang toggle. Tighten the cells first, then fall back to the
+   hamburger earlier for vi than for en. */
+@media(max-width:1280px){.navlinks a{padding:0 14px;letter-spacing:.1em}}
+@media(max-width:1180px){
+ html[lang="vi"] .navlinks{display:none}
+ html[lang="vi"] .menu-toggle{display:block}
+ html[lang="vi"] .navticker{display:none}
+}
+/* English ran out at ~1015px while its links only hid at 900, leaving a band
+   where the last one slid under the lang toggle. */
+@media(max-width:1060px){
+ .navlinks{display:none}
+ .menu-toggle{display:block}
+ .navticker{display:none}
+}

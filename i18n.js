@@ -50,8 +50,8 @@ const VI={
  'about.kicker':'01 / BẢN SẮC',
  'about.h1':'KHÔNG CHỈ','about.h2':'<i class="muted" style="font-style:normal">CHẾ TẠO.</i>',
  'about.h3':'<em style="font-style:normal;text-decoration:underline;text-decoration-thickness:4px;text-underline-offset:9px">VƯƠN LÊN.</em>',
- 'about.manifesto':'Lambda là mười học sinh tại TP. Hồ Chí Minh đã quyết định không chờ ai cho phép. Không chương trình của trường, không ngân sách, không ai trao cho chúng tôi một xưởng — chúng tôi tự tìm chỗ, tự học CAD, học hàn một khung xe chịu được cả trận đấu, và tự viết code điều khiển nó. Đây là mùa giải FIRST Tech Challenge đầu tiên của chúng tôi. Chúng tôi sẽ khiến mọi người khó quên.',
- 'about.foot':'Độc lập và tự chủ tài chính. Mọi công cụ, mọi linh kiện và mọi giờ chế tạo đều đến từ mười chúng tôi — và từ những đối tác quyết định đồng hành cùng chúng tôi.',
+ 'about.manifesto':'Mười học sinh tại TP. Hồ Chí Minh. Không chương trình của trường. Không ngân sách. Không xưởng. Chúng tôi tự tìm chỗ, tự học CAD, và chế tạo một con robot thi đấu được. Mùa giải FTC đầu tiên. Chúng tôi sẽ khiến mọi người khó quên.',
+ 'about.foot':'Độc lập và tự chủ tài chính. Mọi công cụ và mọi linh kiện đều đến từ mười chúng tôi, và từ những đối tác đồng hành.',
  'about.stat1':'THÀNH VIÊN','about.stat2':'SỨ MỆNH CHUNG','about.stat3':'SỰ TÒ MÒ',
 
  'team.kicker':'02 / CON NGƯỜI','team.title':'NHỮNG<br>BỘ ÓC.',

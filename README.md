@@ -1,5 +1,14 @@
 # Lambda Robotics — FTC #36789
 
+Two pages sharing one stylesheet and one script:
+
+- **`index.html`** — hero, identity, the team, the timeline, sponsors, partner tiers. For visitors and sponsors.
+- **`build.html`** — Behind the Build and community outreach, as four pinned chapters.
+
+`styles.css` and `script.js` serve both. Every block in `script.js` guards its
+own entry point, because an unguarded lookup throws and silently stops every
+later block on whichever page lacks that element.
+
 Cinematic, single-page, responsive Lambda website built as a **deployable static site**.
 
 ## Preview
@@ -21,8 +30,13 @@ The hero runs a machined gear train built in Three.js (`script.js`, bottom block
 
 Deliberately generic — it shows no part of the real robot, so nothing about the team's design can be copied from the site. Change `POP` at the top of the block to re-accent the anodised gear. Metal needs something to reflect, so the block builds a small studio environment from a canvas gradient; tone mapping is linear rather than ACES, which otherwise desaturates the anodised orange to cream. It degrades to a plain hero if WebGL is unavailable.
 
+## The build page
+Four chapters. Each `.chapter` is a tall section whose inner `.chapter-pin` sticks while you scroll its height; one rAF-throttled pass writes progress into `--p` (0 to 1) and drives the animation — parts converging onto the bench, frames developing one by one, outreach cards and counters arriving. `prefers-reduced-motion` drops the pinning entirely and shows everything in flow.
+
+Outreach content lives in `outreach[]` and `outreachStats[]` in `config.js`. An entry with an empty `title` renders as a dashed OPEN SLOT card, so the grid stays composed while you fill it in; a stat with an empty `n` shows a dash instead of a number.
+
 ## Section mechanics
-The page is four sections plus a dialog. Each presents itself differently on purpose: WebGL robot (hero), a manifesto whose words light up word-by-word as you scroll (about), a grid of generated ID plates, every member the same size (team), a stepped timeline plus the taped prints, merged into one build section,  and a cumulative funding ladder (sponsors) where picking a tier charges every rung beneath it and marks which benefits are inherited from the tiers below. Milestones come from `config.js` as before; `status: 'ACTIVE'` gives a milestone the dark pulsing pill.
+The page is four sections plus a dialog. Each presents itself differently on purpose: WebGL robot (hero), a manifesto whose words light up word-by-word as you scroll (about), a grid of generated ID plates, every member the same size (team), a compact timeline showing every milestone at once (the old stepper hid three of five behind a rail and two arrows, and ran 1881px tall),  and a cumulative funding ladder (sponsors) where picking a tier charges every rung beneath it and marks which benefits are inherited from the tiers below. Milestones come from `config.js` as before; `status: 'ACTIVE'` gives a milestone the dark pulsing pill.
 
 ## Member plates
 Nobody has a portrait yet, so each member's tile draws a plate generated from their name — gear rings, bolt circles, traces and hatching, seeded by a hash so the same name always produces the same plate. Set `photo` on a member in `config.js` and the photo covers the plate instead; you can mix the two while photos trickle in. Every cell is identical in size on purpose — ten equals, no feature tile.

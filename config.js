@@ -41,6 +41,23 @@ window.LAMBDA_CONFIG = {
     {name:'Member 09',role:'Outreach',photo:''},
     {name:'Member 10',role:'Operations',photo:''}
   ],
+  // Community outreach. The first two are from the 2026 sponsorship packet;
+  // the rest are slots — fill in title/date/body/photo and they render.
+  outreach: [
+    {title:'LotusHacks', kind:'FOUNDED', date:'2025',
+     body:'Vietnam\u2019s largest student hackathon, taken from concept to execution by this team. The same habit we bring to the robot: plan it, build it, ship it.',
+     stat:'1,000+', statLabel:'BUILDERS REACHED', url:'https://lotushack.org', photo:''},
+    {title:'STEM in local schools', kind:'ONGOING', date:'2026',
+     body:'Hands-on robotics sessions for students in Ho Chi Minh City \u2014 letting people drive a real robot is still the fastest way to make engineering feel possible.',
+     stat:'', statLabel:'', url:'', photo:''},
+    {title:'', kind:'', date:'', body:'', stat:'', statLabel:'', url:'', photo:''},
+    {title:'', kind:'', date:'', body:'', stat:'', statLabel:'', url:'', photo:''}
+  ],
+  outreachStats: [
+    {n:'1,000+', label:'BUILDERS REACHED'},
+    {n:'', label:'SCHOOLS VISITED'},
+    {n:'', label:'WORKSHOP HOURS'}
+  ],
   milestones: [
     {index:'01',date:'MAY 2026',label:'THE BEGINNING',title:'An independent team takes shape.',body:'Ten students unite around a shared interest in robotics, engineering and competition.',status:'COMPLETE'},
     {index:'02',date:'SEP 2026',label:'KICKOFF',title:'BioBuzz season started.',body:'A brand-new game is revealed. We break down the rules, study the field and map out our strategy for the 2026–2027 season.',status:'COMPLETE'},

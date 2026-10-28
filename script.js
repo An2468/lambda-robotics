@@ -2,7 +2,7 @@
 'use strict';
 const cfg=window.LAMBDA_CONFIG||{};
 const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
-$('#year').textContent=new Date().getFullYear();
+{const y=$('#year');if(y)y.textContent=new Date().getFullYear();}
 const safe=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const T=window.LAMBDA_T||((k,f,v)=>v?String(f).replace(/\{(\w+)\}/g,(m,x)=>v[x]??m):f);
@@ -61,7 +61,7 @@ function plate(name,role,accent){
  if(accent)body+=`<circle cx="${(16+r()*168).toFixed(1)}" cy="${(16+r()*168).toFixed(1)}" r="5" fill="${hot}"/>`;
  return `<svg class="mind-art" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>${g}</defs>${body}</svg>`;
 }
-(cfg.members||[]).forEach((m,i)=>{
+if(minds)(cfg.members||[]).forEach((m,i)=>{
  const cell=document.createElement('article');
  cell.className='mind';cell.style.setProperty('--i',i);
  cell.innerHTML=(m.photo?`<img class="mind-photo" src="${safe(m.photo)}" alt="${safe(T('js.portrait','Portrait of {name}',{name:m.name}))}" loading="lazy"/>`:plate(m.name,m.role,i%3===0))+
@@ -98,6 +98,7 @@ function showBacker(i){
   `<div style="--d:1"><div class="backer-count">${String(i+1).padStart(2,'0')} / ${String(backers.length).padStart(2,'0')} \u00b7 ${T('js.sponsor','SPONSOR')}</div><h3>${safe(s.name)}</h3>`+
   `${s.about?`<p>${safe(s.about)}</p>`:''}${s.url?`<a class="backer-link" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer">${T('js.learn','Learn more \u2197')}</a>`:''}</div>`;
 }
+if(backerCard&&backerRow){
 backers.forEach((s,i)=>{
  const b=document.createElement('button');b.type='button';b.className='backer-logo';
  b.setAttribute('aria-label',T('js.show','Show {name}',{name:s.name}));
@@ -105,45 +106,27 @@ backers.forEach((s,i)=>{
  ['click','mouseenter','focus'].forEach(ev=>b.addEventListener(ev,()=>showBacker(i)));
  backerRow.appendChild(b);
 });
-if(backers.length)showBacker(0);else $('#sponsors').hidden=true;
-
-// Journey: a timeline you step through. One panel swaps in place, so the
-// section stays about a screen tall instead of scrolling through every card.
-const panel=$('#mpanel'),points=$('#journeyPoints'),railFill=$('#journeyRailFill'),counter=$('#journeyCounter');
-const stones=cfg.milestones||[];
-stones.forEach((m,i)=>{
- const btn=document.createElement('button');btn.type='button';btn.className='journey-point';
- btn.setAttribute('aria-label',T('js.milestone','Milestone {n}: {title}',{n:i+1,title:m.title}));
- btn.innerHTML=`<span class="point-date">${safe(m.date)}</span><span class="point-label">${safe(m.label)}</span>`;
- btn.addEventListener('click',()=>show(i));
- points.appendChild(btn);
-});
-let step=0;
-function show(i){
- if(!stones.length)return;
- step=(i+stones.length)%stones.length;
- const m=stones[step];
- [...points.children].forEach((n,j)=>{
-  n.classList.toggle('active',j===step);
-  n.classList.toggle('passed',j<step);
-  n.setAttribute('aria-current',j===step?'step':'false');
- });
- const node=points.children[step];
- if(node)railFill.style.width=`${node.offsetLeft+node.offsetWidth/2}px`;
- counter.textContent=`${String(step+1).padStart(2,'0')} \u2014 ${String(stones.length).padStart(2,'0')}`;
- panel.dataset.status=m.status||'';
- panel.innerHTML=`<div class="m-side" style="--d:0"><div class="m-idx">${safe(m.index)} / ${safe(m.label)}</div><div class="m-date">${safe(m.date)}</div></div>`+
-  `<div class="m-body" style="--d:1"><h3>${safe(m.title)}</h3><p>${safe(m.body)}</p><span class="m-tag"><i></i>${safe(T('js.'+m.status,m.status))}</span></div>`+
-  `<div class="m-ghost" aria-hidden="true">${safe(m.index)}</div>`;
+if(backers.length)showBacker(0);else{const sec=$('#sponsors');if(sec)sec.hidden=true}
 }
-$('#timelinePrev').addEventListener('click',()=>show(step-1));
-$('#timelineNext').addEventListener('click',()=>show(step+1));
-panel.addEventListener('keydown',e=>{
- if(e.key==='ArrowRight'){show(step+1);e.preventDefault()}
- if(e.key==='ArrowLeft'){show(step-1);e.preventDefault()}
-});
-addEventListener('resize',()=>show(step),{passive:true});
-show(0);
+
+
+// Journey: all four milestones laid out at once. No controls, no swapping —
+// the old stepper hid three of four behind a rail and two arrows.
+const tline=$('#tline');
+if(tline){
+ const stones=cfg.milestones||[];
+ const state=s=>{const v=(s||'').toUpperCase();
+  return v==='COMPLETE'?'done':v==='ACTIVE'?'now':'todo'};
+ tline.style.setProperty('--n',stones.length);
+ tline.innerHTML=stones.map((m,i)=>{
+  const st=state(m.status);
+  return `<li class="tstep ${st}"><i></i>`+
+   `<span class="tstep-date">${safe(m.date)}</span>`+
+   `<span class="tstep-lab">${safe(m.index)} / ${safe(m.label)}</span>`+
+   `<h3>${safe(m.title)}</h3><p>${safe(m.body)}</p>`+
+   `<span class="tstep-tag"><b></b>${safe(m.status)}</span></li>`;
+ }).join('');
+}
 
 // About: the manifesto lights up word by word as the section crosses the screen.
 const manifesto=$('#manifesto');
@@ -195,6 +178,7 @@ function benefitsFor(i){
  tiers[i].benefits.forEach(x=>{if(!/benefits$/i.test(x)&&!seen.has(x)){seen.add(x);rows.push([x,true])}});
  return rows;
 }
+if(rail&&dots){
 tiers.forEach((t,i)=>{
  const c=document.createElement('button');
  c.type='button';c.className='tcard';c.setAttribute('role','tab');c.setAttribute('aria-selected','false');
@@ -228,6 +212,8 @@ rail.addEventListener('keydown',e=>{
  if(e.key==='ArrowLeft'){pick(picked-1,true);e.preventDefault()}
 });
 pick(tiers.length>2?2:0,false);
+}
+
 
 // Packet footnotes, and the two offers that sit outside the tier ladder.
 const tierNotes=$('#tierNotes');
@@ -238,7 +224,9 @@ if(extrasEl&&(cfg.extras||[]).length)
  extrasEl.innerHTML=cfg.extras.map(e=>
   `<div class="extra"><h4>${safe(e.name)}</h4><p>${safe(e.body)}</p><a href="#contact" data-tier="${safe(e.name)}">${T('js.talk','Talk to us \u2197')}</a></div>`).join('');
 
-const mobile=$('#mobileMenu');$('#menuButton').addEventListener('click',()=>{mobile.classList.toggle('open');$('#menuButton').setAttribute('aria-expanded',String(mobile.classList.contains('open')))});mobile.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mobile.classList.remove('open')));
+const mobile=$('#mobileMenu'),menuBtn=$('#menuButton');
+if(mobile&&menuBtn){menuBtn.addEventListener('click',()=>{mobile.classList.toggle('open');menuBtn.setAttribute('aria-expanded',String(mobile.classList.contains('open')))});
+ mobile.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mobile.classList.remove('open')));}
 const instagram=$('#insta'),tiktok=$('#tiktok');if(cfg.instagram&&cfg.instagram!=='#')instagram.href=cfg.instagram;else instagram.addEventListener('click',e=>{e.preventDefault();alert(T('js.instaMissing','Add your Instagram URL in config.js'))});if(cfg.tiktok&&cfg.tiktok!=='#')tiktok.href=cfg.tiktok;else tiktok.addEventListener('click',e=>{e.preventDefault();alert(T('js.tiktokMissing','Add your TikTok URL in config.js'))});
 // Canvas-free CSS 3D model. A real robot photograph can replace the first cube.
 // Measure each drawn path so the stroke animation draws at a consistent rate.
@@ -306,7 +294,8 @@ if(modal){
 }
 
 const sponsorForm=$('#sponsorForm');sponsorForm.addEventListener('submit',async e=>{e.preventDefault();if(!sponsorForm.reportValidity())return;const data=Object.fromEntries(new FormData(sponsorForm));data.team='Lambda FTC 36789';delete data.consent;const status=$('#formStatus');status.textContent=T('js.preparing','Preparing inquiry…');if(cfg.inquiryEndpoint){try{const res=await fetch(cfg.inquiryEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});if(!res.ok)throw Error('Submission failed');status.textContent=T('js.sent','Your inquiry was submitted. Thank you for contacting Lambda!');sponsorForm.reset()}catch(err){status.textContent=T('js.failed','Submission failed. Please try again or contact us by email.')}}else{const recipient=(cfg.email||'').includes('REPLACE_')?'':cfg.email;const subject=encodeURIComponent(T('js.mailSubject','Lambda Robotics — Sponsorship Inquiry'));const body=encodeURIComponent(T('js.mailBody','Company/contact: {company}\nType: {support}\nTier: {tier}\nContact email: {email}\n\nPlease contact me to discuss sponsoring Lambda Robotics FTC #36789.',data));const mail=`mailto:${recipient}?subject=${subject}&body=${body}`;window.location.href=mail;status.textContent=recipient?T('js.draft','Email draft opened. Please send it from your email app.'):T('js.draftNoTo','Email draft opened. Enter Lambda’s team email as the recipient before sending.');setTimeout(()=>{const m=$('#contact');if(m&&m.classList.contains('open'))m.querySelector('.modal-x').click()},1800)}});
-$('#newsletterForm').addEventListener('submit',async e=>{e.preventDefault();const email=$('#newsletterEmail').value.trim(),status=$('#newsletterStatus');if(!email)return;if(cfg.newsletterEndpoint){try{const res=await fetch(cfg.newsletterEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});if(!res.ok)throw Error();status.textContent=T('js.subOk','Subscription request received.');$('#newsletterForm').reset()}catch{status.textContent=T('js.subFail','Could not subscribe right now. Please try again later.')}}else{status.textContent=T('js.subSoon','Newsletter subscription will be available soon. Add a newsletter endpoint in config.js.')}});
+const newsForm=$('#newsletterForm');
+if(newsForm)newsForm.addEventListener('submit',async e=>{e.preventDefault();const email=$('#newsletterEmail').value.trim(),status=$('#newsletterStatus');if(!email)return;if(cfg.newsletterEndpoint){try{const res=await fetch(cfg.newsletterEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});if(!res.ok)throw Error();status.textContent=T('js.subOk','Subscription request received.');newsForm.reset()}catch{status.textContent=T('js.subFail','Could not subscribe right now. Please try again later.')}}else{status.textContent=T('js.subSoon','Newsletter subscription will be available soon. Add a newsletter endpoint in config.js.')}});
 })();
 
 
@@ -475,4 +464,112 @@ function frame(now){
  renderer.render(scene,cam);
 }
 requestAnimationFrame(frame);
+})();
+
+/* ---------------------------------------------------------------------
+   BUILD PAGE. Each chapter is a tall section whose inner .chapter-pin
+   sticks; progress through that scroll range feeds in as --p (0..1) and
+   drives the animation. Everything here no-ops on the main page.
+   --------------------------------------------------------------------- */
+(function buildPage(){
+// own scope: the helpers above live inside the main IIFE
+const $=(sel,root)=>(root||document).querySelector(sel);
+const $$=(sel,root)=>Array.from((root||document).querySelectorAll(sel));
+const cfg=window.LAMBDA_CONFIG||{};
+const safe=(x)=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const T=window.LAMBDA_T||((k,f)=>f);
+const chapters=$$('.chapter');
+if(!chapters.length)return;
+const slow=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// 01 — parts scattered off the bench, converging as the chapter plays
+const bench=$('#benchParts'),benchPct=$('#benchPct');
+const PARTS=[
+ {w:150,h:150,label:'FRAME',   svg:'<rect x="12" y="12" width="76" height="76" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><rect x="28" y="28" width="44" height="44" rx="3" fill="none" stroke="currentColor" stroke-width="2" opacity=".55"/>'},
+ {w:120,h:120,label:'GEAR',    svg:'<circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="50" r="10" fill="none" stroke="currentColor" stroke-width="2"/>'+Array.from({length:10},(_,i)=>{const a=i/10*Math.PI*2;return `<rect x="${(50+Math.cos(a)*36-4).toFixed(1)}" y="${(50+Math.sin(a)*36-4).toFixed(1)}" width="8" height="8" fill="currentColor" opacity=".8"/>`}).join('')},
+ {w:132,h:96, label:'BRACKET', svg:'<path d="M14 80V20h30v24h42v36z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>'},
+ {w:104,h:104,label:'BEARING', svg:'<circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="50" r="16" fill="none" stroke="currentColor" stroke-width="3"/>'+Array.from({length:8},(_,i)=>{const a=i/8*Math.PI*2;return `<circle cx="${(50+Math.cos(a)*25).toFixed(1)}" cy="${(50+Math.sin(a)*25).toFixed(1)}" r="4" fill="currentColor" opacity=".7"/>`}).join('')},
+ {w:150,h:76, label:'RAIL',    svg:'<rect x="8" y="38" width="84" height="24" rx="4" fill="none" stroke="currentColor" stroke-width="3"/><path d="M22 38v24M50 38v24M78 38v24" stroke="currentColor" stroke-width="2" opacity=".5"/>'},
+ {w:112,h:112,label:'WHEEL',   svg:'<circle cx="50" cy="50" r="32" fill="none" stroke="currentColor" stroke-width="3"/>'+Array.from({length:6},(_,i)=>{const a=i/6*Math.PI*2;return `<path d="M50 50L${(50+Math.cos(a)*32).toFixed(1)} ${(50+Math.sin(a)*32).toFixed(1)}" stroke="currentColor" stroke-width="2" opacity=".5"/>`}).join('')}
+];
+if(bench){
+ bench.innerHTML=PARTS.map(p=>
+  `<div class="bpart" style="width:${p.w}px;height:${p.h}px"><svg viewBox="0 0 100 100">${p.svg}</svg><span>${p.label}</span></div>`).join('');
+ const els=$$('.bpart',bench);
+ // where each part starts (scattered) and lands (a neat row)
+ PARTS.forEach((p,i)=>{
+  const t=(i/(PARTS.length-1))-0.5;                 // -0.5 .. 0.5 across the bench
+  els[i]._to={x:t*560,y:(i%2?1:-1)*26,r:0};
+  els[i]._from={x:t*1500+(i%2?240:-240),y:(i%2?-1:1)*420,r:(i%2?1:-1)*(28+i*11)};
+ });
+ bench._els=els;
+}
+
+// 02 — frames develop one at a time
+const sheet=$('#sheet');
+if(sheet){
+ const shots=(cfg.gallery||[]).slice(0,12);
+ sheet.innerHTML=shots.map((g,i)=>
+  `<figure class="frameShot">${g.src?`<img src="${safe(g.src)}" alt="${safe(g.caption)}" loading="lazy"/>`:'<span class="ph">λ</span>'}<b>${String(i+1).padStart(2,'0')} ${safe(g.caption)}</b></figure>`).join('');
+ sheet._els=$$('.frameShot',sheet);
+}
+
+// 03 — outreach: filled entries render, blanks render as marked slots
+const fieldStats=$('#fieldStats'),fieldGrid=$('#fieldGrid');
+if(fieldStats)
+ fieldStats.innerHTML=(cfg.outreachStats||[]).map(s=>
+  `<div class="fstat"><b class="${s.n?'':'empty'}" data-n="${safe(s.n)}">${s.n?'0':'—'}</b><span>${safe(s.label)}</span></div>`).join('');
+if(fieldGrid)
+ fieldGrid.innerHTML=(cfg.outreach||[]).map(o=>{
+  if(!o.title)return `<div class="fcard slot"><div class="fcard-k">${T('bn.slot','OPEN SLOT')}</div><h3>${T('bn.slotH','Your next programme')}</h3><p>${T('bn.slotP','Add it to outreach[] in config.js — title, date, a line of copy and a photo.')}</p></div>`;
+  return `<div class="fcard"><div class="fcard-k">${safe(o.kind)}</div><span class="fdate">${safe(o.date)}</span>`+
+   `<h3>${safe(o.title)}</h3><p>${safe(o.body)}</p>`+
+   (o.url?`<a href="${safe(o.url)}" target="_blank" rel="noopener noreferrer">${T('bn.visit','Visit')} ↗</a>`:'')+`</div>`;
+ }).join('');
+
+// progress pump: one rAF-throttled pass sets --p on every chapter
+let raf=0;
+function run(){
+ raf=0;
+ chapters.forEach(ch=>{
+  const r=ch.getBoundingClientRect();
+  const span=Math.max(1,r.height-innerHeight);
+  const p=Math.max(0,Math.min(1,-r.top/span));
+  ch.style.setProperty('--p',p.toFixed(4));
+  const id=ch.id;
+  if(id==='bench'&&bench&&bench._els){
+   const e=1-Math.pow(1-p,3);
+   bench._els.forEach(el=>{
+    const f=el._from,t=el._to;
+    const x=f.x+(t.x-f.x)*e, y=f.y+(t.y-f.y)*e, rot=f.r+(t.r-f.r)*e;
+    el.style.transform=`translate(-50%,-50%) translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${rot.toFixed(1)}deg)`;
+    el.classList.toggle('set',e>.92);
+   });
+   if(benchPct)benchPct.textContent=Math.round(e*100)+'%';
+  }
+  if(id==='prints'&&sheet&&sheet._els){
+   const n=Math.round(p*sheet._els.length*1.25);
+   sheet._els.forEach((el,i)=>el.classList.toggle('dev',i<n));
+  }
+  if(id==='field'){
+   const cards=$$('.fcard',ch);
+   cards.forEach((c,i)=>c.classList.toggle('in',p*cards.length*1.4>i));
+   $$('.fstat b[data-n]',ch).forEach(b=>{
+    const raw=b.dataset.n;if(!raw)return;
+    const num=parseInt(raw.replace(/[^0-9]/g,''),10);if(!num)return;
+    const v=Math.round(num*Math.min(1,p*2));
+    b.textContent=v.toLocaleString()+(/\+/.test(raw)&&v>=num?'+':'');
+   });
+  }
+ });
+}
+if(slow){
+ $$('.frameShot').forEach(e=>e.classList.add('dev'));
+ $$('.fcard').forEach(e=>e.classList.add('in'));
+ $$('.fstat b[data-n]').forEach(b=>{if(b.dataset.n)b.textContent=b.dataset.n});
+}else{
+ addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(run)},{passive:true});
+ addEventListener('resize',()=>{if(!raf)raf=requestAnimationFrame(run)},{passive:true});
+ run();
+}
 })();

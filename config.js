@@ -26,7 +26,8 @@ window.LAMBDA_CONFIG = {
   sponsors: [
     {name:'OpenAI', logo:'assets/sponsors/openai.png', url:'https://openai.com', about:'The AI research and deployment company behind ChatGPT, on a mission to ensure artificial general intelligence benefits all of humanity.'},
     {name:'LotusHacks', logo:'assets/sponsors/lotushacks.png', url:'https://lotushack.org', about:'A hackathon bringing together young builders and innovators in Vietnam.'},
-    {name:'sixonefour labs', logo:'assets/sponsors/sixonefour-labs.png', url:'https://sixonefourlabs.com', about:'Proud sponsor of Lambda Robotics.'}
+    {name:'sixonefour labs', logo:'assets/sponsors/sixonefour-labs.png', url:'https://sixonefourlabs.com', about:'Proud sponsor of Lambda Robotics.'},
+    {name:'Symbotic', logo:'assets/sponsors/symbotic.png', url:'https://www.symbotic.com', about:'A robotics and AI company transforming supply chains with automated warehouse systems.'}
   ],
   members: [
     {name:'Sonic Nguyen',role:'Team Captain',photo:'assets/team/member-01.jpg'},
@@ -78,4 +79,72 @@ window.LAMBDA_CONFIG = {
     {name:'Presenting Sponsor',body:'The team competes as Lambda Robotics presented by your company for the whole season. One partner only \u2014 get in touch to discuss it.'},
     {name:'Individual Contribution',body:'Any amount helps. Individual gifts go straight to robot parts, tools, competition registration and travel.'}
   ],
+
+  // Vietnamese. Each list matches the English list above, item by item, in the
+  // same order; only the fields given here change. Anything left out stays English.
+  vi: {
+    gallery: [
+      {caption:'Buổi chế tạo / khung xe v1'},
+      {caption:'Họp duyệt CAD'},
+      {caption:'Nguyên mẫu hệ truyền động'},
+      {caption:'Đi dây và điện tử'},
+      {caption:'Kiểm thử phần mềm'},
+      {caption:'Không gian làm việc'},
+      {caption:'Cơ cấu nạp'},
+      {caption:'Sân tập'}
+    ],
+    sponsors: [
+      {about:'Công ty nghiên cứu và triển khai AI đứng sau ChatGPT, với sứ mệnh đảm bảo trí tuệ nhân tạo tổng quát mang lại lợi ích cho toàn nhân loại.'},
+      {about:'Cuộc thi hackathon quy tụ những người trẻ đam mê sáng tạo và công nghệ tại Việt Nam.'},
+      {about:'Tự hào là nhà tài trợ của Lambda Robotics.'},
+      {about:'Công ty robot và AI đang thay đổi chuỗi cung ứng bằng hệ thống kho hàng tự động.'}
+    ],
+    members: [
+      {role:'Đội trưởng'},
+      {role:'Trưởng ban Kỹ thuật & Cơ khí'},
+      {role:'Trưởng ban CAD & Điện'},
+      {role:'Đồng trưởng ban Phần mềm'},
+      {role:'Đồng trưởng ban Phần mềm'},
+      {role:'Kỹ sư Full Stack cấp cao'},
+      {role:'Cơ khí & Chế tạo'},
+      {role:'Phần mềm & Chế tạo'},
+      {name:'Thành viên 09',role:'Cộng đồng'},
+      {name:'Thành viên 10',role:'Vận hành'}
+    ],
+    milestones: [
+      {date:'05/2026',label:'KHỞI ĐẦU',title:'Một đội độc lập ra đời.',body:'Mười học sinh cùng chung niềm đam mê robot, kỹ thuật và thi đấu.'},
+      {date:'09/2026',label:'KHAI MẠC',title:'Mùa giải BioBuzz bắt đầu.',body:'Thể thức thi đấu mới được công bố. Chúng tôi phân tích luật, nghiên cứu sân đấu và lên chiến lược cho mùa giải 2026–2027.'},
+      {date:'T9–T1',label:'MÙA CHẾ TẠO',title:'Đến giờ chế tạo!',body:'Từ tháng 9 đến tháng 1, ý tưởng trở thành phần cứng: mô hình CAD, nguyên mẫu nhanh, chạy thử, và chế tạo lại hết lần này đến lần khác cho đến khi mọi cơ cấu xứng đáng có mặt trên robot.'},
+      {date:'01/2027',label:'GIAO HỮU',title:'Giải giao hữu Lambda Robotics.',body:'Chúng tôi tổ chức giải giao hữu FTC đầu tiên tại miền Nam Việt Nam, quy tụ các đội để thử nghiệm robot trước giải vô địch.'},
+      {date:'02/2027',label:'TOÀN QUỐC',title:'Giải Vô địch Quốc gia.',body:'Tranh tài trên đấu trường quốc gia cùng những đội FTC mạnh nhất Việt Nam.'}
+    ],
+    tiers: [
+      {name:'Đồng',note:'Ghi danh cùng đội',benefits:[
+        'Giới thiệu trên mạng xã hội',
+        'Logo công ty trên đồng phục đội và băng rôn sự kiện',
+        'Logo công ty trên website của đội']},
+      {name:'Bạc',note:'Đồng hành trên robot',benefits:[
+        'Logo công ty trên robot',
+        'Bài đăng mạng xã hội riêng',
+        'Lời cảm ơn đặc biệt trên standee của đội']},
+      {name:'Vàng',note:'Hiện diện tại giải đấu',benefits:[
+        'Video quảng bá phát tại gian hàng của đội (2 phút)',
+        'Phân phát sản phẩm của bạn tại gian hàng',
+        'Băng rôn / standee riêng tại sự kiện và gian hàng của đội']},
+      {name:'Kim cương',note:'Nổi bật suốt cả mùa giải',benefits:[
+        'Logo công ty trên quà tặng của đội',
+        'Vị trí nhà tài trợ chính trên mọi ấn phẩm của đội',
+        'Ghi nhận đặc biệt trên mọi kênh truyền thông của đội',
+        'Đội mang robot đến và trình diễn trực tiếp tại sự kiện của bạn']}
+    ],
+    tierFootnotes: [
+      'Kích thước và vị trí logo tăng theo cấp độ \u2014 cấp cao hơn được ưu tiên vị trí.',
+      'Thời lượng video quảng bá: 2 phút với cấp Vàng, 3 phút với cấp Kim cương.',
+      'Lịch xuất hiện của đội tùy thuộc vào thời gian, ưu tiên các sự kiện tại Việt Nam.'
+    ],
+    extras: [
+      {name:'Nhà tài trợ chính danh',body:'Đội thi đấu với tên gọi \u201cLambda Robotics presented by\u201d công ty của bạn trong suốt mùa giải. Chỉ dành cho một đối tác \u2014 hãy liên hệ để trao đổi.'},
+      {name:'Đóng góp cá nhân',body:'Mọi khoản đóng góp đều quý giá. Đóng góp cá nhân được dùng trực tiếp cho linh kiện robot, công cụ, phí đăng ký thi đấu và chi phí di chuyển.'}
+    ]
+  }
 };

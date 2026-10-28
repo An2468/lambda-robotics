@@ -5,6 +5,7 @@ const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll
 $('#year').textContent=new Date().getFullYear();
 const safe=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const T=window.LAMBDA_T||((k,f,v)=>v?String(f).replace(/\{(\w+)\}/g,(m,x)=>v[x]??m):f);
 // THE MINDS. No portraits exist yet, so each member gets an ID plate drawn
 // deterministically from their name — same name, same plate, every load.
 // Primitives match the hero's language: gear rings, bolt circles, traces.
@@ -63,7 +64,7 @@ function plate(name,role,accent){
 (cfg.members||[]).forEach((m,i)=>{
  const cell=document.createElement('article');
  cell.className='mind';cell.style.setProperty('--i',i);
- cell.innerHTML=(m.photo?`<img class="mind-photo" src="${safe(m.photo)}" alt="Portrait of ${safe(m.name)}" loading="lazy"/>`:plate(m.name,m.role,i%3===0))+
+ cell.innerHTML=(m.photo?`<img class="mind-photo" src="${safe(m.photo)}" alt="${safe(T('js.portrait','Portrait of {name}',{name:m.name}))}" loading="lazy"/>`:plate(m.name,m.role,i%3===0))+
   `<div class="mind-scrim"></div><span class="mind-n">${String(i+1).padStart(2,'0')}</span>`+
   `<div class="mind-meta"><div class="mind-name">${safe(m.name)}</div><span class="mind-role">${safe(m.role)}</span></div><span class="mind-rule"></span>`;
  minds.appendChild(cell);
@@ -80,8 +81,8 @@ function fillMarquee(el,items,render){if(!el||!items.length)return;
 fillMarquee($('#galleryTrack'),cfg.gallery||[],g=>`<figure class="shot" aria-hidden="pending"><div class="frame">${g.src?`<img src="${safe(g.src)}" alt="${safe(g.caption)}" loading="lazy"/>`:'<div class="shot-ph">\u03bb</div>'}</div><figcaption>${safe(g.caption)}</figcaption></figure>`);
 const sponsorLogo=s=>{
  const inner=s.logo
-  ? `<span class="logo-plate"><img src="${safe(s.logo)}" alt="${safe(s.name)} logo" loading="lazy"/></span>`
-  : `<span class="logo-plate is-slot"><b>${safe(s.name)}</b><i>PARTNER</i></span>`;
+  ? `<span class="logo-plate"><img src="${safe(s.logo)}" alt="${safe(T('js.logo','{name} logo',{name:s.name}))}" loading="lazy"/></span>`
+  : `<span class="logo-plate is-slot"><b>${safe(s.name)}</b><i>${T('js.partner','PARTNER')}</i></span>`;
  return s.url?`<a class="sponsor-logo" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer" aria-label="${safe(s.name)}" aria-hidden="pending">${inner}</a>`:`<div class="sponsor-logo" aria-hidden="pending">${inner}</div>`};
 fillMarquee($('#sponsorTrack'),cfg.sponsors||[],sponsorLogo);   // footer wall
 fillMarquee($('#heroSponsorTrack'),cfg.sponsors||[],sponsorLogo);
@@ -92,14 +93,14 @@ function showBacker(i){
  if(i===backerOn||!backers[i])return;
  backerOn=i;const s=backers[i];
  [...backerRow.children].forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-pressed',String(j===i))});
- const mark=s.logo?`<img src="${safe(s.logo)}" alt="${safe(s.name)} logo"/>`:`<span class="ph">${safe(s.name)}</span>`;
+ const mark=s.logo?`<img src="${safe(s.logo)}" alt="${safe(T('js.logo','{name} logo',{name:s.name}))}"/>`:`<span class="ph">${safe(s.name)}</span>`;
  backerCard.innerHTML=(s.url?`<a class="backer-mark" style="--d:0" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer">${mark}</a>`:`<div class="backer-mark" style="--d:0">${mark}</div>`)+
-  `<div style="--d:1"><div class="backer-count">${String(i+1).padStart(2,'0')} / ${String(backers.length).padStart(2,'0')} \u00b7 SPONSOR</div><h3>${safe(s.name)}</h3>`+
-  `${s.about?`<p>${safe(s.about)}</p>`:''}${s.url?`<a class="backer-link" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer">Learn more \u2197</a>`:''}</div>`;
+  `<div style="--d:1"><div class="backer-count">${String(i+1).padStart(2,'0')} / ${String(backers.length).padStart(2,'0')} \u00b7 ${T('js.sponsor','SPONSOR')}</div><h3>${safe(s.name)}</h3>`+
+  `${s.about?`<p>${safe(s.about)}</p>`:''}${s.url?`<a class="backer-link" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer">${T('js.learn','Learn more \u2197')}</a>`:''}</div>`;
 }
 backers.forEach((s,i)=>{
  const b=document.createElement('button');b.type='button';b.className='backer-logo';
- b.setAttribute('aria-label',`Show ${s.name}`);
+ b.setAttribute('aria-label',T('js.show','Show {name}',{name:s.name}));
  b.innerHTML=s.logo?`<img src="${safe(s.logo)}" alt=""/>`:`<b>${safe(s.name)}</b>`;
  ['click','mouseenter','focus'].forEach(ev=>b.addEventListener(ev,()=>showBacker(i)));
  backerRow.appendChild(b);
@@ -112,7 +113,7 @@ const panel=$('#mpanel'),points=$('#journeyPoints'),railFill=$('#journeyRailFill
 const stones=cfg.milestones||[];
 stones.forEach((m,i)=>{
  const btn=document.createElement('button');btn.type='button';btn.className='journey-point';
- btn.setAttribute('aria-label',`Milestone ${i+1}: ${m.title}`);
+ btn.setAttribute('aria-label',T('js.milestone','Milestone {n}: {title}',{n:i+1,title:m.title}));
  btn.innerHTML=`<span class="point-date">${safe(m.date)}</span><span class="point-label">${safe(m.label)}</span>`;
  btn.addEventListener('click',()=>show(i));
  points.appendChild(btn);
@@ -132,7 +133,7 @@ function show(i){
  counter.textContent=`${String(step+1).padStart(2,'0')} \u2014 ${String(stones.length).padStart(2,'0')}`;
  panel.dataset.status=m.status||'';
  panel.innerHTML=`<div class="m-side" style="--d:0"><div class="m-idx">${safe(m.index)} / ${safe(m.label)}</div><div class="m-date">${safe(m.date)}</div></div>`+
-  `<div class="m-body" style="--d:1"><h3>${safe(m.title)}</h3><p>${safe(m.body)}</p><span class="m-tag"><i></i>${safe(m.status)}</span></div>`+
+  `<div class="m-body" style="--d:1"><h3>${safe(m.title)}</h3><p>${safe(m.body)}</p><span class="m-tag"><i></i>${safe(T('js.'+m.status,m.status))}</span></div>`+
   `<div class="m-ghost" aria-hidden="true">${safe(m.index)}</div>`;
 }
 $('#timelinePrev').addEventListener('click',()=>show(step-1));
@@ -197,10 +198,10 @@ function benefitsFor(i){
 tiers.forEach((t,i)=>{
  const c=document.createElement('button');
  c.type='button';c.className='tcard';c.setAttribute('role','tab');c.setAttribute('aria-selected','false');
- c.innerHTML=`<span class="tcard-n">LEVEL ${String(i+1).padStart(2,'0')} / ${String(tiers.length).padStart(2,'0')}</span>`+
+ c.innerHTML=`<span class="tcard-n">${T('js.level','LEVEL {n} / {total}',{n:String(i+1).padStart(2,'0'),total:String(tiers.length).padStart(2,'0')})}</span>`+
   `<h3>${safe(t.name)}</h3><p class="tcard-note">${safe(t.note)}</p>`+
   `<ul>${benefitsFor(i).map(([x,isNew])=>`<li class="${isNew?'new':''}">${tick()}<span>${safe(x)}</span></li>`).join('')}</ul>`+
-  `<span class="tcard-cta">Partner at ${safe(t.name)} ↗</span>`;
+  `<span class="tcard-cta">${safe(T('js.partnerAt','Partner at {name} ↗',{name:t.name}))}</span>`;
  c.addEventListener('click',e=>{
   if(e.target.closest('.tcard-cta')&&c.classList.contains('sel')){
    if(window.openPartnerModal)window.openPartnerModal(t.name);
@@ -210,7 +211,7 @@ tiers.forEach((t,i)=>{
  });
  rail.appendChild(c);
  const d=document.createElement('button');
- d.type='button';d.setAttribute('aria-label',`Show ${t.name}`);
+ d.type='button';d.setAttribute('aria-label',T('js.show','Show {name}',{name:t.name}));
  d.addEventListener('click',()=>pick(i,true));
  dots.appendChild(d);
 });
@@ -235,15 +236,15 @@ if(tierNotes&&(cfg.tierFootnotes||[]).length)
 const extrasEl=$('#extras');
 if(extrasEl&&(cfg.extras||[]).length)
  extrasEl.innerHTML=cfg.extras.map(e=>
-  `<div class="extra"><h4>${safe(e.name)}</h4><p>${safe(e.body)}</p><a href="#contact" data-tier="${safe(e.name)}">Talk to us \u2197</a></div>`).join('');
+  `<div class="extra"><h4>${safe(e.name)}</h4><p>${safe(e.body)}</p><a href="#contact" data-tier="${safe(e.name)}">${T('js.talk','Talk to us \u2197')}</a></div>`).join('');
 
 const mobile=$('#mobileMenu');$('#menuButton').addEventListener('click',()=>{mobile.classList.toggle('open');$('#menuButton').setAttribute('aria-expanded',String(mobile.classList.contains('open')))});mobile.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mobile.classList.remove('open')));
-const instagram=$('#insta'),tiktok=$('#tiktok');if(cfg.instagram&&cfg.instagram!=='#')instagram.href=cfg.instagram;else instagram.addEventListener('click',e=>{e.preventDefault();alert('Add your Instagram URL in config.js')});if(cfg.tiktok&&cfg.tiktok!=='#')tiktok.href=cfg.tiktok;else tiktok.addEventListener('click',e=>{e.preventDefault();alert('Add your TikTok URL in config.js')});
+const instagram=$('#insta'),tiktok=$('#tiktok');if(cfg.instagram&&cfg.instagram!=='#')instagram.href=cfg.instagram;else instagram.addEventListener('click',e=>{e.preventDefault();alert(T('js.instaMissing','Add your Instagram URL in config.js'))});if(cfg.tiktok&&cfg.tiktok!=='#')tiktok.href=cfg.tiktok;else tiktok.addEventListener('click',e=>{e.preventDefault();alert(T('js.tiktokMissing','Add your TikTok URL in config.js'))});
 // Canvas-free CSS 3D model. A real robot photograph can replace the first cube.
 // Measure each drawn path so the stroke animation draws at a consistent rate.
 const draft=$('#heroDraft');
 if(draft){
- if(cfg.robotImage){draft.querySelector('.draft').outerHTML=`<img class="draft-photo" src="${safe(cfg.robotImage)}" alt="Lambda's FTC robot"/>`}
+ if(cfg.robotImage){draft.querySelector('.draft').outerHTML=`<img class="draft-photo" src="${safe(cfg.robotImage)}" alt="${safe(T('js.robotAlt',"Lambda's FTC robot"))}"/>`}
  else{draft.querySelectorAll('.draft .p').forEach((el,i)=>{
   let len=1400; try{len=Math.ceil(el.getTotalLength())||1400}catch{}
   el.style.setProperty('--len',len);el.style.setProperty('--i',i)})}
@@ -275,7 +276,8 @@ if(modal){
   lastFocus=document.activeElement;
   modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.classList.add('locked');
   const sel=$('#sponsorTier');
-  if(tier&&sel&&[...sel.options].some(o=>o.value===tier||o.text===tier))sel.value=tier;
+  const want=String(tier||'').toLowerCase(),opt=sel&&[...sel.options].find(o=>o.value.toLowerCase()===want||o.text.toLowerCase()===want);
+  if(opt)sel.value=opt.value;
   const first=$('#company')||focusable()[0];
   if(first)setTimeout(()=>first.focus(),60);
  }
@@ -303,9 +305,8 @@ if(modal){
  window.openPartnerModal=openModal;
 }
 
-const sponsorForm=$('#sponsorForm');sponsorForm.addEventListener('submit',async e=>{e.preventDefault();if(!sponsorForm.reportValidity())return;const data=Object.fromEntries(new FormData(sponsorForm));data.team='Lambda FTC 36789';delete data.consent;const status=$('#formStatus');status.textContent='Preparing inquiry…';if(cfg.inquiryEndpoint){try{const res=await fetch(cfg.inquiryEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});if(!res.ok)throw Error('Submission failed');status.textContent='Your inquiry was submitted. Thank you for contacting Lambda!';sponsorForm.reset()}catch(err){status.textContent='Submission failed. Please try again or contact us by email.'}}else{const recipient=(cfg.email||'').includes('REPLACE_')?'':cfg.email;const subject=encodeURIComponent('Lambda Robotics — Sponsorship Inquiry');const body=encodeURIComponent(`Company/contact: ${data.company}\nType: ${data.support}\nTier: ${data.tier}\nContact email: ${data.email}\n\nPlease contact me to discuss sponsoring Lambda Robotics FTC #36789.`);const mail=`mailto:${recipient}?subject=${subject}&body=${body}`;window.location.href=mail;status.textContent=recipient?'Email draft opened. Please send it from your email app.':'Email draft opened. Enter Lambda’s team email as the recipient before sending.';setTimeout(()=>{const m=$('#contact');if(m&&m.classList.contains('open'))m.querySelector('.modal-x').click()},1800)}});
-$('#newsletterForm').addEventListener('submit',async e=>{e.preventDefault();const email=$('#newsletterEmail').value.trim(),status=$('#newsletterStatus');if(!email)return;if(cfg.newsletterEndpoint){try{const res=await fetch(cfg.newsletterEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});if(!res.ok)throw Error();status.textContent='Subscription request received.';$('#newsletterForm').reset()}catch{status.textContent='Could not subscribe right now. Please try again later.'}}else{status.textContent='Newsletter subscription will be available soon. Add a newsletter endpoint in config.js.'}});
-$('#language').addEventListener('click',()=>{alert('English is live. Vietnamese translations are reserved for phase two; this control will switch languages once translations are added.')});
+const sponsorForm=$('#sponsorForm');sponsorForm.addEventListener('submit',async e=>{e.preventDefault();if(!sponsorForm.reportValidity())return;const data=Object.fromEntries(new FormData(sponsorForm));data.team='Lambda FTC 36789';delete data.consent;const status=$('#formStatus');status.textContent=T('js.preparing','Preparing inquiry…');if(cfg.inquiryEndpoint){try{const res=await fetch(cfg.inquiryEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});if(!res.ok)throw Error('Submission failed');status.textContent=T('js.sent','Your inquiry was submitted. Thank you for contacting Lambda!');sponsorForm.reset()}catch(err){status.textContent=T('js.failed','Submission failed. Please try again or contact us by email.')}}else{const recipient=(cfg.email||'').includes('REPLACE_')?'':cfg.email;const subject=encodeURIComponent(T('js.mailSubject','Lambda Robotics — Sponsorship Inquiry'));const body=encodeURIComponent(T('js.mailBody','Company/contact: {company}\nType: {support}\nTier: {tier}\nContact email: {email}\n\nPlease contact me to discuss sponsoring Lambda Robotics FTC #36789.',data));const mail=`mailto:${recipient}?subject=${subject}&body=${body}`;window.location.href=mail;status.textContent=recipient?T('js.draft','Email draft opened. Please send it from your email app.'):T('js.draftNoTo','Email draft opened. Enter Lambda’s team email as the recipient before sending.');setTimeout(()=>{const m=$('#contact');if(m&&m.classList.contains('open'))m.querySelector('.modal-x').click()},1800)}});
+$('#newsletterForm').addEventListener('submit',async e=>{e.preventDefault();const email=$('#newsletterEmail').value.trim(),status=$('#newsletterStatus');if(!email)return;if(cfg.newsletterEndpoint){try{const res=await fetch(cfg.newsletterEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});if(!res.ok)throw Error();status.textContent=T('js.subOk','Subscription request received.');$('#newsletterForm').reset()}catch{status.textContent=T('js.subFail','Could not subscribe right now. Please try again later.')}}else{status.textContent=T('js.subSoon','Newsletter subscription will be available soon. Add a newsletter endpoint in config.js.')}});
 })();
 
 

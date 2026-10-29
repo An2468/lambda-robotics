@@ -33,6 +33,8 @@ Deliberately generic — it shows no part of the real robot, so nothing about th
 ## The build page
 Four chapters. Each `.chapter` is a tall section whose inner `.chapter-pin` sticks while you scroll its height; one rAF-throttled pass writes progress into `--p` (0 to 1) and drives the animation — parts converging onto the bench, frames developing one by one, outreach cards and counters arriving. `prefers-reduced-motion` drops the pinning entirely and shows everything in flow.
 
+Photos: every empty slot on the build page prints the filename it is waiting for. Save the photo to `assets/build/` (behind the scenes, THE PRINTS) or `assets/outreach/` (THE FIELD), then set `src` or `photo` in `config.js` to that path. The `suggest` field is only the label, so nothing 404s while the slots are empty.
+
 Outreach content lives in `outreach[]` and `outreachStats[]` in `config.js`. An entry with an empty `title` renders as a dashed OPEN SLOT card, so the grid stays composed while you fill it in; a stat with an empty `n` shows a dash instead of a number.
 
 ## Section mechanics

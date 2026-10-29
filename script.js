@@ -509,8 +509,12 @@ if(bench){
 const sheet=$('#sheet');
 if(sheet){
  const shots=(cfg.gallery||[]).slice(0,12);
- sheet.innerHTML=shots.map((g,i)=>
-  `<figure class="frameShot">${g.src?`<img src="${safe(g.src)}" alt="${safe(g.caption)}" loading="lazy"/>`:'<span class="ph">λ</span>'}<b>${String(i+1).padStart(2,'0')} ${safe(g.caption)}</b></figure>`).join('');
+ sheet.innerHTML=shots.map((g,i)=>{
+  const inner=g.src
+   ? `<img src="${safe(g.src)}" alt="${safe(g.caption)}" loading="lazy"/>`
+   : `<span class="ph"><i>+</i><em>${T('bn.addPhoto','ADD PHOTO')}</em>${g.suggest?`<code>${safe(g.suggest.split('/').pop())}</code>`:''}</span>`;
+  return `<figure class="frameShot${g.src?'':' empty'}">${inner}<b>${String(i+1).padStart(2,'0')} ${safe(g.caption)}</b></figure>`;
+ }).join('');
  sheet._els=$$('.frameShot',sheet);
 }
 
@@ -521,8 +525,12 @@ if(fieldStats)
   `<div class="fstat"><b class="${s.n?'':'empty'}" data-n="${safe(s.n)}">${s.n?'0':'—'}</b><span>${safe(s.label)}</span></div>`).join('');
 if(fieldGrid)
  fieldGrid.innerHTML=(cfg.outreach||[]).map(o=>{
-  if(!o.title)return `<div class="fcard slot"><div class="fcard-k">${T('bn.slot','OPEN SLOT')}</div><h3>${T('bn.slotH','Your next programme')}</h3><p>${T('bn.slotP','Add it to outreach[] in config.js — title, date, a line of copy and a photo.')}</p></div>`;
-  return `<div class="fcard"><div class="fcard-k">${safe(o.kind)}</div><span class="fdate">${safe(o.date)}</span>`+
+  if(!o.title)return `<div class="fcard slot"><span class="fshot empty"><i>+</i><em>${T('bn.addPhoto','ADD PHOTO')}</em>${o.suggest?`<code>${safe(o.suggest)}</code>`:''}</span>`+
+   `<div class="fcard-k">${T('bn.slot','OPEN SLOT')}</div><h3>${T('bn.slotH','Your next programme')}</h3><p>${T('bn.slotP','Add it to outreach[] in config.js: title, date, a line of copy and a photo.')}</p></div>`;
+  const shot=o.photo
+   ? `<span class="fshot"><img src="${safe(o.photo)}" alt="${safe(o.title)}" loading="lazy"/></span>`
+   : `<span class="fshot empty"><i>+</i><em>${T('bn.addPhoto','ADD PHOTO')}</em>${o.suggest?`<code>${safe(o.suggest)}</code>`:''}</span>`;
+  return `<div class="fcard">${shot}<div class="fcard-k">${safe(o.kind)}</div><span class="fdate">${safe(o.date)}</span>`+
    `<h3>${safe(o.title)}</h3><p>${safe(o.body)}</p>`+
    (o.url?`<a href="${safe(o.url)}" target="_blank" rel="noopener noreferrer">${T('bn.visit','Visit')} ↗</a>`:'')+`</div>`;
  }).join('');

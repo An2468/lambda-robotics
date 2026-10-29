@@ -10,15 +10,17 @@ window.LAMBDA_CONFIG = {
   robotImage: '', // Optional path such as assets/robot.webp. Empty keeps 3D placeholder cube.
   teamPhoto: '', // Optional team image
   // Gallery: drop photos in assets/ and set src. Empty src renders a styled placeholder tile.
+  // Behind the scenes. Save a photo to the path in `suggest`, then set `src`
+  // to the same path. Empty `src` renders a labelled slot instead.
   gallery: [
-    {src:'', caption:'Build session / chassis v1'},
-    {src:'', caption:'CAD review'},
-    {src:'', caption:'Drivetrain prototype'},
-    {src:'', caption:'Wiring and electronics'},
-    {src:'', caption:'Software testing'},
-    {src:'', caption:'Team workspace'},
-    {src:'', caption:'Intake mechanism'},
-    {src:'', caption:'Practice field'}
+    {src:'', suggest:'assets/build/chassis-v1.jpg', caption:'Build session / chassis v1'},
+    {src:'', suggest:'assets/build/cad-review.jpg', caption:'CAD review'},
+    {src:'', suggest:'assets/build/drivetrain.jpg', caption:'Drivetrain prototype'},
+    {src:'', suggest:'assets/build/wiring.jpg', caption:'Wiring and electronics'},
+    {src:'', suggest:'assets/build/software.jpg', caption:'Software testing'},
+    {src:'', suggest:'assets/build/workspace.jpg', caption:'Team workspace'},
+    {src:'', suggest:'assets/build/intake.jpg', caption:'Intake mechanism'},
+    {src:'', suggest:'assets/build/practice-field.jpg', caption:'Practice field'}
   ],
   // Sponsors: set logo to a path in assets/ when you have the real file.
   // White or light logos on a transparent background (SVG/PNG) look best on the dark Sponsors section.
@@ -46,12 +48,12 @@ window.LAMBDA_CONFIG = {
   outreach: [
     {title:'LotusHacks', kind:'FOUNDED', date:'2025',
      body:'Vietnam\u2019s largest student hackathon, taken from concept to execution by this team. The same habit we bring to the robot: plan it, build it, ship it.',
-     stat:'1,000+', statLabel:'BUILDERS REACHED', url:'https://lotushack.org', photo:''},
+     stat:'1,000+', statLabel:'BUILDERS REACHED', url:'https://lotushack.org', photo:'', suggest:'assets/outreach/lotushacks.jpg'},
     {title:'STEM in local schools', kind:'ONGOING', date:'2026',
-     body:'Hands-on robotics sessions for students in Ho Chi Minh City \u2014 letting people drive a real robot is still the fastest way to make engineering feel possible.',
-     stat:'', statLabel:'', url:'', photo:''},
-    {title:'', kind:'', date:'', body:'', stat:'', statLabel:'', url:'', photo:''},
-    {title:'', kind:'', date:'', body:'', stat:'', statLabel:'', url:'', photo:''}
+     body:'Hands-on robotics sessions for students in Ho Chi Minh City. Letting someone drive a real robot is still the fastest way to make engineering feel possible.',
+     stat:'', statLabel:'', url:'', photo:'', suggest:'assets/outreach/stem-schools.jpg'},
+    {title:'', kind:'', date:'', body:'', stat:'', statLabel:'', url:'', photo:'', suggest:'assets/outreach/03.jpg'},
+    {title:'', kind:'', date:'', body:'', stat:'', statLabel:'', url:'', photo:'', suggest:'assets/outreach/04.jpg'}
   ],
   outreachStats: [
     {n:'1,000+', label:'BUILDERS REACHED'},
@@ -88,12 +90,12 @@ window.LAMBDA_CONFIG = {
   ],
   // Shown under the tiers; these are offers, not levels.
   tierFootnotes: [
-    'Logo size and placement scale with tier \u2014 higher tiers get priority positioning.',
+    'Logo size and placement scale with tier. Higher tiers get priority positioning.',
     'Promotional video length: 2 minutes at Gold, 3 minutes at Diamond.',
     'Team appearances are subject to scheduling, with priority for events in Vietnam.'
   ],
   extras: [
-    {name:'Presenting Sponsor',body:'The team competes as Lambda Robotics presented by your company for the whole season. One partner only \u2014 get in touch to discuss it.'},
+    {name:'Presenting Sponsor',body:'The team competes as Lambda Robotics presented by your company for the whole season. One partner only, so get in touch to discuss it.'},
     {name:'Individual Contribution',body:'Any amount helps. Individual gifts go straight to robot parts, tools, competition registration and travel.'}
   ],
 
@@ -155,12 +157,12 @@ window.LAMBDA_CONFIG = {
         'Đội mang robot đến và trình diễn trực tiếp tại sự kiện của bạn']}
     ],
     tierFootnotes: [
-      'Kích thước và vị trí logo tăng theo cấp độ \u2014 cấp cao hơn được ưu tiên vị trí.',
+      'Kích thước và vị trí logo tăng theo cấp độ. Cấp cao hơn được ưu tiên vị trí.',
       'Thời lượng video quảng bá: 2 phút với cấp Vàng, 3 phút với cấp Kim cương.',
       'Lịch xuất hiện của đội tùy thuộc vào thời gian, ưu tiên các sự kiện tại Việt Nam.'
     ],
     extras: [
-      {name:'Nhà tài trợ chính danh',body:'Đội thi đấu với tên gọi \u201cLambda Robotics presented by\u201d công ty của bạn trong suốt mùa giải. Chỉ dành cho một đối tác \u2014 hãy liên hệ để trao đổi.'},
+      {name:'Nhà tài trợ chính danh',body:'Đội thi đấu với tên gọi \u201cLambda Robotics presented by\u201d công ty của bạn trong suốt mùa giải. Chỉ dành cho một đối tác, hãy liên hệ để trao đổi.'},
       {name:'Đóng góp cá nhân',body:'Mọi khoản đóng góp đều quý giá. Đóng góp cá nhân được dùng trực tiếp cho linh kiện robot, công cụ, phí đăng ký thi đấu và chi phí di chuyển.'}
     ]
   }

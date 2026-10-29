@@ -706,3 +706,23 @@ html[lang="vi"] .wipe>span{padding-top:.04em}
  .menu-toggle{display:block}
  .navticker{display:none}
 }
+
+/* Photo slots. An empty slot names the file it is waiting for, so adding a
+   photo is: save it to that path, then set `src`/`photo` in config.js. */
+.fshot{display:block;position:relative;aspect-ratio:16/10;margin:0 0 16px;border-radius:9px;overflow:hidden;background:#15181d}
+.fshot img{width:100%;height:100%;object-fit:cover;display:block}
+.fshot.empty{display:grid;place-items:center;align-content:center;gap:5px;
+ background:#ffffff06;border:1px dashed #ffffff2e}
+.fshot.empty i,.frameShot .ph i{font-style:normal;font-size:19px;line-height:1;color:#f4511e}
+.fshot.empty em,.frameShot .ph em{font-style:normal;font:8px var(--mono);letter-spacing:.16em;color:#8e95a1}
+.fshot.empty code,.frameShot .ph code{font:7.5px var(--mono);letter-spacing:.04em;color:#5d6470;
+ max-width:92%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fcard:hover .fshot.empty{border-color:#ffffff4d}
+
+.frameShot .ph{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:4px;padding:6px;text-align:center}
+.frameShot.empty{border-style:dashed;border-color:#ffffff26}
+.frameShot.dev.empty{background:#101318}
+@media(max-width:620px){
+ .frameShot .ph code{display:none}
+ .fshot{aspect-ratio:3/2;margin-bottom:12px}
+}

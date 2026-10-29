@@ -92,7 +92,7 @@ let backerOn=-1;
 function showBacker(i){
  if(i===backerOn||!backers[i])return;
  backerOn=i;const s=backers[i];
- [...backerRow.children].forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-pressed',String(j===i))});
+ [...backerRow.querySelectorAll('.backer-logo')].forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-pressed',String(j===i))});
  const mark=s.logo?`<img src="${safe(s.logo)}" alt="${safe(T('js.logo','{name} logo',{name:s.name}))}"/>`:`<span class="ph">${safe(s.name)}</span>`;
  backerCard.innerHTML=(s.url?`<a class="backer-mark" style="--d:0" href="${safe(s.url)}" target="_blank" rel="noopener noreferrer">${mark}</a>`:`<div class="backer-mark" style="--d:0">${mark}</div>`)+
   `<div style="--d:1"><div class="backer-count">${String(i+1).padStart(2,'0')} / ${String(backers.length).padStart(2,'0')} \u00b7 ${T('js.sponsor','SPONSOR')}</div><h3>${safe(s.name)}</h3>`+
@@ -105,6 +105,7 @@ backers.forEach((s,i)=>{
  b.innerHTML=s.logo?`<img src="${safe(s.logo)}" alt=""/>`:`<b>${safe(s.name)}</b>`;
  ['click','mouseenter','focus'].forEach(ev=>b.addEventListener(ev,()=>showBacker(i)));
  backerRow.appendChild(b);
+ if(i===1&&backers.length>2)backerRow.appendChild(Object.assign(document.createElement('span'),{className:'backer-break'}));
 });
 if(backers.length)showBacker(0);else{const sec=$('#sponsors');if(sec)sec.hidden=true}
 }

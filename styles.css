@@ -497,6 +497,7 @@ a.backer-mark:hover img{transform:scale(1.05)}
  font:10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:#f4511e;transition:color .3s,border-color .3s}
 .backer-link:hover{color:#ff7a45;border-color:#ff7a45}
 .backer-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:18px 64px;margin-top:56px}
+.backer-break{flex-basis:100%;height:0}
 .backer-logo{position:relative;display:grid;place-items:center;height:120px;padding:0 6px;border:0;background:none;color:#eef0f3;
  transition:transform .35s cubic-bezier(.2,.7,.3,1)}
 .backer-logo:hover{transform:translateY(-3px)}
@@ -535,6 +536,7 @@ a.backer-mark:hover img{transform:scale(1.05)}
 @media(max-width:760px){.extras{grid-template-columns:1fr}}
 
 /* ---- language: EN / VI ---- */
+img[src$="lotushacks.png"]{transform:scale(1.15)}
 .navlinks a,.nav .lang,.nav .navright .pill{white-space:nowrap}
 .nav .lang span{transition:color .25s}
 .nav .lang span.on{color:#fff}

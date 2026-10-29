@@ -27,7 +27,8 @@ window.LAMBDA_CONFIG = {
     {name:'OpenAI', logo:'assets/sponsors/openai.png', url:'https://openai.com', about:'The AI research and deployment company behind ChatGPT, on a mission to ensure artificial general intelligence benefits all of humanity.'},
     {name:'LotusHacks', logo:'assets/sponsors/lotushacks.png', url:'https://lotushack.org', about:'A hackathon bringing together young builders and innovators in Vietnam.'},
     {name:'sixonefour labs', logo:'assets/sponsors/sixonefour-labs.png', url:'https://sixonefourlabs.com', about:'Proud sponsor of Lambda Robotics.'},
-    {name:'Symbotic', logo:'assets/sponsors/symbotic.png', url:'https://www.symbotic.com', about:'A robotics and AI company transforming supply chains with automated warehouse systems.'}
+    {name:'Symbotic', logo:'assets/sponsors/symbotic.png', url:'https://www.symbotic.com', about:'A robotics and AI company transforming supply chains with automated warehouse systems.'},
+    {name:'Anh Dong', logo:'assets/sponsors/anhdong.png', url:'https://anhdong.vn', about:'Proud sponsor of Lambda Robotics.'}
   ],
   members: [
     {name:'Sonic Nguyen',role:'Team Captain',photo:'assets/team/member-01.jpg'},
@@ -103,7 +104,8 @@ window.LAMBDA_CONFIG = {
       {about:'Công ty nghiên cứu và triển khai AI đứng sau ChatGPT, với sứ mệnh đảm bảo trí tuệ nhân tạo tổng quát mang lại lợi ích cho toàn nhân loại.'},
       {about:'Cuộc thi hackathon quy tụ những người trẻ đam mê sáng tạo và công nghệ tại Việt Nam.'},
       {about:'Tự hào là nhà tài trợ của Lambda Robotics.'},
-      {about:'Công ty robot và AI đang thay đổi chuỗi cung ứng bằng hệ thống kho hàng tự động.'}
+      {about:'Công ty robot và AI đang thay đổi chuỗi cung ứng bằng hệ thống kho hàng tự động.'},
+      {about:'Tự hào là nhà tài trợ của Lambda Robotics.'}
     ],
     members: [
       {role:'Đội trưởng'},

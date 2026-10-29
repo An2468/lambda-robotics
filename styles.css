@@ -107,7 +107,7 @@
 .navticker span{font:9px var(--mono);letter-spacing:.2em;color:#636a76;white-space:nowrap;padding-left:22px}
 html{scroll-padding-top:70px}
 @media(max-width:1080px){.navticker{display:none}}
-@media(max-width:900px){.nav{grid-template-columns:auto 1fr auto}.navlinks{display:none}.mobile-menu{top:62px;left:0;right:0;border-radius:0;border-left:0;border-right:0}}
+@media(max-width:900px){.nav{grid-template-columns:auto minmax(0,1fr) auto}.navlinks{display:none}.mobile-menu{top:62px;left:0;right:0;border-radius:0;border-left:0;border-right:0}}
 @media(max-width:620px){.nav{height:56px}.nav .logo{padding:0 14px}.nav .navright .pill{padding:0 14px;font-size:9px}}
 
 /* ---------- HERO: WebGL stage ---------- */
@@ -649,3 +649,30 @@ html[lang="vi"] .wipe>span{padding-top:.04em}
 @media(max-width:900px){.masonry{columns:2 160px}.gal{padding:60px max(5%,calc((100vw - 1500px)/2))}}
 @media(max-width:560px){.masonry{columns:2 130px;column-gap:9px}.shotcell{margin-bottom:9px}}
 @media(prefers-reduced-motion:reduce){.shotcell img,.lb-x{transition:none}}
+
+/* The ticker needs 339px to read. It was being given 64px at 1180 and 1px at
+   1100, so it rendered as a hard-cut stub against the language divider, and
+   the links overflowed by 17px underneath it. Show it only where it fits,
+   fade the trailing edge so a tight fit never cuts mid-character, and hand
+   the links the space back below that. */
+.navticker{display:none}
+@media(min-width:1460px){
+ .navticker{display:flex;
+  -webkit-mask-image:linear-gradient(90deg,#000 76%,transparent);
+  mask-image:linear-gradient(90deg,#000 76%,transparent)}
+}
+@media(max-width:1120px){
+ .navlinks{display:none}
+ .menu-toggle{display:block}
+}
+
+/* FIRST mark sits in its own nav cell beside the wordmark, same hairline
+   rhythm as the links. Hidden on phones where the bar has no spare room. */
+.first-mark{display:flex;align-items:center;height:100%;padding:0 18px;
+ border-right:1px solid #ffffff14;opacity:.85;transition:opacity .25s}
+.first-mark:hover{opacity:1}
+.first-mark img{max-height:22px;width:auto;display:block}
+@media(max-width:620px){.first-mark{display:none}}
+/* with the FIRST mark present the bar needs a fourth column, or the right
+   cluster wraps onto a second row */
+.nav.has-first{grid-template-columns:auto auto minmax(0,1fr) auto}

@@ -1,5 +1,13 @@
 # assets
 
+## FIRST logo
+Download the current mark from FIRST's brand/media pages and save it here,
+then set `firstLogo` in `config.js` to the path (`assets/first-logo.svg`).
+It renders beside the wordmark in the nav on both pages, linked to
+`firstUrl`. It is a trademark with usage rules, so use their official file
+rather than a redrawn copy. Empty means nothing renders and the bar keeps
+its three-column layout.
+
 ## Sponsor logos
 `assets/sponsors/`. Point each sponsor's `logo` in `config.js` at the file.
 SVG is best; otherwise a transparent PNG at least 600px wide. Logos render on

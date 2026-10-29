@@ -510,3 +510,21 @@ if(lb){
  addEventListener('keydown',e=>{if(e.key==='Escape'&&lb.classList.contains('open'))close()});
 }
 })();
+
+// FIRST mark beside the wordmark, on both pages. Renders only when
+// cfg.firstLogo points at a file, so the nav never shows a broken image.
+(function firstMark(){
+ const cfg=window.LAMBDA_CONFIG||{};
+ if(!cfg.firstLogo)return;
+ const logo=document.querySelector('.nav .logo');
+ if(!logo||logo.parentNode.querySelector('.first-mark'))return;
+ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const a=document.createElement(cfg.firstUrl?'a':'span');
+ a.className='first-mark';
+ if(cfg.firstUrl){a.href=esc(cfg.firstUrl);a.target='_blank';a.rel='noopener noreferrer';}
+ a.setAttribute('aria-label','FIRST Tech Challenge');
+ a.innerHTML=`<img src="${esc(cfg.firstLogo)}" alt="FIRST"/>`;
+ logo.insertAdjacentElement('afterend',a);
+ // the bar is a 3-column grid; a 4th child would wrap the right cluster
+ const nav=logo.closest('.nav');if(nav)nav.classList.add('has-first');
+})();

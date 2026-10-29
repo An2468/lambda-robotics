@@ -1,6 +1,11 @@
 /* EDIT THIS FILE TO CUSTOMIZE YOUR TEAM'S WEBSITE */
 window.LAMBDA_CONFIG = {
   teamNumber: '36789',
+  // Official FIRST mark, shown beside the wordmark in the nav. Download the
+  // current logo from FIRST's brand pages and save it here; it is a trademark,
+  // so use their file rather than a redrawn copy. Empty = nothing renders.
+  firstLogo: '',          // e.g. 'assets/first-logo.svg'
+  firstUrl: 'https://www.firstinspires.org/robotics/ftc',
   season: '2026 / 2027',
   email: 'teamlambdarobotics@gmail.com',
   instagram: '#', // Replace with Instagram profile URL

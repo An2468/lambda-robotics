@@ -467,117 +467,45 @@ requestAnimationFrame(frame);
 })();
 
 /* ---------------------------------------------------------------------
-   BUILD PAGE. Each chapter is a tall section whose inner .chapter-pin
-   sticks; progress through that scroll range feeds in as --p (0..1) and
-   drives the animation. Everything here no-ops on the main page.
+   BUILD PAGE. Two galleries and nothing else. Masonry columns keep each
+   photo's own shape; an empty slot names the file it is waiting for.
+   No-ops on the main page.
    --------------------------------------------------------------------- */
 (function buildPage(){
-// own scope: the helpers above live inside the main IIFE
 const $=(sel,root)=>(root||document).querySelector(sel);
 const $$=(sel,root)=>Array.from((root||document).querySelectorAll(sel));
 const cfg=window.LAMBDA_CONFIG||{};
 const safe=(x)=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const T=window.LAMBDA_T||((k,f)=>f);
-const chapters=$$('.chapter');
-if(!chapters.length)return;
-const slow=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const sheet=$('#sheet'),field=$('#fieldGrid');
+if(!sheet&&!field)return;
 
-// 01 — parts scattered off the bench, converging as the chapter plays
-const bench=$('#benchParts'),benchPct=$('#benchPct');
-const PARTS=[
- {w:150,h:150,label:'FRAME',   svg:'<rect x="12" y="12" width="76" height="76" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><rect x="28" y="28" width="44" height="44" rx="3" fill="none" stroke="currentColor" stroke-width="2" opacity=".55"/>'},
- {w:120,h:120,label:'GEAR',    svg:'<circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="50" r="10" fill="none" stroke="currentColor" stroke-width="2"/>'+Array.from({length:10},(_,i)=>{const a=i/10*Math.PI*2;return `<rect x="${(50+Math.cos(a)*36-4).toFixed(1)}" y="${(50+Math.sin(a)*36-4).toFixed(1)}" width="8" height="8" fill="currentColor" opacity=".8"/>`}).join('')},
- {w:132,h:96, label:'BRACKET', svg:'<path d="M14 80V20h30v24h42v36z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>'},
- {w:104,h:104,label:'BEARING', svg:'<circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="50" r="16" fill="none" stroke="currentColor" stroke-width="3"/>'+Array.from({length:8},(_,i)=>{const a=i/8*Math.PI*2;return `<circle cx="${(50+Math.cos(a)*25).toFixed(1)}" cy="${(50+Math.sin(a)*25).toFixed(1)}" r="4" fill="currentColor" opacity=".7"/>`}).join('')},
- {w:150,h:76, label:'RAIL',    svg:'<rect x="8" y="38" width="84" height="24" rx="4" fill="none" stroke="currentColor" stroke-width="3"/><path d="M22 38v24M50 38v24M78 38v24" stroke="currentColor" stroke-width="2" opacity=".5"/>'},
- {w:112,h:112,label:'WHEEL',   svg:'<circle cx="50" cy="50" r="32" fill="none" stroke="currentColor" stroke-width="3"/>'+Array.from({length:6},(_,i)=>{const a=i/6*Math.PI*2;return `<path d="M50 50L${(50+Math.cos(a)*32).toFixed(1)} ${(50+Math.sin(a)*32).toFixed(1)}" stroke="currentColor" stroke-width="2" opacity=".5"/>`}).join('')}
-];
-if(bench){
- bench.innerHTML=PARTS.map(p=>
-  `<div class="bpart" style="width:${p.w}px;height:${p.h}px"><svg viewBox="0 0 100 100">${p.svg}</svg><span>${p.label}</span></div>`).join('');
- const els=$$('.bpart',bench);
- // where each part starts (scattered) and lands (a neat row)
- PARTS.forEach((p,i)=>{
-  const t=(i/(PARTS.length-1))-0.5;                 // -0.5 .. 0.5 across the bench
-  els[i]._to={x:t*560,y:(i%2?1:-1)*26,r:0};
-  els[i]._from={x:t*1500+(i%2?240:-240),y:(i%2?-1:1)*420,r:(i%2?1:-1)*(28+i*11)};
+function cell(item){
+ if(!item.src){
+  return `<div class="shotcell empty"><i>+</i><em>${T('bn.addPhoto','ADD PHOTO')}</em>`+
+   `${item.suggest?`<code>${safe(item.suggest.split('/').pop())}</code>`:''}</div>`;
+ }
+ return `<button type="button" class="shotcell filled" data-full="${safe(item.src)}" data-cap="${safe(item.caption)}">`+
+  `<img src="${safe(item.src)}" alt="${safe(item.caption)}" loading="lazy"/>`+
+  `<figcaption>${safe(item.caption)}</figcaption></button>`;
+}
+if(sheet)sheet.innerHTML=(cfg.gallery||[]).map(cell).join('');
+if(field)field.innerHTML=(cfg.outreach||[]).map(cell).join('');
+
+// lightbox, only ever reachable from a filled cell
+const lb=$('#lightbox'),lbImg=$('#lbImg'),lbCap=$('#lbCap');
+if(lb){
+ let last=null;
+ const open=(src,cap)=>{last=document.activeElement;lbImg.src=src;lbImg.alt=cap||'';lbCap.textContent=cap||'';
+  lb.classList.add('open');lb.setAttribute('aria-hidden','false');document.body.classList.add('locked');
+  const x=$('.lb-x',lb);if(x)x.focus()};
+ const close=()=>{lb.classList.remove('open');lb.setAttribute('aria-hidden','true');
+  document.body.classList.remove('locked');lbImg.removeAttribute('src');if(last&&last.focus)last.focus()};
+ document.addEventListener('click',e=>{
+  const c=e.target.closest('.shotcell.filled');
+  if(c){open(c.dataset.full,c.dataset.cap);return}
+  if(e.target.closest('[data-lbclose]')||e.target===lb)close();
  });
- bench._els=els;
-}
-
-// 02 — frames develop one at a time
-const sheet=$('#sheet');
-if(sheet){
- const shots=(cfg.gallery||[]).slice(0,12);
- sheet.innerHTML=shots.map((g,i)=>{
-  const inner=g.src
-   ? `<img src="${safe(g.src)}" alt="${safe(g.caption)}" loading="lazy"/>`
-   : `<span class="ph"><i>+</i><em>${T('bn.addPhoto','ADD PHOTO')}</em>${g.suggest?`<code>${safe(g.suggest.split('/').pop())}</code>`:''}</span>`;
-  return `<figure class="frameShot${g.src?'':' empty'}">${inner}<b>${String(i+1).padStart(2,'0')} ${safe(g.caption)}</b></figure>`;
- }).join('');
- sheet._els=$$('.frameShot',sheet);
-}
-
-// 03 — outreach: filled entries render, blanks render as marked slots
-const fieldStats=$('#fieldStats'),fieldGrid=$('#fieldGrid');
-if(fieldStats)
- fieldStats.innerHTML=(cfg.outreachStats||[]).map(s=>
-  `<div class="fstat"><b class="${s.n?'':'empty'}" data-n="${safe(s.n)}">${s.n?'0':'—'}</b><span>${safe(s.label)}</span></div>`).join('');
-if(fieldGrid)
- fieldGrid.innerHTML=(cfg.outreach||[]).map(o=>{
-  if(!o.title)return `<div class="fcard slot"><span class="fshot empty"><i>+</i><em>${T('bn.addPhoto','ADD PHOTO')}</em>${o.suggest?`<code>${safe(o.suggest)}</code>`:''}</span>`+
-   `<div class="fcard-k">${T('bn.slot','OPEN SLOT')}</div><h3>${T('bn.slotH','Your next programme')}</h3><p>${T('bn.slotP','Add it to outreach[] in config.js: title, date, a line of copy and a photo.')}</p></div>`;
-  const shot=o.photo
-   ? `<span class="fshot"><img src="${safe(o.photo)}" alt="${safe(o.title)}" loading="lazy"/></span>`
-   : `<span class="fshot empty"><i>+</i><em>${T('bn.addPhoto','ADD PHOTO')}</em>${o.suggest?`<code>${safe(o.suggest)}</code>`:''}</span>`;
-  return `<div class="fcard">${shot}<div class="fcard-k">${safe(o.kind)}</div><span class="fdate">${safe(o.date)}</span>`+
-   `<h3>${safe(o.title)}</h3><p>${safe(o.body)}</p>`+
-   (o.url?`<a href="${safe(o.url)}" target="_blank" rel="noopener noreferrer">${T('bn.visit','Visit')} ↗</a>`:'')+`</div>`;
- }).join('');
-
-// progress pump: one rAF-throttled pass sets --p on every chapter
-let raf=0;
-function run(){
- raf=0;
- chapters.forEach(ch=>{
-  const r=ch.getBoundingClientRect();
-  const span=Math.max(1,r.height-innerHeight);
-  const p=Math.max(0,Math.min(1,-r.top/span));
-  ch.style.setProperty('--p',p.toFixed(4));
-  const id=ch.id;
-  if(id==='bench'&&bench&&bench._els){
-   const e=1-Math.pow(1-p,3);
-   bench._els.forEach(el=>{
-    const f=el._from,t=el._to;
-    const x=f.x+(t.x-f.x)*e, y=f.y+(t.y-f.y)*e, rot=f.r+(t.r-f.r)*e;
-    el.style.transform=`translate(-50%,-50%) translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${rot.toFixed(1)}deg)`;
-    el.classList.toggle('set',e>.92);
-   });
-   if(benchPct)benchPct.textContent=Math.round(e*100)+'%';
-  }
-  if(id==='prints'&&sheet&&sheet._els){
-   const n=Math.round(p*sheet._els.length*1.25);
-   sheet._els.forEach((el,i)=>el.classList.toggle('dev',i<n));
-  }
-  if(id==='field'){
-   const cards=$$('.fcard',ch);
-   cards.forEach((c,i)=>c.classList.toggle('in',p*cards.length*1.4>i));
-   $$('.fstat b[data-n]',ch).forEach(b=>{
-    const raw=b.dataset.n;if(!raw)return;
-    const num=parseInt(raw.replace(/[^0-9]/g,''),10);if(!num)return;
-    const v=Math.round(num*Math.min(1,p*2));
-    b.textContent=v.toLocaleString()+(/\+/.test(raw)&&v>=num?'+':'');
-   });
-  }
- });
-}
-if(slow){
- $$('.frameShot').forEach(e=>e.classList.add('dev'));
- $$('.fcard').forEach(e=>e.classList.add('in'));
- $$('.fstat b[data-n]').forEach(b=>{if(b.dataset.n)b.textContent=b.dataset.n});
-}else{
- addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(run)},{passive:true});
- addEventListener('resize',()=>{if(!raf)raf=requestAnimationFrame(run)},{passive:true});
- run();
+ addEventListener('keydown',e=>{if(e.key==='Escape'&&lb.classList.contains('open'))close()});
 }
 })();

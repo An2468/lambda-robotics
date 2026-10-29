@@ -31,11 +31,13 @@ The hero runs a machined gear train built in Three.js (`script.js`, bottom block
 Deliberately generic — it shows no part of the real robot, so nothing about the team's design can be copied from the site. Change `POP` at the top of the block to re-accent the anodised gear. Metal needs something to reflect, so the block builds a small studio environment from a canvas gradient; tone mapping is linear rather than ACES, which otherwise desaturates the anodised orange to cream. It degrades to a plain hero if WebGL is unavailable.
 
 ## The build page
-Four chapters. Each `.chapter` is a tall section whose inner `.chapter-pin` sticks while you scroll its height; one rAF-throttled pass writes progress into `--p` (0 to 1) and drives the animation — parts converging onto the bench, frames developing one by one, outreach cards and counters arriving. `prefers-reduced-motion` drops the pinning entirely and shows everything in flow.
+Two galleries and nothing else: the workshop and outreach. Both are masonry
+columns (`columns: 3 240px`), so photos keep their own proportions instead of
+being cropped into a grid, and the set rebalances when you add or remove one.
+A filled photo opens in a lightbox; an empty slot prints the filename it is
+waiting for and is not clickable.
 
-Photos: every empty slot on the build page prints the filename it is waiting for. Save the photo to `assets/build/` (behind the scenes, THE PRINTS) or `assets/outreach/` (THE FIELD), then set `src` or `photo` in `config.js` to that path. The `suggest` field is only the label, so nothing 404s while the slots are empty.
-
-Outreach content lives in `outreach[]` and `outreachStats[]` in `config.js`. An entry with an empty `title` renders as a dashed OPEN SLOT card, so the grid stays composed while you fill it in; a stat with an empty `n` shows a dash instead of a number.
+Photos go in `assets/build/` and `assets/outreach/` — see `assets/README.md`.
 
 ## Section mechanics
 The page is four sections plus a dialog. Each presents itself differently on purpose: WebGL robot (hero), a manifesto whose words light up word-by-word as you scroll (about), a grid of generated ID plates, every member the same size (team), a compact timeline showing every milestone at once (the old stepper hid three of five behind a rail and two arrows, and ran 1881px tall),  and a cumulative funding ladder (sponsors) where picking a tier charges every rung beneath it and marks which benefits are inherited from the tiers below. Milestones come from `config.js` as before; `status: 'ACTIVE'` gives a milestone the dark pulsing pill.

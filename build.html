@@ -11,52 +11,35 @@
 <link rel="stylesheet" href="styles.css"/>
 </head><body class="buildpage">
 <div class="grain"></div><div class="cursor-glow" id="glow"></div><main class="site">
-<header class="nav" aria-label="Main navigation" data-i18n-attr="aria-label:nav.main"><a href="#home" class="logo"><span class="logo-mark">λ</span>LAMBDA</a><nav class="navlinks"><a href="index.html" data-i18n="nav.home">← HOME</a><a href="#bench" data-i18n="bn.ch1">THE BENCH</a><a href="#prints" data-i18n="bn.ch2">THE PRINTS</a><a href="#field" data-i18n="bn.ch3">THE FIELD</a><a class="nav-out" href="index.html#partners" data-i18n="nav.partner">PARTNER</a><div class="navticker" aria-hidden="true"><span id="navTick" data-i18n="nav.ticker">FTC #36789 · 2026/2027 SEASON · BUILDING NOW</span></div></nav><div class="navright"><button class="lang" id="language" data-lang-toggle aria-label="Change language" data-i18n-attr="aria-label:nav.lang">EN / VI</button><a class="pill" href="#contact" data-i18n="nav.pill">BECOME A PARTNER ↗</a><button class="menu-toggle" id="menuButton" aria-label="Toggle menu" data-i18n-attr="aria-label:nav.menu">☰</button></div></header>
-<div class="mobile-menu" id="mobileMenu"><a href="index.html" data-i18n="nav.home">← HOME</a><a href="#bench" data-i18n="bn.ch1">THE BENCH</a><a href="#prints" data-i18n="bn.ch2">THE PRINTS</a><a href="#field" data-i18n="bn.ch3">THE FIELD</a><a href="index.html#partners" data-i18n="nav.partner">PARTNER</a><a href="#contact" data-i18n="nav.contact">CONTACT</a></div>
+<header class="nav" aria-label="Main navigation" data-i18n-attr="aria-label:nav.main"><a href="#home" class="logo"><span class="logo-mark">λ</span>LAMBDA</a><nav class="navlinks"><a href="index.html" data-i18n="nav.home">← HOME</a><a href="#prints" data-i18n="bn.ch2">WORKSHOP</a><a href="#field" data-i18n="bn.ch3">OUTREACH</a><a class="nav-out" href="index.html#partners" data-i18n="nav.partner">PARTNER</a><div class="navticker" aria-hidden="true"><span id="navTick" data-i18n="nav.ticker">FTC #36789 · 2026/2027 SEASON · BUILDING NOW</span></div></nav><div class="navright"><button class="lang" id="language" data-lang-toggle aria-label="Change language" data-i18n-attr="aria-label:nav.lang">EN / VI</button><a class="pill" href="#contact" data-i18n="nav.pill">BECOME A PARTNER ↗</a><button class="menu-toggle" id="menuButton" aria-label="Toggle menu" data-i18n-attr="aria-label:nav.menu">☰</button></div></header>
+<div class="mobile-menu" id="mobileMenu"><a href="index.html" data-i18n="nav.home">← HOME</a><a href="#prints" data-i18n="bn.ch2">WORKSHOP</a><a href="#field" data-i18n="bn.ch3">OUTREACH</a><a href="index.html#partners" data-i18n="nav.partner">PARTNER</a><a href="#contact" data-i18n="nav.contact">CONTACT</a></div>
 
 <header class="bhero" id="top">
  <div class="bhero-grid"></div>
  <div class="bhero-in">
   <div class="section-kicker reveal" data-i18n="bn.kicker">LAMBDA / THE WORKSHOP</div>
   <h1 class="bhero-title"><span class="hl"><span data-i18n="bn.t1">BEHIND</span></span><span class="hl"><span data-i18n="bn.t2">THE BUILD.</span></span></h1>
-  <p class="bhero-lead" data-i18n="bn.lead">Four chapters: the bench we work on, the prints we keep, the rooms we show up in, and what comes next. Scroll, and each one plays as you go.</p>
+  <p class="bhero-lead" data-i18n="bn.lead">Photographs from the workshop and from the rooms we show up in. Replace each slot in config.js as you take them.</p>
  </div>
- <div class="bhero-scroll" aria-hidden="true"><span data-i18n="bn.scroll">SCROLL</span><i></i></div>
 </header>
 
-<section class="chapter" id="bench" data-ch="01">
- <div class="chapter-pin">
-  <div class="ch-head"><span class="ch-n">01</span><h2 data-i18n="bn.ch1h">THE BENCH.</h2>
-   <p data-i18n="bn.ch1p">Nothing arrives finished. Every part is cut, drilled, test-fitted and cut again until the assembly closes.</p></div>
-  <div class="bench" id="benchParts" aria-hidden="true"></div>
-  <div class="ch-read"><span data-i18n="bn.ch1r">ASSEMBLY</span><b id="benchPct">0%</b></div>
- </div>
+<section class="gal" id="prints">
+ <div class="gal-head"><h2 data-i18n="bn.ch2h">The workshop.</h2>
+  <p data-i18n="bn.ch2p">Prototypes, late builds, and the moments in between.</p></div>
+ <div class="masonry" id="sheet"></div>
 </section>
 
-<section class="chapter" id="prints" data-ch="02">
- <div class="chapter-pin">
-  <div class="ch-head"><span class="ch-n">02</span><h2 data-i18n="bn.ch2h">THE PRINTS.</h2>
-   <p data-i18n="bn.ch2p">Photographs from the build season, developing as you scroll. Replace them in config.js as you take them.</p></div>
-  <div class="sheet" id="sheet"></div>
- </div>
+<section class="gal alt" id="field">
+ <div class="gal-head"><h2 data-i18n="bn.ch3h">Outreach.</h2>
+  <p data-i18n="bn.ch3p">Hackathons we run and classrooms we turn up in.</p></div>
+ <div class="masonry" id="fieldGrid"></div>
+ <div class="gal-cta"><a class="ghost" href="index.html#partners" data-i18n="bn.cta1">See the tiers ↗</a></div>
 </section>
 
-<section class="chapter" id="field" data-ch="03">
- <div class="chapter-pin">
-  <div class="ch-head"><span class="ch-n">03</span><h2 data-i18n="bn.ch3h">THE FIELD.</h2>
-   <p data-i18n="bn.ch3p">The work that happens outside the workshop. Hackathons we run, classrooms we turn up in.</p></div>
-  <div class="field-stats" id="fieldStats"></div>
-  <div class="field-grid" id="fieldGrid"></div>
- </div>
-</section>
-
-<section class="chapter short" id="next" data-ch="04">
- <div class="chapter-pin">
-  <div class="ch-head"><span class="ch-n">04</span><h2 data-i18n="bn.ch4h">WHAT’S NEXT.</h2>
-   <p data-i18n="bn.ch4p">Competition season, more outreach, and a robot that keeps changing. Back us and your name rides along.</p></div>
-  <div class="next-cta"><a class="solid" href="index.html#partners" data-i18n="bn.cta1">See the tiers ↗</a><a class="ghost" href="#contact" data-i18n="bn.cta2">Talk to us</a></div>
- </div>
-</section>
+<div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+ <button class="lb-x" data-lbclose aria-label="Close">×</button>
+ <figure><img id="lbImg" alt=""/><figcaption id="lbCap"></figcaption></figure>
+</div>
 
 <div class="modal" id="contact" aria-hidden="true"><div class="modal-scrim" data-close></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-x" data-close aria-label="Close" data-i18n-attr="aria-label:m.close">×</button><div class="modal-grid"><div class="modal-side"><div class="eyebrow" data-i18n="m.eyebrow">BECOME A PARTNER</div><h2 class="modal-head" id="modalTitle" data-i18n="m.title">LET'S BUILD<br><span>TOGETHER.</span></h2><div class="contact-info"><h3 data-i18n="m.h3">Join our journey as a founding partner.</h3><p data-i18n="m.p">Whether you can offer financial support, materials, tools or technical expertise, we'd love to start a conversation. Tell us how you'd like to help; we'll reach out by email.</p><p class="mono" style="font-size:11px" data-i18n="m.quick">ONLY FOUR QUICK FIELDS · NO PAYMENT REQUIRED</p><p><span data-i18n="m.follow">Follow our progress:</span><br><a href="#" id="insta" target="_blank" rel="noopener noreferrer"><u>Instagram ↗</u></a> &nbsp; <a href="#" id="tiktok" target="_blank" rel="noopener noreferrer"><u>TikTok ↗</u></a></p></div></div><form class="contact-form" id="sponsorForm"><div class="eyebrow" style="color:#4c535c" data-i18n="f.eyebrow">BECOME A LAMBDA PARTNER / 01—04</div><label for="company" data-i18n="f.l1">01 / COMPANY OR CONTACT NAME</label><input id="company" name="company" type="text" placeholder="Company or contact name" data-i18n-attr="placeholder:f.p1" required maxlength="120"/><label for="support" data-i18n="f.l2">02 / HOW WOULD YOU LIKE TO SUPPORT US?</label><select id="support" name="support"><option data-i18n="f.s1">Financial sponsorship</option><option data-i18n="f.s2">Equipment or materials</option><option data-i18n="f.s3">Engineering / technical mentorship</option><option data-i18n="f.notsure">Not sure yet</option></select><label for="sponsorTier" data-i18n="f.l3">03 / SPONSORSHIP TIER</label><select id="sponsorTier" name="tier"><option data-i18n="f.notsure">Not sure yet</option><option data-i18n="f.t1">Bronze</option><option data-i18n="f.t2">Silver</option><option data-i18n="f.t3">Gold</option><option data-i18n="f.t4">Diamond</option><option data-i18n="f.t5">Presenting Sponsor</option><option data-i18n="f.t6">Individual contribution</option></select><label for="email" data-i18n="f.l4">04 / YOUR EMAIL ADDRESS</label><input type="email" id="email" name="email" placeholder="you@company.com" data-i18n-attr="placeholder:f.p4" required maxlength="254"/><label style="display:flex;align-items:flex-start;gap:10px;text-transform:none;letter-spacing:normal;line-height:1.5"><input type="checkbox" name="consent" required style="width:17px;height:17px;flex:none;margin:0"/><span data-i18n="f.consent">I agree to be contacted by Lambda about this inquiry.</span></label><button type="submit" class="submit"><span data-i18n="f.submit">SEND PARTNERSHIP INQUIRY</span><span>↗</span></button><div class="form-status" id="formStatus" role="status"></div><p class="form-note" data-i18n="f.note">If a secure form endpoint hasn't been configured, this button will open a draft email for you to send. It won't falsely claim that a message was submitted.</p></form></div></div></div><footer class="footer"><div class="sponsor-wall reveal"><div class="eyebrow" data-i18n="ft.backed">BACKED BY</div><div class="marquee logo-strip" tabindex="0" aria-label="Our sponsors" data-i18n-attr="aria-label:strip.aria"><div class="marquee-track logo-track" id="sponsorTrack"></div></div></div><div class="footer-links"><span data-i18n="ft.team">FTC TEAM #36789</span><span data-i18n="ft.indie">INDEPENDENT STUDENT ROBOTICS TEAM</span><a href="#home" data-i18n="ft.top">BACK TO TOP ↑</a></div><div class="footer-brand">LAMBDA.</div><div class="newsletter"><div><label data-i18n="ft.newsH">NOTES FROM THE WORKSHOP.</label><p style="font-size:12px;color:#626971" data-i18n="ft.newsP">Occasional updates about our build and team milestones.</p></div><form id="newsletterForm"><input type="email" id="newsletterEmail" placeholder="YOUR EMAIL ADDRESS" aria-label="Newsletter email" data-i18n-attr="placeholder:ft.newsIn,aria-label:ft.newsAria" required/><button type="submit" aria-label="Subscribe" data-i18n-attr="aria-label:ft.sub">↗</button></form></div><p id="newsletterStatus" style="font-size:12px" role="status"></p><div class="foot-bottom"><span>© <span id="year"></span> LAMBDA ROBOTICS</span><span data-i18n="ft.motto">BUILT TO BUILD BETTER.</span><span data-i18n="ft.city">HO CHI MINH CITY, VIETNAM</span></div></footer>
 </main>

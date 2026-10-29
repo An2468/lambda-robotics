@@ -1,24 +1,26 @@
 # assets
 
-Drop sponsor logos here, then point `config.js` at them:
+## Sponsor logos
+`assets/sponsors/`. Point each sponsor's `logo` in `config.js` at the file.
+SVG is best; otherwise a transparent PNG at least 600px wide. Logos render on
+a light plate so dark marks stay legible, and scale to fit.
 
-```js
-sponsors: [
-  {name:'Acme Robotics', logo:'assets/acme.svg', url:'https://acme.example'},
-]
-```
+## Team portraits
+`assets/team/`. Set `photo` on the member in `config.js`. A member without one
+gets a generated plate instead, so a half-filled roster still looks composed.
 
-SVG is best (sharp at any size). Otherwise PNG with a transparent background,
-at least 600px wide. Logos are shown on a light plate so dark marks stay legible,
-and scaled to fit — no need to pre-size them.
+## Build and outreach photos
+`assets/build/` for the workshop gallery, `assets/outreach/` for the outreach
+gallery. Every empty slot on the build page prints the filename it wants:
 
-Behind-the-scenes and outreach photos live here too:
+    assets/build/     chassis.jpg  cad.jpg  drivetrain.jpg
+                      wiring.jpg   testing.jpg  workspace.jpg
+    assets/outreach/  lotushacks.jpg  schools.jpg  workshop.jpg
 
-- `assets/build/` — build-season photos for THE PRINTS on the build page
-- `assets/outreach/` — one photo per outreach entry for THE FIELD
-- `assets/team/` — member portraits
+Save the photo under that name, then set `src` on the matching entry in
+`config.js` to the same path. The `suggest` field is only the label, so
+nothing is requested and nothing 404s while a slot is empty.
 
-Each empty slot on the site prints the filename it is waiting for. Save the
-photo to that path, then set `src` (gallery) or `photo` (outreach) in
-`config.js` to the same path. Landscape crops work best; they are cropped to
-fill, so keep the subject centred.
+The galleries are masonry columns, so photos keep their own proportions.
+Portrait and landscape both work and neither gets cropped. Add or remove
+entries freely; the columns rebalance.

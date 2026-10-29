@@ -590,139 +590,60 @@ html[lang="vi"] .wipe>span{padding-top:.04em}
 @media(prefers-reduced-motion:reduce){.tstep i,.tstep.now i:after{animation:none;transition:none}}
 
 /* =======================================================================
-   BUILD PAGE — pinned chapters. Each .chapter is tall; its .chapter-pin
-   sticks for that height while JS feeds progress in as --p (0 to 1), so
-   the content plays in place and the page still scrolls normally.
+   BUILD PAGE — two galleries, nothing else. Masonry columns so phone
+   photos keep their own shape instead of being cropped to a grid.
    ======================================================================= */
 .buildpage{background:#07080a}
-.bhero{position:relative;min-height:86svh;display:grid;align-items:center;overflow:hidden;
- padding:150px max(5%,calc((100vw - 1500px)/2)) 90px;
- background:radial-gradient(ellipse 70% 60% at 28% 40%,#1e222a 0%,#101318 48%,#07080a 88%)}
-.bhero-grid{position:absolute;inset:0;opacity:.14;pointer-events:none;
+.bhero{position:relative;display:grid;align-items:end;overflow:hidden;min-height:58svh;
+ padding:160px max(5%,calc((100vw - 1500px)/2)) 70px;
+ background:radial-gradient(ellipse 70% 70% at 25% 40%,#1c2027 0%,#0f1217 50%,#07080a 88%)}
+.bhero-grid{position:absolute;inset:0;opacity:.12;pointer-events:none;
  background-image:linear-gradient(#ffffff1a 1px,transparent 1px),linear-gradient(90deg,#ffffff1a 1px,transparent 1px);
- background-size:74px 74px;mask-image:radial-gradient(ellipse 60% 60% at 30% 45%,#000,transparent 72%)}
-.bhero-in{position:relative;z-index:2;max-width:780px}
-.bhero-title{margin:22px 0 0;font-size:clamp(46px,8vw,124px);line-height:.86;font-weight:500;letter-spacing:-.075em}
-.bhero-lead{margin:30px 0 0;max-width:520px;font-size:17px;line-height:1.6;color:#aeb4be}
-.bhero-scroll{position:absolute;left:max(5%,calc((100vw - 1500px)/2));bottom:46px;z-index:2;
- display:flex;align-items:center;gap:12px;font:9px var(--mono);letter-spacing:.2em;color:#79808d}
-.bhero-scroll i{display:block;width:52px;height:1px;background:#ffffff33;position:relative;overflow:hidden}
-.bhero-scroll i:after{content:'';position:absolute;inset:0;background:#f4511e;transform:translateX(-100%);animation:sweep 2.6s ease-in-out infinite}
-@keyframes sweep{50%{transform:none}100%{transform:translateX(100%)}}
+ background-size:74px 74px;mask-image:radial-gradient(ellipse 60% 60% at 28% 50%,#000,transparent 72%)}
+.bhero-in{position:relative;z-index:2;max-width:760px}
+.bhero-title{margin:20px 0 0;font-size:clamp(44px,7.5vw,104px);line-height:.88;font-weight:500;letter-spacing:-.075em}
+.bhero-lead{margin:24px 0 0;max-width:470px;font-size:15px;line-height:1.6;color:#aeb4be}
 
-.chapter{position:relative;height:300vh}
-.chapter.short{height:140vh}
-.chapter-pin{position:sticky;top:62px;height:calc(100svh - 62px);overflow:hidden;
- display:flex;flex-direction:column;justify-content:center;gap:34px;
- padding:30px max(5%,calc((100vw - 1500px)/2))}
-.chapter:nth-child(even) .chapter-pin{background:#090a0d}
-.ch-head{position:relative;z-index:3;max-width:640px}
-.ch-n{font:10px var(--mono);letter-spacing:.2em;color:#f4511e}
-.ch-head h2{margin:12px 0 0;font-size:clamp(34px,5.4vw,76px);font-weight:500;letter-spacing:-.075em;line-height:.95}
-.ch-head p{margin:16px 0 0;max-width:470px;font-size:14px;line-height:1.65;color:#9aa1ac}
-.ch-read{position:absolute;right:max(5%,calc((100vw - 1500px)/2));top:34px;z-index:3;
- display:flex;align-items:baseline;gap:12px;font:9px var(--mono);letter-spacing:.18em;color:#79808d}
-.ch-read b{font-size:22px;font-weight:500;letter-spacing:-.04em;color:#eef1f5;font-variant-numeric:tabular-nums}
+.gal{padding:84px max(5%,calc((100vw - 1500px)/2))}
+.gal.alt{background:#090a0d}
+.gal-head{display:flex;justify-content:space-between;align-items:baseline;gap:30px;flex-wrap:wrap;
+ margin-bottom:30px;padding-bottom:22px;border-bottom:1px solid #ffffff14}
+.gal-head h2{margin:0;font-size:clamp(26px,3.2vw,40px);font-weight:500;letter-spacing:-.05em}
+.gal-head p{margin:0;max-width:380px;font-size:13px;line-height:1.6;color:#8e95a1}
 
-/* 01 — parts converge onto the bench as you scroll */
-.bench{position:relative;flex:1;min-height:0}
-.bpart{position:absolute;left:50%;top:50%;display:grid;place-items:center;
- border:1px solid #ffffff26;border-radius:10px;background:#141820;color:#aeb7c4;
- box-shadow:0 18px 40px #00000066;will-change:transform}
-.bpart svg{width:62%;height:62%;overflow:visible}
-.bpart span{position:absolute;left:11px;bottom:8px;font:8px var(--mono);letter-spacing:.14em;color:#6f7885}
-.bpart.set{border-color:#f4511e66;background:#171a20}
+.masonry{columns:3 240px;column-gap:14px}
+.shotcell{break-inside:avoid;margin:0 0 14px;border-radius:8px;overflow:hidden;position:relative;
+ background:#13161b;display:block;width:100%;padding:0;border:0;color:inherit;text-align:left}
+.shotcell img{width:100%;height:auto;display:block}
+.shotcell figcaption{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 10px;
+ font:9px var(--mono);letter-spacing:.1em;color:#eef1f5;
+ background:linear-gradient(transparent,#05070ad9);opacity:0;transition:opacity .3s}
+.shotcell:hover figcaption,.shotcell:focus-visible figcaption{opacity:1}
+.shotcell.filled{cursor:zoom-in}
+.shotcell.filled:hover img{transform:scale(1.03)}
+.shotcell img{transition:transform .6s cubic-bezier(.2,.7,.3,1)}
+/* empty slot: keeps a photo-ish shape and names the file it wants */
+.shotcell.empty{aspect-ratio:4/3;display:grid;place-items:center;align-content:center;gap:6px;
+ background:#ffffff06;border:1px dashed #ffffff26;cursor:default}
+.shotcell.empty:nth-child(3n+2){aspect-ratio:3/4}
+.shotcell.empty i{font-style:normal;font-size:18px;line-height:1;color:#f4511e}
+.shotcell.empty em{font-style:normal;font:8px var(--mono);letter-spacing:.16em;color:#8e95a1}
+.shotcell.empty code{font:8px var(--mono);color:#5d6470;max-width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gal-cta{margin-top:34px}
+.gal-cta a{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:2px;
+ border:1px solid #ffffff2e;color:#d9dde4;font:10px var(--mono);letter-spacing:.13em;text-transform:uppercase;transition:.3s}
+.gal-cta a:hover{background:#ffffff14;border-color:#ffffff70;color:#fff}
 
-/* 02 — contact sheet develops frame by frame */
-.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;flex:1;min-height:0;align-content:center}
-.frameShot{position:relative;aspect-ratio:3/4;border-radius:4px;overflow:hidden;background:#15171c;
- border:1px solid #ffffff14;opacity:.08;filter:grayscale(1) contrast(.6) brightness(.5);
- transform:translateY(16px) scale(.97);transition:none}
-.frameShot.dev{opacity:1;filter:none;transform:none;transition:opacity .6s ease,filter .9s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
-.frameShot img{width:100%;height:100%;object-fit:cover}
-.frameShot .ph{position:absolute;inset:0;display:grid;place-items:center;font-size:34px;color:#ffffff1f}
-.frameShot b{position:absolute;left:9px;bottom:7px;font:8px var(--mono);letter-spacing:.12em;color:#cfd4dc;font-weight:400;
- text-shadow:0 1px 6px #000}
-@media(max-width:620px){.sheet{grid-template-columns:repeat(3,1fr);gap:8px}}
+.lightbox{position:fixed;inset:0;z-index:95;display:none;place-items:center;padding:5vh 5vw;
+ background:#05070af2;backdrop-filter:blur(6px)}
+.lightbox.open{display:grid}
+.lightbox figure{margin:0;max-width:100%;max-height:90svh;display:flex;flex-direction:column;gap:12px}
+.lightbox img{max-width:100%;max-height:82svh;object-fit:contain;border-radius:6px}
+.lightbox figcaption{font:10px var(--mono);letter-spacing:.12em;color:#aeb4be;text-align:center}
+.lb-x{position:absolute;top:20px;right:24px;width:40px;height:40px;border-radius:50%;
+ border:1px solid #ffffff33;background:none;color:#eef1f5;font-size:22px;line-height:1;transition:.25s}
+.lb-x:hover{background:#ffffff14;transform:rotate(90deg)}
 
-/* 03 — outreach */
-.field-stats{display:flex;gap:52px;flex-wrap:wrap}
-.fstat b{display:block;font-size:clamp(34px,5vw,62px);font-weight:500;letter-spacing:-.07em;line-height:1;font-variant-numeric:tabular-nums}
-.fstat b.empty{color:#39404b}
-.fstat span{display:block;margin-top:8px;font:9px var(--mono);letter-spacing:.16em;color:#79808d}
-.field-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;align-content:center}
-.fcard{position:relative;padding:22px;border-radius:14px;border:1px solid #ffffff1c;background:#101318;
- opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.3,1),border-color .4s}
-.fcard.in{opacity:1;transform:none}
-.fcard:hover{border-color:#ffffff40}
-.fcard-k{font:8px var(--mono);letter-spacing:.16em;color:#f4511e}
-.fcard h3{margin:10px 0 0;font-size:20px;font-weight:500;letter-spacing:-.04em}
-.fcard p{margin:9px 0 0;font-size:13px;line-height:1.6;color:#9aa1ac}
-.fcard .fdate{position:absolute;top:20px;right:20px;font:9px var(--mono);color:#6f7885}
-.fcard a{display:inline-flex;gap:7px;margin-top:12px;font:9px var(--mono);letter-spacing:.14em;color:#f4511e;
- border-bottom:1px solid #f4511e55;padding-bottom:2px}
-.fcard.slot{border-style:dashed;background:none}
-.fcard.slot h3{color:#5d6470}
-.fcard.slot p{color:#5d6470}
-
-.next-cta{display:flex;gap:12px;flex-wrap:wrap}
-.next-cta a{display:inline-flex;align-items:center;gap:8px;padding:15px 26px;border-radius:2px;
- font:10px var(--mono);letter-spacing:.13em;text-transform:uppercase;border:1px solid #ffffff2e;transition:.3s}
-.next-cta .solid{background:#f1f3f6;color:#0a0b0d;border-color:#f1f3f6}
-.next-cta .solid:hover{background:#f4511e;border-color:#f4511e;color:#fff}
-.next-cta .ghost{color:#d9dde4}
-.next-cta .ghost:hover{background:#ffffff14;border-color:#ffffff70}
-
-@media(max-width:820px){
- .chapter{height:260vh}
- .ch-read{display:none}
- .chapter-pin{gap:22px}
- .field-stats{gap:28px}
-}
-@media(prefers-reduced-motion:reduce){
- .chapter{height:auto}
- .chapter-pin{position:static;height:auto;padding-top:70px;padding-bottom:70px}
- .bpart{position:relative;left:auto;top:auto;transform:none!important}
- .bench{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
- .frameShot{opacity:1;filter:none;transform:none}
- .fcard{opacity:1;transform:none}
- .bhero-scroll i:after{animation:none}
-}
-
-/* Vietnamese nav labels are much longer than the English ones, so the rail
-   runs out of room well before the 900px breakpoint and the last link slides
-   under the lang toggle. Tighten the cells first, then fall back to the
-   hamburger earlier for vi than for en. */
-@media(max-width:1280px){.navlinks a{padding:0 14px;letter-spacing:.1em}}
-@media(max-width:1180px){
- html[lang="vi"] .navlinks{display:none}
- html[lang="vi"] .menu-toggle{display:block}
- html[lang="vi"] .navticker{display:none}
-}
-/* English ran out at ~1015px while its links only hid at 900, leaving a band
-   where the last one slid under the lang toggle. */
-@media(max-width:1060px){
- .navlinks{display:none}
- .menu-toggle{display:block}
- .navticker{display:none}
-}
-
-/* Photo slots. An empty slot names the file it is waiting for, so adding a
-   photo is: save it to that path, then set `src`/`photo` in config.js. */
-.fshot{display:block;position:relative;aspect-ratio:16/10;margin:0 0 16px;border-radius:9px;overflow:hidden;background:#15181d}
-.fshot img{width:100%;height:100%;object-fit:cover;display:block}
-.fshot.empty{display:grid;place-items:center;align-content:center;gap:5px;
- background:#ffffff06;border:1px dashed #ffffff2e}
-.fshot.empty i,.frameShot .ph i{font-style:normal;font-size:19px;line-height:1;color:#f4511e}
-.fshot.empty em,.frameShot .ph em{font-style:normal;font:8px var(--mono);letter-spacing:.16em;color:#8e95a1}
-.fshot.empty code,.frameShot .ph code{font:7.5px var(--mono);letter-spacing:.04em;color:#5d6470;
- max-width:92%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.fcard:hover .fshot.empty{border-color:#ffffff4d}
-
-.frameShot .ph{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:4px;padding:6px;text-align:center}
-.frameShot.empty{border-style:dashed;border-color:#ffffff26}
-.frameShot.dev.empty{background:#101318}
-@media(max-width:620px){
- .frameShot .ph code{display:none}
- .fshot{aspect-ratio:3/2;margin-bottom:12px}
-}
+@media(max-width:900px){.masonry{columns:2 160px}.gal{padding:60px max(5%,calc((100vw - 1500px)/2))}}
+@media(max-width:560px){.masonry{columns:2 130px;column-gap:9px}.shotcell{margin-bottom:9px}}
+@media(prefers-reduced-motion:reduce){.shotcell img,.lb-x{transition:none}}

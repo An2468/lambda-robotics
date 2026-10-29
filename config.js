@@ -11,16 +11,14 @@ window.LAMBDA_CONFIG = {
   teamPhoto: '', // Optional team image
   // Gallery: drop photos in assets/ and set src. Empty src renders a styled placeholder tile.
   // Behind the scenes. Save a photo to the path in `suggest`, then set `src`
-  // to the same path. Empty `src` renders a labelled slot instead.
+  // to the same path. An empty `src` renders a labelled slot instead.
   gallery: [
-    {src:'', suggest:'assets/build/chassis-v1.jpg', caption:'Build session / chassis v1'},
-    {src:'', suggest:'assets/build/cad-review.jpg', caption:'CAD review'},
-    {src:'', suggest:'assets/build/drivetrain.jpg', caption:'Drivetrain prototype'},
-    {src:'', suggest:'assets/build/wiring.jpg', caption:'Wiring and electronics'},
-    {src:'', suggest:'assets/build/software.jpg', caption:'Software testing'},
-    {src:'', suggest:'assets/build/workspace.jpg', caption:'Team workspace'},
-    {src:'', suggest:'assets/build/intake.jpg', caption:'Intake mechanism'},
-    {src:'', suggest:'assets/build/practice-field.jpg', caption:'Practice field'}
+    {src:'', suggest:'assets/build/chassis.jpg',   caption:'Chassis build'},
+    {src:'', suggest:'assets/build/cad.jpg',       caption:'CAD review'},
+    {src:'', suggest:'assets/build/drivetrain.jpg',caption:'Drivetrain'},
+    {src:'', suggest:'assets/build/wiring.jpg',    caption:'Wiring'},
+    {src:'', suggest:'assets/build/testing.jpg',   caption:'Testing'},
+    {src:'', suggest:'assets/build/workspace.jpg', caption:'Workspace'}
   ],
   // Sponsors: set logo to a path in assets/ when you have the real file.
   // White or light logos on a transparent background (SVG/PNG) look best on the dark Sponsors section.
@@ -43,22 +41,11 @@ window.LAMBDA_CONFIG = {
     {name:'Member 09',role:'Outreach',photo:''},
     {name:'Member 10',role:'Operations',photo:''}
   ],
-  // Community outreach. The first two are from the 2026 sponsorship packet;
-  // the rest are slots — fill in title/date/body/photo and they render.
+  // Community outreach photos. Same rule: save to `suggest`, then set `src`.
   outreach: [
-    {title:'LotusHacks', kind:'FOUNDED', date:'2025',
-     body:'Vietnam\u2019s largest student hackathon, taken from concept to execution by this team. The same habit we bring to the robot: plan it, build it, ship it.',
-     stat:'1,000+', statLabel:'BUILDERS REACHED', url:'https://lotushack.org', photo:'', suggest:'assets/outreach/lotushacks.jpg'},
-    {title:'STEM in local schools', kind:'ONGOING', date:'2026',
-     body:'Hands-on robotics sessions for students in Ho Chi Minh City. Letting someone drive a real robot is still the fastest way to make engineering feel possible.',
-     stat:'', statLabel:'', url:'', photo:'', suggest:'assets/outreach/stem-schools.jpg'},
-    {title:'', kind:'', date:'', body:'', stat:'', statLabel:'', url:'', photo:'', suggest:'assets/outreach/03.jpg'},
-    {title:'', kind:'', date:'', body:'', stat:'', statLabel:'', url:'', photo:'', suggest:'assets/outreach/04.jpg'}
-  ],
-  outreachStats: [
-    {n:'1,000+', label:'BUILDERS REACHED'},
-    {n:'', label:'SCHOOLS VISITED'},
-    {n:'', label:'WORKSHOP HOURS'}
+    {src:'', suggest:'assets/outreach/lotushacks.jpg', caption:'LotusHacks'},
+    {src:'', suggest:'assets/outreach/schools.jpg',    caption:'STEM in local schools'},
+    {src:'', suggest:'assets/outreach/workshop.jpg',   caption:'Community workshop'}
   ],
   milestones: [
     {index:'01',date:'MAY 2026',label:'THE BEGINNING',title:'An independent team takes shape.',body:'Ten students unite around a shared interest in robotics, engineering and competition.',status:'COMPLETE'},

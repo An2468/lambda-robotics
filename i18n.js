@@ -26,14 +26,14 @@ const VI={
 
 
  // --- build page ---
- 'nav.home':'\u2190 TRANG CH\u1ee6','nav.journey':'H\u00c0NH TR\u00ccNH','nav.build':'QU\u00c1 TR\u00ccNH CH\u1ebe T\u1ea0O \u2197',
+ 'nav.home':'\u2190 TRANG CH\u1ee6','nav.journey':'H\u00c0NH TR\u00ccNH','nav.build':'CH\u1ebe T\u1ea0O',
  'journey.kicker':'03 / H\u00c0NH TR\u00ccNH','journey.h':'\u0110ANG<br>T\u1ea0O N\u00caN.',
  'journey.lead':'T\u1eeb m\u1ed9t \u00fd t\u01b0\u1edfng \u0111\u1ebfn con robot tr\u00ean s\u00e2n \u0111\u1ea5u. \u0110\u00e2y l\u00e0 ch\u1eb7ng ch\u00fang t\u00f4i \u0111ang \u0111i.',
  'bn.kicker':'LAMBDA / X\u01af\u1edeNG',
  'bn.t1':'PH\u00cdA SAU','bn.t2':'CU\u1ed8C CH\u1ebe T\u1ea0O.',
  'bn.lead':'\u1ea2nh t\u1eeb x\u01b0\u1edfng v\u00e0 t\u1eeb nh\u1eefng c\u0103n ph\u00f2ng ch\u00fang t\u00f4i b\u01b0\u1edbc v\u00e0o. Thay t\u1eebng \u00f4 trong config.js khi b\u1ea1n ch\u1ee5p \u0111\u01b0\u1ee3c.',
  'bn.scroll':'CU\u1ed8N',
- 'bn.ch1':'B\u00c0N L\u00c0M VI\u1ec6C','bn.ch2':'X\u01af\u1edeNG','bn.ch3':'C\u1ed8NG \u0110\u1ed2NG',
+ 'bn.ch1':'B\u00c0N L\u00c0M VI\u1ec6C','bn.ch2':'X\u01af\u1edeNG','nav.minds':'TH\u00c0NH VI\u00caN','nav.aboutSub':'Ch\u00fang t\u00f4i l\u00e0 ai, v\u00e0 v\u00ec sao','nav.mindsSub':'M\u01b0\u1eddi ng\u01b0\u1eddi trong \u0111\u1ed9i','nav.journeySub':'M\u00f9a gi\u1ea3i \u0111ang \u1edf \u0111\u00e2u','nav.backers':'AI \u0110\u1ed2NG H\u00c0NH','nav.backersSub':'Nh\u1eefng c\u00e1i t\u00ean \u0111\u00e3 \u1edf b\u00ean ch\u00fang t\u00f4i','nav.tiers':'C\u00c1C G\u00d3I T\u00c0I TR\u1ee2','nav.tiersSub':'S\u1ef1 h\u1ed7 tr\u1ee3 mang l\u1ea1i g\u00ec','nav.build2':'QU\u00c1 TR\u00ccNH','bn.ch2Sub':'B\u00ean trong x\u01b0\u1edfng','bn.ch3Sub':'Ra v\u1edbi c\u1ed9ng \u0111\u1ed3ng','bn.ch3':'C\u1ed8NG \u0110\u1ed2NG',
  'bn.ch1h':'B\u00c0N L\u00c0M VI\u1ec6C.',
  'bn.ch1p':'Kh\u00f4ng g\u00ec \u0111\u1ebfn m\u00e0 \u0111\u00e3 ho\u00e0n thi\u1ec7n. M\u1ecdi chi ti\u1ebft \u0111\u1ec1u \u0111\u01b0\u1ee3c c\u1eaft, khoan, l\u1eafp th\u1eed v\u00e0 c\u1eaft l\u1ea1i cho \u0111\u1ebfn khi kh\u1edbp.',
  'bn.ch1r':'L\u1eaeP R\u00c1P',

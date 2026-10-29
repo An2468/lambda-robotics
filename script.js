@@ -250,7 +250,9 @@ if(draft&&!reduced){let praf=0,tx=0,ty=0;
 // Nav rail highlights whichever section fills the viewport.
 const navLinks=$$('.navlinks a[href^="#"]');
 const spy=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;
- navLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id||a.dataset.also===e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
+ navLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id||a.dataset.also===e.target.id));
+ // the anchors live inside dropdowns now, so the trigger wears its child's state
+ $$('.navgroup').forEach(g=>g.querySelector('.navtrigger').classList.toggle('on',!!g.querySelector('.navpanel a.on')))}),{rootMargin:'-45% 0px -50% 0px'});
 $$('section[id]').forEach(sec=>spy.observe(sec));
 const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.12});$$('.reveal').forEach(x=>observer.observe(x));
 
@@ -525,6 +527,26 @@ if(lb){
  a.setAttribute('aria-label','FIRST Tech Challenge');
  a.innerHTML=`<img src="${esc(cfg.firstLogo)}" alt="FIRST"/>`;
  logo.insertAdjacentElement('afterend',a);
- // the bar is a 3-column grid; a 4th child would wrap the right cluster
- const nav=logo.closest('.nav');if(nav)nav.classList.add('has-first');
+})();
+
+
+// Nav dropdowns. Hover opens them on a mouse, click on everything else, and
+// focus keeps them open for the keyboard. One open at a time.
+(function navMenus(){
+ const groups=[...document.querySelectorAll('.navgroup')];
+ if(!groups.length)return;
+ const fine=matchMedia('(hover:hover) and (pointer:fine)');
+ const close=g=>{g.classList.remove('open');g.querySelector('.navtrigger').setAttribute('aria-expanded','false')};
+ const open=g=>{groups.forEach(o=>{if(o!==g)close(o)});g.classList.add('open');g.querySelector('.navtrigger').setAttribute('aria-expanded','true')};
+ groups.forEach(g=>{
+  const t=g.querySelector('.navtrigger');
+  t.addEventListener('click',e=>{e.stopPropagation();g.classList.contains('open')?close(g):open(g)});
+  g.addEventListener('mouseenter',()=>{if(fine.matches)open(g)});
+  g.addEventListener('mouseleave',()=>{if(fine.matches)close(g)});
+  g.addEventListener('focusin',()=>open(g));
+  g.addEventListener('focusout',e=>{if(!g.contains(e.relatedTarget))close(g)});
+  g.querySelectorAll('.navpanel a').forEach(a=>a.addEventListener('click',()=>close(g)));
+ });
+ document.addEventListener('click',()=>groups.forEach(close));
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')groups.forEach(close)});
 })();

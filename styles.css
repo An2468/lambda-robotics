@@ -83,32 +83,94 @@
    ======================================================================= */
 :root{--glow:#9fb4d4}
 
-/* ---------- NAV: a thin instrument rail, not a floating pill ---------- */
-.nav{position:fixed;top:0;left:0;right:0;transform:none;width:100%;height:62px;border-radius:0;
- background:#07080acc;backdrop-filter:blur(14px) saturate(140%);border:0;border-bottom:1px solid #ffffff14;
- display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:0;padding:0;z-index:60}
-.nav .logo{display:flex;align-items:center;gap:10px;height:100%;padding:0 22px;border-right:1px solid #ffffff14;font-size:13px;letter-spacing:-.02em;font-weight:500}
-.nav .logo-mark{width:24px;height:24px;border:0;background:#f1f3f6;color:#0a0b0d;border-radius:5px;display:grid;place-items:center;font-size:15px;line-height:1}
-.navlinks{display:flex;height:100%}
-.navlinks a{position:relative;display:flex;align-items:center;padding:0 20px;height:100%;border-right:1px solid #ffffff0f;
- font:10px var(--mono);letter-spacing:.14em;color:#8b919c;transition:color .25s,background .25s}
-.navlinks a:first-child{border-left:1px solid #ffffff0f}
-.navlinks a:hover{color:#fff;background:#ffffff0a}
-.navlinks a:before{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--glow);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.7,.3,1)}
-.navlinks a:hover:before,.navlinks a.on:before{transform:none}
-.navlinks a.on{color:#fff}
-.navright{display:flex;align-items:center;height:100%;gap:0}
-.nav .lang{height:100%;padding:0 16px;border:0;border-left:1px solid #ffffff14;background:none;color:#8b919c;font:10px var(--mono);letter-spacing:.12em}
-.nav .lang:hover{color:#fff}
-.nav .navright .pill{height:100%;border-radius:0;padding:0 24px;display:flex;align-items:center;background:#f1f3f6;color:#0a0b0d;font:10px var(--mono);letter-spacing:.12em;border:0;transition:background .25s}
-.nav .navright .pill:hover{background:var(--glow)}
-.nav .menu-toggle{height:100%;padding:0 18px;border:0;border-left:1px solid #ffffff14;background:none;color:#eef1f5}
-.navticker{overflow:hidden;height:100%;display:flex;align-items:center;border-right:1px solid #ffffff0f}
-.navticker span{font:9px var(--mono);letter-spacing:.2em;color:#636a76;white-space:nowrap;padding-left:22px}
-html{scroll-padding-top:70px}
-@media(max-width:1080px){.navticker{display:none}}
-@media(max-width:900px){.nav{grid-template-columns:auto minmax(0,1fr) auto}.navlinks{display:none}.mobile-menu{top:62px;left:0;right:0;border-radius:0;border-left:0;border-right:0}}
-@media(max-width:620px){.nav{height:56px}.nav .logo{padding:0 14px}.nav .navright .pill{padding:0 14px;font-size:9px}}
+/* ---------- NAV: three zones, one divider ----------
+   The old bar caged every item in its own identical hairline cell, so the
+   wordmark, the six links, the ticker, the language toggle and the call to
+   action all read at the same rank and nothing said where navigation began
+   or ended. Grouping does that work now. Brand on the left, navigation
+   pushed right so it sits with the actions, and a single hairline in the
+   whole bar, in front of the actions cluster. The five page anchors collapse
+   into two dropdowns, so the bar carries three top-level items instead of
+   six, and the link that leaves the page wears a chip so it cannot be read
+   as one more anchor. */
+.nav{position:fixed;top:0;left:0;right:0;transform:none;width:100%;height:64px;border-radius:0;
+ background:#07080ad9;backdrop-filter:blur(16px) saturate(140%);border:0;border-bottom:1px solid #ffffff14;
+ display:flex;align-items:center;gap:0;padding:0 20px 0 24px;z-index:60}
+
+.nav .logo{display:flex;align-items:center;gap:11px;height:100%;padding:0;border:0;
+ font-size:14px;letter-spacing:-.02em;font-weight:500}
+.nav .logo-mark{width:25px;height:25px;border:0;background:#f1f3f6;color:#0a0b0d;border-radius:6px;
+ display:grid;place-items:center;font-size:16px;line-height:1}
+/* the season line used to scroll through the link row, where it read as a
+   sixth nav item that would not click. It is identity, not navigation, so it
+   sits with the wordmark and holds still. */
+.logo-tag{font:9px var(--mono);letter-spacing:.16em;color:#6f7682;border:1px solid #ffffff1c;
+ border-radius:999px;padding:4px 9px;margin-left:4px}
+
+.navlinks{display:flex;align-items:center;gap:3px;margin-left:auto;height:auto}
+.navlinks>a,.navtrigger{position:relative;display:flex;align-items:center;gap:7px;height:auto;
+ padding:9px 14px;border:1px solid transparent;border-radius:999px;background:none;
+ font:10px var(--mono);letter-spacing:.14em;color:#8b919c;white-space:nowrap;
+ transition:color .22s,background .22s,border-color .22s}
+.navlinks>a:hover,.navtrigger:hover,.navgroup.open .navtrigger{color:#fff;background:#ffffff0f}
+.navlinks>a.on,.navtrigger.on{color:#f3f5f8}
+.navlinks>a.on:before,.navtrigger.on:before{content:'';position:absolute;left:50%;bottom:2px;
+ width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--glow)}
+.navtrigger:after{content:'';width:0;height:0;border:3.5px solid transparent;border-top-color:currentColor;
+ margin-top:4px;opacity:.65;transition:transform .25s,opacity .25s}
+.navgroup.open .navtrigger:after{transform:rotate(180deg);opacity:1}
+
+/* the one link that leaves the page is a chip, so "goes somewhere else"
+   never looks like "scrolls down" */
+.navlinks>.nav-out{border-color:#ffffff24;color:#c6cbd3;margin-left:7px}
+.navlinks>.nav-out:hover{border-color:#ffffff47;background:#ffffff12;color:#fff}
+/* the arrow is CSS, not label text: switching to Vietnamese rewrites the
+   label and would otherwise take the arrow with it */
+.nav-fwd:after{content:'\2197';display:inline-block;margin-left:2px;transition:transform .25s}
+.nav-fwd:hover:after{transform:translate(2px,-2px)}
+
+.navgroup{position:relative;display:flex;align-items:center}
+.navpanel{position:absolute;top:calc(100% + 13px);left:-6px;min-width:256px;padding:7px;
+ background:#0d0f13f2;backdrop-filter:blur(20px) saturate(140%);
+ border:1px solid #ffffff1f;border-radius:15px;box-shadow:0 26px 70px #000a;
+ opacity:0;transform:translateY(-9px) scale(.98);transform-origin:top left;pointer-events:none;
+ transition:opacity .2s,transform .24s cubic-bezier(.2,.75,.3,1)}
+/* bridges the gap under the trigger so the pointer survives the trip down */
+.navpanel:before{content:'';position:absolute;left:0;right:0;top:-15px;height:15px}
+.navgroup.open .navpanel{opacity:1;transform:none;pointer-events:auto}
+.navpanel a{display:block;padding:11px 13px;border-radius:10px;transition:background .18s}
+.navpanel a:hover{background:#ffffff12}
+.navpanel strong{display:block;font:10px var(--mono);font-weight:500;letter-spacing:.14em;color:#e9edf2}
+.navpanel span{display:block;margin-top:5px;font-size:11.5px;line-height:1.35;color:#767d89;letter-spacing:0}
+.navpanel a.on strong{color:var(--glow)}
+
+.navright{display:flex;align-items:center;height:auto;gap:9px;margin-left:22px;padding-left:22px;
+ border-left:1px solid #ffffff1c}
+.nav .lang{height:auto;padding:9px 11px;border:0;border-radius:999px;background:none;
+ color:#8b919c;font:10px var(--mono);letter-spacing:.12em;transition:color .22s,background .22s}
+.nav .lang:hover{color:#fff;background:#ffffff0f}
+.nav .navright .pill{height:auto;border-radius:999px;padding:11px 18px;display:flex;align-items:center;
+ background:#f1f3f6;color:#0a0b0d;font:10px var(--mono);letter-spacing:.12em;border:0;
+ transition:background .25s,transform .25s}
+.nav .navright .pill:hover{background:var(--glow);transform:translateY(-1px)}
+.nav .menu-toggle{height:auto;padding:5px 3px;border:0;background:none;color:#eef1f5;font-size:22px;line-height:1}
+html{scroll-padding-top:78px}
+
+/* the mobile sheet carries the same grouping, spelled out instead of folded */
+.mobile-menu .mm-head{margin:12px 0 1px;font:9px var(--mono);letter-spacing:.18em;color:#646b77}
+.mobile-menu .mm-head:first-child{margin-top:0}
+.mobile-menu a{padding:10px 11px;border-radius:9px;font:11px var(--mono);letter-spacing:.12em;color:#d9dde3}
+.mobile-menu a:hover{background:#ffffff0d}
+.mobile-menu .mm-out{border:1px solid #ffffff24;margin-top:10px}
+
+@media(max-width:900px){
+ .navlinks{display:none}
+ .menu-toggle{display:block}
+ .navright{margin-left:auto;border-left:0;padding-left:0}
+ .mobile-menu{top:64px;left:0;right:0;gap:3px;padding:16px;border-radius:0;border-left:0;border-right:0}
+}
+@media(max-width:700px){.logo-tag{display:none}}
+@media(max-width:620px){.nav{height:58px;padding:0 12px 0 14px}.nav .navright .pill{padding:10px 13px;font-size:9px}.mobile-menu{top:58px}}
 
 /* ---------- HERO: WebGL stage ---------- */
 .hero{height:100svh;min-height:620px;border-radius:0;display:block;overflow:hidden;
@@ -537,7 +599,7 @@ a.backer-mark:hover img{transform:scale(1.05)}
 
 /* ---- language: EN / VI ---- */
 img[src$="lotushacks.png"]{transform:scale(1.15)}
-.navlinks a,.nav .lang,.nav .navright .pill{white-space:nowrap}
+.navlinks a,.navtrigger,.nav .lang,.nav .navright .pill{white-space:nowrap}
 .nav .lang span{transition:color .25s}
 .nav .lang span.on{color:#fff}
 .mobile-menu .mm-lang{margin-top:4px;padding:12px 10px;border:1px solid #ffffff2e;border-radius:10px;background:none;color:#eef0f3;
@@ -547,7 +609,6 @@ html[lang="vi"]{--mono:'IBM Plex Mono','DM Mono',monospace}
 /* stacked tone marks sit above the caps; the tight English leading clips them */
 html[lang="vi"] .giant,html[lang="vi"] .modal-head,html[lang="vi"] .contact-head{line-height:1.12}
 html[lang="vi"] .wipe>span{padding-top:.04em}
-@media(max-width:1180px){html[lang="vi"] .navlinks a{padding:0 12px;letter-spacing:.08em}html[lang="vi"] .nav .lang{padding:0 12px}html[lang="vi"] .nav .navright .pill{padding:0 16px;letter-spacing:.08em}}
 
 /* =======================================================================
    Compact timeline. The stepper needed a rail, prev/next and a swapping
@@ -650,29 +711,10 @@ html[lang="vi"] .wipe>span{padding-top:.04em}
 @media(max-width:560px){.masonry{columns:2 130px;column-gap:9px}.shotcell{margin-bottom:9px}}
 @media(prefers-reduced-motion:reduce){.shotcell img,.lb-x{transition:none}}
 
-/* The ticker needs 339px to read. It was being given 64px at 1180 and 1px at
-   1100, so it rendered as a hard-cut stub against the language divider, and
-   the links overflowed by 17px underneath it. Show it only where it fits,
-   fade the trailing edge so a tight fit never cuts mid-character, and hand
-   the links the space back below that. */
-.navticker{display:none}
-@media(min-width:1460px){
- .navticker{display:flex;
-  -webkit-mask-image:linear-gradient(90deg,#000 76%,transparent);
-  mask-image:linear-gradient(90deg,#000 76%,transparent)}
-}
-@media(max-width:1120px){
- .navlinks{display:none}
- .menu-toggle{display:block}
-}
-
-/* FIRST mark sits in its own nav cell beside the wordmark, same hairline
-   rhythm as the links. Hidden on phones where the bar has no spare room. */
-.first-mark{display:flex;align-items:center;height:100%;padding:0 18px;
- border-right:1px solid #ffffff14;opacity:.85;transition:opacity .25s}
+/* FIRST mark reads as a second brand beside the wordmark, so it gets the
+   one kind of divider the bar still uses: a hairline with air around it. */
+.first-mark{display:flex;align-items:center;height:26px;padding-left:15px;margin-left:15px;
+ border-left:1px solid #ffffff1c;opacity:.8;transition:opacity .25s}
 .first-mark:hover{opacity:1}
 .first-mark img{max-height:22px;width:auto;display:block}
-@media(max-width:620px){.first-mark{display:none}}
-/* with the FIRST mark present the bar needs a fourth column, or the right
-   cluster wraps onto a second row */
-.nav.has-first{grid-template-columns:auto auto minmax(0,1fr) auto}
+@media(max-width:700px){.first-mark{display:none}}

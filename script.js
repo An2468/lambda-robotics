@@ -495,22 +495,6 @@ function cell(item){
 if(sheet)sheet.innerHTML=(cfg.gallery||[]).map(cell).join('');
 if(field)field.innerHTML=(cfg.outreach||[]).map(cell).join('');
 
-// lightbox, only ever reachable from a filled cell
-const lb=$('#lightbox'),lbImg=$('#lbImg'),lbCap=$('#lbCap');
-if(lb){
- let last=null;
- const open=(src,cap)=>{last=document.activeElement;lbImg.src=src;lbImg.alt=cap||'';lbCap.textContent=cap||'';
-  lb.classList.add('open');lb.setAttribute('aria-hidden','false');document.body.classList.add('locked');
-  const x=$('.lb-x',lb);if(x)x.focus()};
- const close=()=>{lb.classList.remove('open');lb.setAttribute('aria-hidden','true');
-  document.body.classList.remove('locked');lbImg.removeAttribute('src');if(last&&last.focus)last.focus()};
- document.addEventListener('click',e=>{
-  const c=e.target.closest('.shotcell.filled');
-  if(c){open(c.dataset.full,c.dataset.cap);return}
-  if(e.target.closest('[data-lbclose]')||e.target===lb)close();
- });
- addEventListener('keydown',e=>{if(e.key==='Escape'&&lb.classList.contains('open'))close()});
-}
 })();
 
 // FIRST mark beside the wordmark, on both pages. Renders only when
@@ -549,4 +533,137 @@ if(lb){
  });
  document.addEventListener('click',()=>groups.forEach(close));
  document.addEventListener('keydown',e=>{if(e.key==='Escape')groups.forEach(close)});
+})();
+
+
+// Lightbox, shared by the build page galleries and the home reel. It opens
+// from anything carrying data-full, so a gallery only has to render cells.
+(function lightbox(){
+ const lb=document.querySelector('#lightbox');
+ if(!lb)return;
+ const lbImg=document.querySelector('#lbImg'),lbCap=document.querySelector('#lbCap');
+ if(!lbImg||!lbCap)return;
+ let last=null;
+ const open=(src,cap)=>{last=document.activeElement;lbImg.src=src;lbImg.alt=cap||'';lbCap.textContent=cap||'';
+  lb.classList.add('open');lb.setAttribute('aria-hidden','false');document.body.classList.add('locked');
+  const x=lb.querySelector('.lb-x');if(x)x.focus()};
+ const close=()=>{lb.classList.remove('open');lb.setAttribute('aria-hidden','true');
+  document.body.classList.remove('locked');lbImg.removeAttribute('src');if(last&&last.focus)last.focus()};
+ document.addEventListener('click',e=>{
+  const c=e.target.closest('[data-full]');
+  if(c){open(c.dataset.full,c.dataset.cap);return}
+  if(e.target.closest('[data-lbclose]')||e.target===lb)close();
+ });
+ addEventListener('keydown',e=>{if(e.key==='Escape'&&lb.classList.contains('open'))close()});
+})();
+
+// Home page photo reel. The browser scrolls and snaps; we only report how far
+// each card is from the rail's centre so CSS can swell the middle one.
+(function homeReel(){
+ const rail=document.querySelector('#reelRail');
+ if(!rail)return;
+ const cfg=window.LAMBDA_CONFIG||{};
+ const items=cfg.gallery||[];
+ const section=rail.closest('section');
+ if(!items.length){if(section)section.remove();return}
+ const safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const T=window.LAMBDA_T||((k,f)=>f);
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+ rail.innerHTML=items.map(it=>it.src
+  ? `<button type="button" class="reel-card filled" data-full="${safe(it.src)}" data-cap="${safe(it.caption)}">`+
+    `<img src="${safe(it.src)}" alt="${safe(it.caption)}" loading="lazy"/>`+
+    `<figcaption>${safe(it.caption)}</figcaption></button>`
+  : `<div class="reel-card empty"><i>+</i><em>${T('bn.addPhoto','ADD PHOTO')}</em>`+
+    `${it.suggest?`<code>${safe(it.suggest.split('/').pop())}</code>`:''}</div>`).join('');
+
+ const cards=Array.from(rail.children);
+ const count=document.querySelector('#reelCount');
+ const prev=document.querySelector('#reelPrev'),next=document.querySelector('#reelNext');
+ let raf=0,centre=0,want=0,gliding=false;
+
+ function paint(){
+  raf=0;
+  const r=rail.getBoundingClientRect(),mid=r.left+r.width/2;
+  // offsetWidth, not the rect: the rect is already scaled by --d, so using it
+  // here feeds the transform back into its own input and everything saturates
+  const gap=parseFloat(getComputedStyle(rail).columnGap)||0;
+  const span=(cards[0].offsetWidth+gap)*1.9;
+  let best=Infinity;
+  cards.forEach((c,i)=>{
+   const cr=c.getBoundingClientRect(),off=Math.abs(cr.left+cr.width/2-mid);
+   c.style.setProperty('--d',Math.min(1,off/span).toFixed(3));
+   if(off<best){best=off;centre=i}
+  });
+  cards.forEach((c,i)=>c.classList.toggle('is-centre',i===centre));
+  // while we are driving the rail the intent is ours, not whatever card the
+  // geometry happens to be nearest mid-flight
+  if(!gliding)want=centre;
+  if(count)count.textContent=String(centre+1).padStart(2,'0')+' / '+String(cards.length).padStart(2,'0');
+  if(prev)prev.disabled=rail.scrollLeft<=1;
+  if(next)next.disabled=rail.scrollLeft>=rail.scrollWidth-rail.clientWidth-1;
+ }
+ const sched=()=>{if(!raf)raf=requestAnimationFrame(paint)};
+ rail.addEventListener('scroll',sched,{passive:true});
+ addEventListener('resize',sched);
+ // a card that grows when its photo arrives would leave --d stale
+ cards.forEach(c=>{const img=c.querySelector('img');if(img)img.addEventListener('load',sched)});
+ paint();
+
+ // We drive the glide ourselves rather than ask for behavior:'smooth'. Two
+ // reasons: mandatory snapping re-snaps on the animation's first frame and
+ // cancels it, and the browser runs that animation on the compositor, which
+ // crawls whenever the page is not being presented. A rAF tween has neither
+ // problem and lets the easing match the rest of the site.
+ let anim=0;
+ const glide=target=>{
+  cancelAnimationFrame(anim);
+  const from=rail.scrollLeft,dist=target-from;
+  if(reduced||Math.abs(dist)<1){gliding=false;rail.scrollLeft=target;return}
+  const t0=performance.now(),ms=Math.min(620,260+Math.abs(dist)*.35);
+  gliding=true;rail.classList.add('gliding');
+  const step=now=>{
+   const p=Math.min(1,(now-t0)/ms);
+   rail.scrollLeft=from+dist*(1-Math.pow(1-p,3));
+   if(p<1){anim=requestAnimationFrame(step);return}
+   anim=0;gliding=false;rail.classList.remove('gliding');
+  };
+  anim=requestAnimationFrame(step);
+ };
+ const to=i=>{
+  want=Math.max(0,Math.min(cards.length-1,i));
+  const t=cards[want];
+  const r=rail.getBoundingClientRect(),cr=t.getBoundingClientRect();
+  // the rect is scaled by --d, but scale is about the card's centre, so the
+  // centre point it reports is still the true one
+  glide(rail.scrollLeft+(cr.left+cr.width/2)-(r.left+r.width/2));
+ };
+ if(prev)prev.addEventListener('click',()=>to(want-1));
+ if(next)next.addEventListener('click',()=>to(want+1));
+ rail.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'){e.preventDefault();to(want+1)}
+  else if(e.key==='ArrowLeft'){e.preventDefault();to(want-1)}
+ });
+
+ // drag, mouse only: touch already scrolls the rail natively
+ let down=false,sx=0,sl=0,moved=0;
+ rail.addEventListener('pointerdown',e=>{
+  if(e.pointerType!=='mouse'||e.button)return;
+  down=true;sx=e.clientX;sl=rail.scrollLeft;moved=0;
+  rail.classList.add('dragging');rail.setPointerCapture(e.pointerId);
+ });
+ rail.addEventListener('pointermove',e=>{
+  if(!down)return;
+  const dx=e.clientX-sx;moved=Math.max(moved,Math.abs(dx));
+  rail.scrollLeft=sl-dx;
+ });
+ const release=()=>{
+  if(!down)return;
+  down=false;rail.classList.remove('dragging');
+  to(centre);
+ };
+ rail.addEventListener('pointerup',release);
+ rail.addEventListener('pointercancel',release);
+ // a drag that happens to end on a card must not also open the lightbox
+ rail.addEventListener('click',e=>{if(moved>6){e.preventDefault();e.stopPropagation();moved=0}},true);
 })();

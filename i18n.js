@@ -68,11 +68,11 @@ const VI={
  'build.nextH':'TIẾP THEO LÀ GÌ? ↗',
  'build.nextP':'Thử nghiệm robot, các sự kiện FTC sắp tới và hoạt động của đội sẽ được cập nhật tại đây khi được xác nhận. <strong>Các ngày trên lịch chỉ là tạm thời cho đến khi Lambda công bố lịch chính thức.</strong>',
 
- 'sp.kicker':'04 / NHÀ TÀI TRỢ','sp.title':'NHÀ<br>TÀI TRỢ.',
+ 'reel.kicker':'04 / TRONG X\u01af\u1edeNG','reel.h':'PH\u00cdA SAU<br>QU\u00c1 TR\u00ccNH.','reel.lead':'\u1ea2nh t\u1eeb x\u01b0\u1edfng v\u00e0 nh\u1eefng n\u01a1i ch\u00fang t\u00f4i c\u00f3 m\u1eb7t.','reel.aria':'B\u0103ng \u1ea3nh','reel.prev':'\u1ea2nh tr\u01b0\u1edbc','reel.next':'\u1ea2nh ti\u1ebfp theo','reel.cta':'XEM TO\u00c0N B\u1ed8 QU\u00c1 TR\u00ccNH','sp.kicker':'05 / NHÀ TÀI TRỢ','sp.title':'NHÀ<br>TÀI TRỢ.',
  'sp.lead':'Những công ty và tổ chức giúp mùa giải của Lambda thành hiện thực. Chọn một logo để tìm hiểu thêm về từng đơn vị.',
  'sp.row':'Nhà tài trợ',
 
- 'pt.kicker':'05 / HỢP TÁC CÙNG CHÚNG TÔI','pt.title':'ĐỒNG HÀNH<br>ĐỂ <span style="color:#697180">TIẾN XA.</span>',
+ 'pt.kicker':'06 / HỢP TÁC CÙNG CHÚNG TÔI','pt.title':'ĐỒNG HÀNH<br>ĐỂ <span style="color:#697180">TIẾN XA.</span>',
  'pt.lead':'Chúng tôi là một đội độc lập, tự chủ tài chính, cùng chung niềm đam mê kỹ thuật. Hãy giúp chúng tôi biến những thiết kế thành hiện thực và tiến thêm một bước trên hành trình FTC.',
  'pt.ways':'CÁC CẤP ĐỘ HỢP TÁC · MỖI CẤP BAO GỒM CẤP TRƯỚC','pt.rail':'Các cấp độ hợp tác','pt.swipe':'VUỐT HOẶC CHỌN MỘT CẤP ĐỘ',
  'pt.buys':'SỰ HỖ TRỢ CỦA BẠN DÀNH CHO',

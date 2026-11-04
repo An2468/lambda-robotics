@@ -718,3 +718,75 @@ html[lang="vi"] .wipe>span{padding-top:.04em}
 .first-mark:hover{opacity:1}
 .first-mark img{max-height:22px;width:auto;display:block}
 @media(max-width:700px){.first-mark{display:none}}
+
+
+/* ---------- HOME REEL: centre-focus photo carousel ----------
+   Native overflow scrolling and scroll-snap do the moving, so momentum,
+   touch and keyboard come free. JS only measures how far each card sits from
+   the rail's centre and writes that to --d (0 dead centre, 1 a card away);
+   the card maps it to scale, opacity and saturation. One rAF-throttled read
+   per scroll frame, no scroll engine of our own. */
+.reel{background:#050607;color:#f4f5f6;padding-bottom:88px;overflow:hidden}
+.reel .section-head p{color:#868d99}
+.reel-stage{position:relative;margin:50px -6% 0}
+.reel-rail{--reel-card:clamp(260px,46vw,620px);
+ display:flex;gap:clamp(14px,2vw,30px);
+ overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;
+ /* the first and last card have to be able to reach the centre */
+ padding:40px calc(50% - var(--reel-card)/2) 48px;
+ scrollbar-width:none;cursor:grab}
+.reel-rail::-webkit-scrollbar{display:none}
+.reel-rail.dragging{cursor:grabbing;scroll-snap-type:none;user-select:none}
+/* mandatory snapping re-snaps on the first frame of a programmatic smooth
+   scroll and cancels it, so the arrows lift snapping for the glide */
+.reel-rail.gliding{scroll-snap-type:none}
+.reel-rail:focus-visible{outline:2px solid var(--glow);outline-offset:-8px}
+
+.reel-card{flex:0 0 var(--reel-card);scroll-snap-align:center;
+ position:relative;margin:0;padding:0;border:0;aspect-ratio:3/2;border-radius:5px;
+ overflow:hidden;background:#0b0e12;color:inherit;text-align:left;
+ transform:scale(calc(1 - .17*var(--d,1)));
+ opacity:calc(1 - .5*var(--d,1));
+ filter:saturate(calc(1 - .55*var(--d,1)));
+ transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .5s,filter .5s,box-shadow .5s}
+.reel-card img{width:100%;height:100%;object-fit:cover;display:block}
+.reel-card.filled{cursor:zoom-in}
+.reel-card.is-centre{box-shadow:0 44px 100px #000c}
+.reel-card figcaption{position:absolute;left:0;right:0;bottom:0;padding:38px 20px 16px;
+ background:linear-gradient(transparent,#000000d9);
+ font:10px var(--mono);letter-spacing:.13em;text-transform:uppercase;color:#e9ecf1;
+ opacity:0;transform:translateY(10px);transition:opacity .45s,transform .45s}
+.reel-card.is-centre figcaption{opacity:1;transform:none}
+
+.reel-card.empty{display:grid;place-content:center;justify-items:center;gap:8px;
+ border:1px dashed #ffffff24;background:#080a0d;color:#6b7280;text-align:center}
+.reel-card.empty i{font-style:normal;font-size:27px;line-height:1;color:#464d58}
+.reel-card.empty em{font-style:normal;font:10px var(--mono);letter-spacing:.14em}
+.reel-card.empty code{font:9px var(--mono);color:#444a55;letter-spacing:.06em}
+
+.reel-nav{position:absolute;top:50%;translate:0 -50%;z-index:3;
+ width:46px;height:46px;border-radius:50%;border:1px solid #ffffff26;
+ background:#0a0c10cc;backdrop-filter:blur(8px);color:#e9ecf1;font-size:16px;line-height:1;
+ transition:background .25s,border-color .25s,opacity .25s}
+.reel-nav:hover{background:#ffffff1a;border-color:#ffffff55}
+.reel-nav[disabled]{opacity:.22;pointer-events:none}
+.reel-nav.prev{left:max(18px,3vw)}
+.reel-nav.next{right:max(18px,3vw)}
+
+.reel-foot{display:flex;align-items:center;justify-content:space-between;gap:20px;
+ border-top:1px solid #ffffff14;padding-top:22px}
+.reel-count{font:10px var(--mono);letter-spacing:.16em;color:#79808c}
+.reel-cta{display:inline-flex;align-items:center;gap:7px;padding:13px 22px;border-radius:999px;
+ border:1px solid #ffffff26;color:#dde1e7;font:10px var(--mono);letter-spacing:.13em;
+ white-space:nowrap;transition:background .25s,border-color .25s,color .25s}
+.reel-cta:hover{background:#ffffff12;border-color:#ffffff55;color:#fff}
+
+@media(max-width:620px){
+ .reel-stage{margin-top:34px}
+ .reel-nav{display:none}
+ .reel-rail{padding-top:24px;padding-bottom:34px}
+ .reel-foot{flex-direction:column;align-items:flex-start;gap:14px}
+}
+@media(prefers-reduced-motion:reduce){
+ .reel-card,.reel-card figcaption{transition:none}
+}

@@ -726,9 +726,7 @@ html[lang="vi"] .wipe>span{padding-top:.04em}
    the rail's centre and writes that to --d (0 dead centre, 1 a card away);
    the card maps it to scale, opacity and saturation. One rAF-throttled read
    per scroll frame, no scroll engine of our own. */
-.reel{background:#050607;color:#f4f5f6;padding-bottom:88px;overflow:hidden}
-.reel .section-head p{color:#868d99}
-.reel-stage{position:relative;margin:50px -6% 0}
+.reel-stage{position:relative;margin-top:40px}
 .reel-rail{--reel-card:clamp(260px,46vw,620px);
  display:flex;gap:clamp(14px,2vw,30px);
  overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;
@@ -773,19 +771,13 @@ html[lang="vi"] .wipe>span{padding-top:.04em}
 .reel-nav.prev{left:max(18px,3vw)}
 .reel-nav.next{right:max(18px,3vw)}
 
-.reel-foot{display:flex;align-items:center;justify-content:space-between;gap:20px;
- border-top:1px solid #ffffff14;padding-top:22px}
+.reel-foot{border-top:1px solid #ffffff14;padding-top:18px}
 .reel-count{font:10px var(--mono);letter-spacing:.16em;color:#79808c}
-.reel-cta{display:inline-flex;align-items:center;gap:7px;padding:13px 22px;border-radius:999px;
- border:1px solid #ffffff26;color:#dde1e7;font:10px var(--mono);letter-spacing:.13em;
- white-space:nowrap;transition:background .25s,border-color .25s,color .25s}
-.reel-cta:hover{background:#ffffff12;border-color:#ffffff55;color:#fff}
 
 @media(max-width:620px){
- .reel-stage{margin-top:34px}
+ .reel-stage{margin-top:28px}
  .reel-nav{display:none}
- .reel-rail{padding-top:24px;padding-bottom:34px}
- .reel-foot{flex-direction:column;align-items:flex-start;gap:14px}
+ .reel-rail{padding-top:22px;padding-bottom:30px}
 }
 @media(prefers-reduced-motion:reduce){
  .reel-card,.reel-card figcaption{transition:none}

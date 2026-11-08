@@ -78,7 +78,7 @@ function fillMarquee(el,items,render){if(!el||!items.length)return;
  const base=Array.from({length:Math.ceil(9/items.length)},()=>items).flat();
  el.innerHTML=[...base,...base].map(render).join('');
  el.querySelectorAll('[aria-hidden="pending"]').forEach((n,i)=>n.setAttribute('aria-hidden',i>=base.length?'true':'false'))}
-fillMarquee($('#galleryTrack'),cfg.gallery||[],g=>`<figure class="shot" aria-hidden="pending"><div class="frame">${g.src?`<img src="${safe(g.src)}" alt="${safe(g.caption)}" loading="lazy"/>`:'<div class="shot-ph">\u03bb</div>'}</div><figcaption>${safe(g.caption)}</figcaption></figure>`);
+fillMarquee($('#galleryTrack'),cfg.gallery||[],g=>`<figure class="shot${['land','port','square'].includes(g.shape)?' '+g.shape:''}" aria-hidden="pending"><div class="frame">${g.src?`<img src="${safe(g.src)}" alt="${safe(g.caption)}" loading="lazy"/>`:'<div class="shot-ph">\u03bb</div>'}</div><figcaption>${safe(g.caption)}</figcaption></figure>`);
 const sponsorLogo=s=>{
  const inner=s.logo
   ? `<span class="logo-plate"><img src="${safe(s.logo)}" alt="${safe(T('js.logo','{name} logo',{name:s.name}))}" loading="lazy"/></span>`

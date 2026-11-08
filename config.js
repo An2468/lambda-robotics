@@ -17,13 +17,14 @@ window.LAMBDA_CONFIG = {
   // Gallery: drop photos in assets/ and set src. Empty src renders a styled placeholder tile.
   // Behind the scenes. Save a photo to the path in `suggest`, then set `src`
   // to the same path. An empty `src` renders a labelled slot instead.
+  // Optional `shape` sets the frame on the home strip: 'land', 'port' or 'square'.
   gallery: [
-    {src:'', suggest:'assets/build/chassis.jpg',   caption:'Chassis build'},
-    {src:'', suggest:'assets/build/cad.jpg',       caption:'CAD review'},
+    {src:'assets/build/field-perimeter.jpg', shape:'port', caption:'Building Field Perimeter'},
+    {src:'assets/build/cad-session.jpg', shape:'land', caption:'CAD Session!'},
     {src:'', suggest:'assets/build/drivetrain.jpg',caption:'Drivetrain'},
-    {src:'', suggest:'assets/build/wiring.jpg',    caption:'Wiring'},
-    {src:'', suggest:'assets/build/testing.jpg',   caption:'Testing'},
-    {src:'', suggest:'assets/build/workspace.jpg', caption:'Workspace'}
+    {src:'assets/build/soldering.jpg', shape:'port', caption:'Soldering the Electronics'},
+    {src:'assets/build/autonomous.jpg', shape:'land', caption:'Autonomous Programming'},
+    {src:'assets/build/biobuzz-workspace.jpg', shape:'land', caption:'BioBuzz Workspace'}
   ],
   // Sponsors: set logo to a path in assets/ when you have the real file.
   // White or light logos on a transparent background (SVG/PNG) look best on the dark Sponsors section.
@@ -96,12 +97,12 @@ window.LAMBDA_CONFIG = {
   // same order; only the fields given here change. Anything left out stays English.
   vi: {
     gallery: [
-      {caption:'Buổi chế tạo / khung xe v1'},
-      {caption:'Họp duyệt CAD'},
+      {caption:'Dựng khung sân thi đấu'},
+      {caption:'Buổi làm CAD!'},
       {caption:'Nguyên mẫu hệ truyền động'},
-      {caption:'Đi dây và điện tử'},
-      {caption:'Kiểm thử phần mềm'},
-      {caption:'Không gian làm việc'},
+      {caption:'Hàn mạch điện tử'},
+      {caption:'Lập trình tự hành'},
+      {caption:'Không gian tập luyện BioBuzz'},
       {caption:'Cơ cấu nạp'},
       {caption:'Sân tập'}
     ],

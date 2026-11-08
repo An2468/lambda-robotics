@@ -248,6 +248,9 @@ html{scroll-padding-top:78px}
 .shot:nth-child(3n) .frame{width:300px;height:234px}
 .shot:nth-child(4n) .frame{width:212px;height:272px}
 .shot:nth-child(5n) .frame{width:268px;height:268px}
+.gallery-track .shot.land .frame{width:320px;height:240px}
+.gallery-track .shot.port .frame{width:232px;height:300px}
+.gallery-track .shot.square .frame{width:268px;height:268px}
 .shot:nth-child(2n){rotate:1.5deg}
 .shot:nth-child(3n){rotate:-2.1deg}
 .shot:nth-child(5n){rotate:.9deg}
@@ -260,6 +263,9 @@ html{scroll-padding-top:78px}
 .shot figcaption{position:static;padding:13px 2px 0;background:none;color:#5e5a52;font:9px var(--mono);letter-spacing:.11em}
 @media(max-width:620px){
  .shot .frame,.shot:nth-child(3n) .frame,.shot:nth-child(4n) .frame,.shot:nth-child(5n) .frame{width:196px;height:248px}
+ .gallery-track .shot.land .frame{width:248px;height:186px}
+ .gallery-track .shot.port .frame{width:196px;height:254px}
+ .gallery-track .shot.square .frame{width:220px;height:220px}
  .gallery-track{gap:30px}
 }
 
